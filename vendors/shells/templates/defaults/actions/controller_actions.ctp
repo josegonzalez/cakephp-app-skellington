@@ -18,6 +18,116 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 ?>
+<?php if ($singularHumanName == 'User') : ?>
+
+	function <?php echo $admin; ?>dashboard() {
+		$this->layout = 'alternate';
+		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('dashboard');
+		$this->set(compact('<?php echo $singularName; ?>'));
+	}
+
+	function <?php echo $admin; ?>login() {
+		$this->layout = 'alternate';
+		if (empty($this->data)) {
+			return;
+		}
+
+		$<?php echo $singularName; ?> = Authsome::login($this->data['<?php echo $currentModelName; ?>']);
+
+		if (!$<?php echo $singularName; ?>) {
+			$this->Session->setFlash(__('Unknown user or Wrong Password', true));
+			return;
+		}
+
+		$remember = (!empty($this->data['<?php echo $currentModelName; ?>']['remember']));
+		if ($remember) {
+			Authsome::persist('2 weeks');
+		}
+
+		if ($<?php echo $singularName; ?>) {
+			$this->Session->setFlash(__('You have been logged in', true));
+			$this->redirect(array('action' => 'dashboard'));
+		}
+	}
+
+	function <?php echo $admin; ?>logout() {
+		$this->layout = 'alternate';
+		$this->Authsome->logout();
+		$this->Session->delete('<?php echo $currentModelName; ?>');
+		$this->redirect(array('action' => 'login'));
+	}
+
+	function <?php echo $admin; ?>forgot_password() {
+		if (!empty($this->data) && isset($this->data['<?php echo $currentModelName; ?>']['email'])) {
+			if ($this->data['<?php echo $currentModelName; ?>']['email'] == '') {
+				$this->Session->setFlash(__('Invalid email address', true));
+				$this->redirect(array('action' => 'forgot_password'));
+			}
+
+			$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('forgot_password', $this->data['<?php echo $currentModelName; ?>']['email']);
+			if (!$<?php echo $singularName; ?>) {
+				$this->Session->setFlash(__('No <?php echo $singularName; ?> found for this email address', true));
+				$this->redirect(array('action' => 'forgot_password'));
+			}
+
+			$activationKey = $this-><?php echo $currentModelName; ?>->changeActivationKey($<?php echo $singularName; ?>['<?php echo $currentModelName; ?>']['id']);
+
+			try {
+				if ($this->Mail->send(array(
+					'to' => $<?php echo $singularName; ?>['<?php echo $currentModelName; ?>']['email'],
+					'mailer' => 'swift',
+					'subject' => '[' . Configure::read('Settings.SiteTitle') .'] ' . __('Reset Password', true),
+					'variables' => compact('<?php echo $singularName; ?>', 'activationKey')))) {
+						$this->Session->setFlash(__('An email has been sent with instructions for resetting your password', true));
+						$this->redirect(array('action' => 'login'));
+				} else {
+					$this->Session->setFlash(__('An error occurred', true));
+					$this->log("Error sending email");
+				}
+			} catch (Exception $e) {
+				$this->Session->setFlash(__('An error occurred', true));
+				$this->log("Failed to send email: " . $e->getMessage());
+			}
+		}
+	}
+
+	function <?php echo $admin; ?>reset_password($username = null, $key = null) {
+		$this->layout = 'alternate';
+		if ($username == null || $key == null) {
+			$this->Session->setFlash(__('An error occurred', true));
+			$this->redirect(array('action' => 'login'));
+		}
+
+		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('reset_password', array('username' => $username, 'key' => $key));
+		if (!isset($<?php echo $singularName; ?>)) {
+			$this->Session->setFlash(__('An error occurred', true));
+			$this->redirect(array('action' => 'login'));
+		}
+
+		if (!empty($this->data) && isset($this->data['<?php echo $currentModelName; ?>']['password'])) {
+			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('fields' => array('id', 'password', 'activation_key'), 'callback' => 'reset_password', 'user_id' => $<?php echo $singularName; ?>['<?php echo $currentModelName; ?>']['id']))) {
+				$this->Session->setFlash(__('Your password has been reset successfully', true));
+				$this->redirect(array('action' => 'login'));
+			} else {
+				$this->Session->setFlash(__('An error occurred please try again', true));
+			}
+		}
+
+		$this->set(compact('<?php echo $singularName; ?>', 'username', 'key'));
+	}
+
+	function <?php echo $admin; ?>change_password() {
+		$this->layout = 'alternate';
+		if (!empty($this->data)) {
+			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('fieldList' => array('id', 'password'), 'callback' => 'change_password'))) {
+				$this->Session->setFlash(__('Your password has been successfully changed', true));
+				$this->redirect(array('action' => 'dashboard'));
+			} else {
+				$this->Session->setFlash(__('Your password could not be changed', true));
+			}
+		}
+	}
+<?php endif; ?>
 
 	function <?php echo $admin ?>index() {
 		$<?php echo $pluralName ?> = $this->paginate();
