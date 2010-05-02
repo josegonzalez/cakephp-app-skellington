@@ -119,7 +119,7 @@
 	}
 ?>
 <div class="<?php echo $pluralVar;?> index">
-	<h2><?php echo "<?php __('{$pluralHumanName}');?>";?></h2>
+	<?php echo "<?php \$this->Html->h2(__('{$pluralHumanName}')); ?>\n"; ?>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 	<?php foreach ($fields as $field):?>
@@ -143,7 +143,27 @@
 				}
 			}
 			if ($isKey !== true) {
-				echo "\t\t<td><?php echo \${$singularVar}['{$modelClass}']['{$field}']; ?>&nbsp;</td>\n";
+				if ($field == $displayField) {
+					echo "\t\t<td><?php echo \$html->link(\${$singularVar}['{$modelClass}']['{$field}'],";
+					if (in_array('slug', $fields)) {
+						echo "\t\t\tarray('action' => 'edit', \${$singularVar}['{$modelClass}']['slug'])); ?>&nbsp;</td>\n";
+					} else {
+						echo "\t\t\tarray('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>&nbsp;</td>\n";
+					}
+				}
+				if ($schema[$field]['type'] == 'datetime') {
+					echo "\t\t<td><?php echo \$this->Time->niceShort(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
+				} else if ($schema[$field]['type'] == 'date') {
+					echo "\t\t<td><?php echo \$this->Time->relativeTime(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
+				} else if ($schema[$field]['type'] == 'time') {
+					echo "\t\t<td><?php echo \$this->Time->time(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
+				} else if (in_array($field, array('created_by', 'modified_by', 'created_by_id', 'modified_by_id'))) {
+					echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['" . Inflector::classify($field) . "']['username'],\n"; 
+					echo "\t\t\tarray('controller' => 'users', 'action' => 'view', \${$singularVar}['{$modelClass}']['{$field}'],";
+					echo " Inflector::slug(\${$singularVar}['". Inflector::classify($field) . "']['username']))); ?></td>\n";
+				} else {
+					echo "\t\t<td><?php echo \${$singularVar}['{$modelClass}']['{$field}']; ?>&nbsp;</td>\n";
+				}
 			}
 		}
 
