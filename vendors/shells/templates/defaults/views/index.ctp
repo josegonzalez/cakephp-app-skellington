@@ -19,31 +19,103 @@
 ?>
 <?php
 	$doActions = true;
-
-	$index_associations = $associations;
 	$related_action_associations = $associations;
+	$view_params = $this->params;
 
-	$invalidFields = array('created', 'modified', 'updated', 'created_by', 'modified_by', 'model', 'model_key');
-	$invalidFields = array_merge(array('id', 'password'), $invalidFields);
-	$invalidFields = array_merge(array('enabled', 'deleted'), $invalidFields);
-	$invalidFields = array_merge(array('contents', 'description'), $invalidFields);
-	if ($modelClass != 'Event') $invalidFields[] = 'date';
-	if ($modelClass == 'Project') {
-		$invalidFields = array_merge(array('owned_by', 'repository_path'), $invalidFields);
-	}
-	if ($modelClass == 'Ticket') {
-		$doActions = false;
-		if (!empty($index_associations['belongsTo']) && isset($index_associations['belongsTo']['Project'])) {
-			$invalidFields = array_merge(array('project_id', 'milestone_id'), $invalidFields);
-			unset($index_associations['belongsTo']['Project']);
-			unset($index_associations['belongsTo']['Milestone']);
-			unset($related_action_associations['belongsTo']['Project']);
-			unset($related_action_associations['belongsTo']['AssignedTo']);
+	$invalid_fields = array('id', 'created', 'created_by', 'created_by_id', 'modified', 'modified_by', 'modified_by_id', 'updated', 'owned_by', 'owner_id');
+	$invalid_contact_fields = array('address', 'cell_number', 'city', 'fax_number', 'latitude', 'location', 'longitude', 'phone_number', 'state_id', 'zipcode');
+	$invalid_behavior_fields = array('lft', 'parent_id', 'position', 'rght', 'slug');
+	$invalid_content_fields = array('body', 'content', 'contents', 'description', 'text');
+	$invalid_file_fields = array('dir', 'filename', 'filesize', 'mimetype', 'picture');
+	$invalid_online_contact_fields = array('email', 'email_address', 'site', 'url', 'website');
+	$invalid_polymorphic_fields = array('class', 'foreign_id', 'model', 'model_id', 'model_key', 'type', 'type_id');
+	$invalid_time_fields = array('date', 'time', 'when');
+	$invalid_user_fields = array('password', 'photo', 'profile_picture');
+	$invalid_visibility_fields = array('enabled', 'deleted', 'published', 'visible');
+
+	foreach ($schema as $key => $value) {
+		if (in_array($value['type'], array('text', 'datetime')) and !in_array($key, array_keys($this->params))) {
+			$invalid_fields[] = $key;
+		} elseif (substr($key, -6) === '_count') {
+			$invalid_fields[] = $key;
+		} elseif (substr($key, -5) === '_time') {
+			$invalid_time_fields[] = $key;
+		} elseif (substr($key, -4) === '_url') {
+			$invalid_online_contact_fields[] = $key;
+		} elseif (substr($key, -4) === '_dir') {
+			$invalid_file_fields[] = $key;
+		} elseif (substr($key, -9) === '_mimetype') {
+			$invalid_file_fields[] = $key;
+		} elseif (substr($key, -9) === '_filesize') {
+			$invalid_file_fields[] = $key;
+		} elseif (substr($key, -6) === '_photo') {
+			$invalid_file_fields[] = $key;
 		}
 	}
-	foreach ($fields as $i => $field) {
-		if (substr($field, -6) == '_count') unset($fields[$i]);
-		if (in_array($field, $invalidFields)) unset($fields[$i]);
+
+	if (!in_array('show_behavior_fields', array_keys($view_params))) {
+		unset($view_params['show_behavior_fields']);
+		$invalid_fields = array_merge($invalid_behavior_fields, $invalid_fields);
+	}
+
+	if (!in_array('show_contact_fields', array_keys($view_params))) {
+		unset($view_params['show_contact_fields']);
+		$invalid_fields = array_merge($invalid_contact_fields, $invalid_fields);
+	}
+
+	if (!in_array('show_content_fields', array_keys($view_params))) {
+		unset($view_params['show_content_fields']);
+		$invalid_fields = array_merge($invalid_content_fields, $invalid_fields);
+	}
+
+	if (!in_array('show_file_fields', array_keys($view_params))) {
+		unset($view_params['show_file_fields']);
+		$invalid_fields = array_merge($invalid_file_fields, $invalid_fields);
+	}
+
+	if (!in_array('show_online_contact_fields', array_keys($view_params))) {
+		unset($view_params['show_online_contact_fields']);
+		$invalid_fields = array_merge($invalid_online_contact_fields, $invalid_fields);
+	}
+
+	if (!in_array('show_polymorphic_fields', array_keys($view_params))) {
+		unset($view_params['show_polymorphic_fields']);
+		$invalid_fields = array_merge($invalid_polymorphic_fields, $invalid_fields);
+	}
+
+	if (!in_array('show_time_fields', array_keys($view_params))) {
+		unset($view_params['show_time_fields']);
+		$invalid_fields = array_merge($invalid_time_fields, $invalid_fields);
+	}
+
+	if (!in_array('show_user_fields', array_keys($view_params))) {
+		unset($view_params['show_user_fields']);
+		$invalid_fields = array_merge($invalid_user_fields, $invalid_fields);
+	}
+
+	if (!in_array('show_visibility_fields', array_keys($view_params))) {
+		unset($view_params['show_visibility_fields']);
+		$invalid_fields = array_merge($invalid_visibility_fields, $invalid_fields);
+	}
+
+	foreach ($view_params as $key => $value) {
+		if (substr($key, 0, 8) === 'noindex:') {
+			$invalid_fields[] = substr($key, 8);
+			continue;
+		}
+		if (substr($key, 0, 6) === 'onindex:') {
+			$invalid_fields = array_diff($invalid_fields, array(substr($key, 0, 6)));
+			continue;
+		}
+	}
+
+	$fields = array_diff($fields, $invalid_fields);
+
+	foreach($fields as $field) {
+		if (substr($field, -3) === '_id') {
+			$fields = array_diff($fields, array($field));
+			$fields[] = $field;
+		}
 	}
 ?>
 <div class="<?php echo $pluralVar;?> index">
@@ -60,8 +132,8 @@
 	echo "\t<tr<?php echo (\$i++ % 2 == 0) ? ' class=\"altrow\"' : '';?>>\n";
 		foreach ($fields as $field) {
 			$isKey = false;
-			if (!empty($index_associations['belongsTo'])) {
-				foreach ($index_associations['belongsTo'] as $alias => $details) {
+			if (!empty($associations['belongsTo'])) {
+				foreach ($associations['belongsTo'] as $alias => $details) {
 					if ($field === $details['foreignKey']) {
 						$isKey = true;
 						echo "\t\t<td>\n\t\t\t<?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$details['displayField']}'],\n";
