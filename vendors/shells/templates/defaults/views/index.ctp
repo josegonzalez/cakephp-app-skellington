@@ -119,7 +119,7 @@
 	}
 ?>
 <div class="<?php echo $pluralVar;?> index">
-	<?php echo "<?php \$this->Html->h2(__('{$pluralHumanName}')); ?>\n"; ?>
+	<?php echo "<?php \$this->Html->h2(__('{$pluralHumanName}', true)); ?>\n"; ?>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 	<?php foreach ($fields as $field):?>
