@@ -230,6 +230,12 @@ endif;
 			'activation_key' => md5(uniqid())));
 	}
 
+	function __findDashboard() {
+		return $this->find('first', array(
+			'conditions' => array(
+				"{$this->alias}.{$this->primaryKey}" => Authsome::get($this->primaryKey)),
+			'contain' => false));
+	}
 <?php endif; ?>
 	function __findEdit($id = null) {
 		if (!$slug) return false;
@@ -238,6 +244,26 @@ endif;
 			'conditions' => array(
 				"{$this->alias}.{$this->primaryKey}" => $id)));
 	}
+<?php if ($name == 'User') :?>
+
+	function __findForgotPassword($email = null) {
+		if (!$email) return false;
+
+		return $this->find('first', array(
+			'conditions' => array(
+				"{$this->alias}.email" => $email),
+			'contain' => false));
+	}
+
+	function __findResetPassword($options = array()) {
+		if (!isset($options['username']) || !isset($options['key'])) return false;
+
+		return $this->find('first', array(
+			'conditions' => array(
+				"{$this->alias}.{$this->displayField}" => $options['username'],
+				"{$this->alias}.activation_key" => $options['key'])));
+	}
+<?php endif; ?>
 
 	function __findView($slug = null) {
 		if (!$slug) return false;
@@ -332,7 +358,14 @@ endif;
 
 	function changeActivationKey($id) {
 		$activationKey = md5(uniqid());
-		if (!$this->updateAll(array('activation_key', $activationKey), array("{$this->alias}.{$this->primaryKey}" => $id))) return false;
+		$data = array(
+			"{$this->alias}" => array(
+				"{$this->primaryKey}" => $id,
+				'activation_key' => $activationKey,
+			),
+		);
+
+		if (!$this->save($data, array('callbacks' => false))) return false;
 		return $activationKey;
 	}
 <?php endif; ?>
