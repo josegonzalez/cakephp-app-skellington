@@ -1,0 +1,13 @@
+h1. App Skellington
+
+h2. wtf
+
+This is basically an app skeleton for CakePHP using RANDOM stuff. Seriously, it ends up nothing like the default bake templates.
+
+h2. how
+
+I don't know, as lots of stuff is still broken - like the Js stuff - but you do have to use this as the skeleton for your app. Be warned if stuff breaks your app randomly. Version control ftw!
+
+h2. credits
+
+Too many to list. I'm on a don't ask, don't tell policy.
