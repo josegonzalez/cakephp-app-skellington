@@ -1,0 +1,109 @@
+/* FORM - from tripoli css framework */
+fieldset {
+    padding:1.4em;
+    margin: 0 0 1.5em 0;
+    border: 1px solid #ccc;
+}
+legend {
+    font-weight: bold;
+    font-size:1.2em;
+}
+label {
+    font-weight: bold;
+}
+textarea, input[type='text'], input[type='password'], select {
+    border: 1px solid #ccc;
+    background: #fff;
+}
+textarea:hover, input[type='text']:hover, input[type='password']:hover, select:hover {
+    border-color: #aaa;
+}
+textarea:focus, input[type='text']:focus, input[type='password']:focus, select:focus {
+    border-color: #888;
+    outline: 2px solid #ffffaa;
+}
+input, select {
+    cursor: pointer;
+}
+input[type='text'],input[type='password'] {
+    cursor: text;
+}
+fieldset {
+    /* padding-top is margin-top for fieldsets in Opera */
+    padding: 0 1em 1em 1em;
+    margin: 1.6em 0;
+}
+legend {
+    padding-left: .8em;
+    padding-right: .8em;
+}
+legend+* {
+    margin-top: 1em; /* compensates for the opera margin bug */
+}
+textarea, input {
+    padding: .3em .4em .15em .4em;
+}
+select {
+    padding: .1em .2em 0 .2em;
+}
+option {
+    padding: 0 .4em;
+}
+label {
+    display:block;
+    margin-top:0.3em;
+}
+textarea, input {
+    padding:0;
+    margin: .3em .4em .15em 0;
+}
+input.form-error, textarea.form-error {
+    border:2px solid #DD4F00;
+    background-color: #fdf3f3
+}
+.error-message {
+    clear:both;
+    font-weight:bold;color:#DD4F00;
+}
+
+/* FLASH MESSAGES */
+div.message {
+    border: 1px dashed;
+    margin: 12px 0;
+    background: no-repeat 8px 10px;
+}
+div.mssg_txt {
+    font-size: 1.1em;
+    font-weight:bold;
+    margin: 12px 8px 12px 55px;
+}
+div.mssg_error {
+    border-color: #DD4F00;
+    background-color: #fdf3f3;
+    background-position:10px 3px;
+    color: #DD4F00;
+    background-image: url(/contact/img/forbidden.gif);
+}
+div.mssg_notice {
+    border-color: #f57900;
+    background-color: #fef8f2;
+    background-position:10px 3px;
+    color: #f57900;
+    background-image: url(/contact/img/exclamation.gif);
+}
+div.mssg_success {
+    border-color: #2B8A0D;
+    background-color: #E7FBD4;
+    background-position:10px 3px;
+    color: #2B8A0D;
+    background-image: url(/contact/img/success.gif);
+}
+div.mssg_error strong {
+    color: #DD4F00;
+}
+div.mssg_notice strong {
+    color: #f57900;
+}
+div.mssg_success strong {
+    color: #47c518;
+}
