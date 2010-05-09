@@ -18,6 +18,23 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 ?>
+<?php
+if (isset($schema['owned_by'])) {
+	$associations['belongsTo'][] = array(
+		'alias' => 'Owner',
+		'className' => 'User',
+		'foreignKey' => 'owned_by'
+	);
+}
+
+if (isset($schema['assigned_to'])) {
+	$associations['belongsTo'][] = array(
+		'alias' => 'AssignedTo',
+		'className' => 'User',
+		'foreignKey' => 'assigned_to'
+	);
+}
+?>
 <?php if ($singularHumanName == 'User') : ?>
 
 	function <?php echo $admin; ?>dashboard() {
@@ -151,7 +168,7 @@
 	function <?php echo $admin ?>add() {
 		if (!empty($this->data)) {
 			$this-><?php echo $currentModelName; ?>->create();
-			if ($this-><?php echo $currentModelName; ?>->save($this->data)) {
+			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('callback' => '<?php echo $admin ?>add'))) {
 <?php if ($wannaUseSession): ?>
 				$this->Session->setFlash(sprintf(__('The %s has been saved', true), '<?php echo strtolower($singularHumanName); ?>'));
 				$this->redirect(array('action' => 'index'));
@@ -193,7 +210,7 @@
 <?php endif; ?>
 		}
 		if (!empty($this->data)) {
-			if ($this-><?php echo $currentModelName; ?>->save($this->data)) {
+			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('callback' => '<?php echo $admin ?>edit'))) {
 <?php if ($wannaUseSession): ?>
 				$this->Session->setFlash(sprintf(__('The %s has been saved', true), '<?php echo strtolower($singularHumanName); ?>'));
 				$this->redirect(array('action' => 'index'));
