@@ -32,9 +32,28 @@ foreach ($fields as $i => $field) {
 		foreach ($fields as $field) {
 			if (strpos($action, 'add') !== false && $field == $primaryKey) {
 				continue;
-			} else {
-				echo "\t\techo \$this->Form->input('{$modelClass}.{$field}');\n";
 			}
+			if ($schema[$field]['type'] == 'boolean') {
+				echo "\t\techo \$this->Form->input('{$modelClass}.{$field}',\n";
+				echo "\t\t\tarray('type' => 'select', 'options' => array('0' => 'No', '1' => 'Yes')));\n";
+				continue;
+			}
+			if ($field == 'owned_by') {
+				echo "\t\techo \$this->Form->input('{$modelClass}.{$field}',\n";
+				echo "\t\t\tarray('type' => 'select', 'options' => \$owners));\n";
+				continue;
+			}
+			if ($field == 'assigned_to') {
+				echo "\t\techo \$this->Form->input('{$modelClass}.{$field}',\n";
+				echo "\t\t\tarray('type' => 'select', 'options' => \$assignedTos));\n";
+				continue;
+			}
+			if ($field == 'password') {
+				echo "\t\techo \$this->Form->input('{$modelClass}.new_{$field}',\n";
+				echo "\t\t\tarray('label' => __('Password', true), 'type' => 'password');\n";
+				continue;
+			}
+			echo "\t\techo \$this->Form->input('{$modelClass}.{$field}');\n";
 		}
 		if (!empty($associations['hasAndBelongsToMany'])) {
 			foreach ($associations['hasAndBelongsToMany'] as $assocName => $assocData) {
