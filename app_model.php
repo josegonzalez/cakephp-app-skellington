@@ -8,11 +8,12 @@ class AppModel extends Model {
 /**
  * Custom find types, as per Matt Curry's method
  *
- * @param string $type 
- * @param array $options 
- * @return mixed array|integer|boolean
- * @author Matt Curry
- * @link http://github.com/mcurry/find
+ * @param   string $type 
+ * @param   array $options 
+ * @return  mixed array|integer|boolean
+ * @access  public
+ * @author  Matt Curry
+ * @link    http://github.com/mcurry/find
  */
 	function find($type, $options = array()) {
 		$method = null;
@@ -48,9 +49,10 @@ class AppModel extends Model {
 /**
  * Allows the returning of query parameters for use in pagination
  *
- * @param array $query 
- * @return boolean
- * @author Matt Curry
+ * @param   array $query 
+ * @return  boolean
+ * @access  public
+ * @author  Matt Curry
  */
 	function beforeFind($query) {
 		if (is_array($query) && isset($query['paginate']) && !empty($query['paginate'])) {
@@ -70,15 +72,15 @@ class AppModel extends Model {
 /**
  * undocumented function
  *
- * @param array $data Data to save.
- * @param mixed $validate Either a boolean, or an array.
+ * @param   array $data Data to save.
+ * @param   mixed $validate Either a boolean, or an array.
  *   If a boolean, indicates whether or not to validate before saving.
  *   If an array, allows control of validate, callbacks, and fieldList
- * @param array $fieldList List of fields to allow to be written
- * @param array $extra controls access to optional data a Behavior may want
- * @return mixed On success Model::$data if its not empty or true, false on failure
- * @access public
- * @author Jose Diaz-Gonzalez
+ * @param   array $fieldList List of fields to allow to be written
+ * @param   array $extra controls access to optional data a Behavior may want
+ * @return  mixed On success Model::$data if its not empty or true, false on failure
+ * @access  public
+ * @author  Jose Diaz-Gonzalez
  **/
 	function save($data = null, $validate = true, $fieldList = array(), $extra = array()) {
 		$this->data = (!$data) ? $this->data : $data;
@@ -113,11 +115,12 @@ class AppModel extends Model {
 /**
  * Unsets contain key for faster pagination counts
  *
- * @param array $conditions
- * @param integer $recursive
- * @param array $extra
- * @return integer
- * @author Jose Diaz-Gonzalez
+ * @param   array $conditions
+ * @param   integer $recursive
+ * @param   array $extra
+ * @return  integer
+ * @access  public
+ * @author  Jose Diaz-Gonzalez
  */
 	function paginateCount($conditions = null, $recursive = 0, $extra = array()) {
 		$conditions = compact('conditions');
@@ -131,8 +134,9 @@ class AppModel extends Model {
 /**
  * Updates a particular record without invoking model callbacks
  *
- * @return boolean True on success, false on Model::id is not set or failure
- * @author Jose Diaz-Gonzalez
+ * @return  boolean True on success, false on Model::id is not set or failure
+ * @access  public
+ * @author  Jose Diaz-Gonzalez
  **/
 	function update($fields, $conditions = array()) {
 		if (!$this->id) return false;
@@ -147,8 +151,9 @@ class AppModel extends Model {
  *
  * @param mixed $except string or array of behaviors to exclude from detachment
  * @param boolean $detach If true, detaches the behavior instead of disabling it
- * @return void
- * @author Jose Diaz-Gonzalez
+ * @return  void
+ * @access  public
+ * @author  Jose Diaz-Gonzalez
  */
 	function detachAllBehaviors($except = array(), $detach = false) {
 		if ($except and !is_array($except)) {
@@ -169,8 +174,9 @@ class AppModel extends Model {
 /**
  * Enables all previously disabled attachments
  *
- * @return void
- * @author Jose Diaz-Gonzalez
+ * @return  void
+ * @access  public
+ * @author  Jose Diaz-Gonzalez
  */
 	function enableAllBehaviors() {
 		$behaviors = $this->Behaviors->attached();
