@@ -128,17 +128,11 @@ class SetupShell extends Shell {
  * @author Jose Diaz-Gonzalez <support@savant.be>
  */
 	function password() {
-		$password = null;
-		if (isset($this->args['0'])) {
-			$password = $this->args['0'];
-		}
+		$password = (isset($this->args['0'])) ? $this->args['0'] : null;
 		while (empty($password)) {
 			$password = $this->in("What password would you like to hash?");
-			if (empty($password)) {
-				$this->out("Try again.");
-			} else {
-				break;
-			}
+			if (!empty($password)) break;
+			$this->out("Try again.");
 		}
 		$this->out(Security::hash($password, null, true));
 	}
