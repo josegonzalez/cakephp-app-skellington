@@ -56,7 +56,7 @@ foreach($schema as $fieldName => $fieldConfig) :
 		continue;
 	}
 	if (in_array($fieldName, array('created_by', 'modified_by')) && !in_array("'Trackable'", $behaviors)) {
-		$isTrackable == true;
+		$isTrackable = true;
 		$behaviors[] = "'Trackable'";
 	}
 	if (in_array($fieldName, array('published', 'active'))) $isPublishable = $fieldName;
@@ -194,6 +194,11 @@ endif;
 	}
 
 <?php if ($name == 'User') : ?>
+	function __beforeSaveAdd($data, $extra) {
+		$data[$this->alias]['password'] = Authsome::hash($data[$this->alias]['new_password']);
+		return $data;
+	}
+
 	function __beforeSaveChangePassword($data, $extra) {
 		if (!$data || !isset($data[$this->alias])) return false;
 
@@ -238,7 +243,7 @@ endif;
 	}
 <?php endif; ?>
 	function __findEdit($id = null) {
-		if (!$slug) return false;
+		if (!$id) return false;
 
 		return $this->find('first', array(
 			'conditions' => array(
@@ -265,22 +270,32 @@ endif;
 	}
 <?php endif; ?>
 
-	function __findView($slug = null) {
-		if (!$slug) return false;
+	function __findView($<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?> = null) {
+		if (!$<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>) return false;
 
 		return $this->find('first', array(
 <?php if ($isPublishable != false) : ?>
 			'conditions' => array(
-				"{$this->alias}.slug" => $slug,
+				"{$this->alias}.<?php echo (isset($schema['slug'])) ? 'slug' : "{\$this->primaryKey}"; ?>" => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>,
 				"{$this->alias}.<?php echo $isPublishable; ?>" => 1),
 <?php elseif ($isDeletable != false) : ?>
 			'conditions' => array(
-				"{$this->alias}.slug" => $slug,
+				"{$this->alias}.<?php echo (isset($schema['slug'])) ? 'slug' : "{\$this->primaryKey}"; ?>" => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>,
 				"{$this->alias}.deleted" => 0),
 <?php else : ?>
-			'conditions' => array("{$this->alias}.slug" => $slug),
+			'conditions' => array("{$this->alias}.<?php echo (isset($schema['slug'])) ? 'slug' : "{\$this->primaryKey}"; ?>" => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>),
 <?php endif?>
+<?php if (!empty($associations['belongsTo'])) : ?>
+			'contain' => array(
+<?php foreach ($associations['belongsTo'] as $i => $relation) : ?>
+<?php echo "\t\t\t\t'" . $relation['alias'] ."',\n"; ?>
+<?php endforeach; ?>
+<?php if ($isTrackable) echo "\t\t\t\t'CreatedBy',\n\t\t\t\t'ModifiedBy',\n"; ?>
+			)
+		));
+<?php else: ?>
 			'contain' => false));
+<?php endif; ?>
 	}
 <?php if ($name == 'User') : ?>
 
