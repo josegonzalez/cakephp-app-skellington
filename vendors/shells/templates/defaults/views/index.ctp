@@ -144,14 +144,13 @@
 			}
 			if ($isKey !== true) {
 				if ($field == $displayField) {
-					echo "\t\t<td><?php echo \$html->link(\${$singularVar}['{$modelClass}']['{$field}'],";
+					echo "\t\t<td><?php echo \$html->link(\${$singularVar}['{$modelClass}']['{$field}'],\n";
 					if (in_array('slug', $fields)) {
 						echo "\t\t\tarray('action' => 'edit', \${$singularVar}['{$modelClass}']['slug'])); ?>&nbsp;</td>\n";
 					} else {
 						echo "\t\t\tarray('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>&nbsp;</td>\n";
 					}
-				}
-				if ($schema[$field]['type'] == 'datetime') {
+				} else if ($schema[$field]['type'] == 'datetime') {
 					echo "\t\t<td><?php echo \$this->Time->niceShort(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
 				} else if ($schema[$field]['type'] == 'date') {
 					echo "\t\t<td><?php echo \$this->Time->relativeTime(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
