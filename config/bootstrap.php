@@ -49,6 +49,8 @@
  *
  */
 
+App::import('Vendor', 'assert');
+
 function diebug($variables = false, $showHtml = true, $showFrom = true, $die = true) {
 	if (Configure::read() > 0) {
 		if (is_array($showHtml)) {
