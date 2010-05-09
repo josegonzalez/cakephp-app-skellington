@@ -224,7 +224,7 @@ class AppModel extends Model {
  * @return  array
  * @access  public
  * @author  Jamie Nay
- * @link    http://github.com/jamienay/find_random/blob/master/app_model.php
+ * @link    http://github.com/jamienay/find_random
  */
 	function __findRandom($options = array()) {
 		if (!isset($options['amount'])) {
@@ -278,5 +278,51 @@ class AppModel extends Model {
 			return $this->find('all', $findOptions);
 		}
 	}
+
+/**
+ * Checks that a given value is a valid postal code.
+ *
+ * Modified version of Validation::postal - allows for multiple
+ * countries to be specified as an array.
+ * 
+ * @param   mixed $check Value to check
+ * @param   string $regex Regular expression to use
+ * @param   mixed $country Countries to use for formatting
+ * @return  boolean Success
+ * @access  public
+ * @author  Jamie Nay
+ * @link    http://github.com/jamienay/postal_validation
+ */
+	function postal_multiple($check, $regex = null, $country = null) {
+		// List of regular expressions to use, if a custom one isn't specified.
+		$countryRegs = array(
+			'uk' => '/\\A\\b[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}\\b\\z/i',
+			'ca' => '/\\A\\b[ABCEGHJKLMNPRSTVXY][0-9][A-Z][ ]?[0-9][A-Z][0-9]\\b\\z/i',
+			'it' => '/^[0-9]{5}$/i',
+			'de' => '/^[0-9]{5}$/i',
+			'be' => '/^[1-9]{1}[0-9]{3}$/i',
+			'us' => '/\\A\\b[0-9]{5}(?:-[0-9]{4})?\\b\\z/i',
+			'default' => '/\\A\\b[0-9]{5}(?:-[0-9]{4})?\\b\\z/i' // Same as US.
+		);
+
+		$value = array_values($check);
+		$value = $value[0];
+		if ($regex) {
+			return preg_match($regex, $value);
+		} else if (!is_array($country)) {
+			return preg_match($countryRegs[$country], $value);
+		}
+
+		foreach ($country as $check) {
+			if (!isset($countryRegs[$check]) && preg_match($countryRegs['default'], $value)) {
+				return true;
+			} else if (preg_match($countryRegs[$check], $value)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 }
 ?>
