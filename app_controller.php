@@ -16,17 +16,11 @@ class AppController extends Controller {
 		'Sanction.Permit',
 		'Session',
 		'Settings.Settings',
+		'Webservice.Webservice'
 	);
 	var $helpers = array(
 		'Form', 'Html', 'Js', 'Resource', 'Sanction.Clearance', 
 		'Session', 'Time', 'Wysiwyg.Tinymce',  'UploadPack.Upload'
 	);
-
-	function beforeFilter() {
-		if (in_array($this->RequestHandler->ext, array('json', 'xml'))) {
-			$this->view = 'WebService';
-			$this->set('baseRoute', Router::url('/', true));
-		}
-	}
 }
 ?>
