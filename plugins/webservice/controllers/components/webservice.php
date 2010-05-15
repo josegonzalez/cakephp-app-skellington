@@ -32,7 +32,6 @@ class WebserviceComponent extends Object {
 	function initialize(&$controller, $settings = array()) {
 		if (in_array($this->RequestHandler->ext, array('json', 'xml'))) {
 			$controller->view = 'Webservice.Webservice';
-			$controller->set('baseRoute', Router::url('/', true));
 		}
 	}
 }
