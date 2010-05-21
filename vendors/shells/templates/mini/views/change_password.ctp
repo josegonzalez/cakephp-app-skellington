@@ -17,5 +17,5 @@ echo "\t\t\tarray('div' => 'submit cancel')); ?> or \n";
 echo "\t<?php echo \$this->Html->link(__('go to dashboard', true),\n";
 echo "\t\t\tarray('action' => 'dashboard'),\n";
 echo "\t\t\tarray('class' => 'cancel-action')); ?>\n";
-echo "<?php echo \$this->Form->end(); ?>";
+echo "<?php echo \$this->Form->end(); ?>\n";
 ?>
