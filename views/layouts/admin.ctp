@@ -94,6 +94,7 @@
 							<?php echo (isset($h2_for_layout)) ? $h2_for_layout : $this->params['action']; ?>
 						</h2>
 						<div class="inner">
+							<?php echo $this->Session->flash(); ?>
 							<?php if (isset($content_for_layout)) echo $content_for_layout; ?>
 						</div>
 					</div>
