@@ -146,7 +146,33 @@ if (isset($schema['assigned_to'])) {
 	}
 <?php endif; ?>
 
+<?php
+	// Find all the paginate displayFields
+	$paginate_models = array();
+	foreach ($modelObj->belongsTo as $associationName => $relation) {
+		$related_model = ClassRegistry::init($relation['className']);
+		if (is_object($related_model)) {
+			$paginate_model = array(
+				'alias' => $this->_modelName($associationName),
+				'displayField' => $related_model->displayField,
+				'primaryKey' => $related_model->primaryKey
+			);
+			if ($related_model->hasField('slug')) {
+				$paginate_model['primaryKey'] = 'slug';
+			}
+			$paginate_models[] = $paginate_model;
+		}
+	}
+?>
+
 	function <?php echo $admin ?>index() {
+		$this->paginate = array(
+			'contain' => array(
+<?php foreach ($paginate_models as $p_model): ?>
+				'<?php echo $p_model['alias']; ?>' => array('fields' => array('<?php echo $p_model['primaryKey']?>', '<?php echo $p_model['displayField']?>')),
+<?php endforeach; ?>
+			)
+		);
 		$<?php echo $pluralName ?> = $this->paginate();
 		$this->set(compact('<?php echo $pluralName ?>'));
 	}
