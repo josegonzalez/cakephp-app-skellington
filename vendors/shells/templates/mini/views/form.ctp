@@ -28,39 +28,39 @@ foreach ($fields as $i => $field) {
 <?php echo "<?php \$this->Html->h2(sprintf(__('" . Inflector::humanize($action) . " %s', true), __('{$singularHumanName}', true))); ?>\n";?>
 <?php echo "<?php echo \$this->Form->create('{$modelClass}');?>\n";?>
 <?php
-		echo "\t<?php\n";
-		foreach ($fields as $field) {
-			if (strpos($action, 'add') !== false && $field == $primaryKey) {
-				continue;
-			}
-			if ($schema[$field]['type'] == 'boolean') {
-				echo "\t\techo \$this->Form->input('{$modelClass}.{$field}',\n";
-				echo "\t\t\tarray('type' => 'select', 'options' => array('0' => 'No', '1' => 'Yes')));\n";
-				continue;
-			}
-			if ($field == 'owned_by') {
-				echo "\t\techo \$this->Form->input('{$modelClass}.{$field}',\n";
-				echo "\t\t\tarray('type' => 'select', 'options' => \$owners));\n";
-				continue;
-			}
-			if ($field == 'assigned_to') {
-				echo "\t\techo \$this->Form->input('{$modelClass}.{$field}',\n";
-				echo "\t\t\tarray('type' => 'select', 'options' => \$assignedTos));\n";
-				continue;
-			}
-			if ($field == 'password') {
-				echo "\t\techo \$this->Form->input('{$modelClass}.new_{$field}',\n";
-				echo "\t\t\tarray('label' => __('Password', true), 'type' => 'password');\n";
-				continue;
-			}
-			echo "\t\techo \$this->Form->input('{$modelClass}.{$field}');\n";
+	echo "\t<?php\n";
+	foreach ($fields as $field) {
+		if (strpos($action, 'add') !== false && $field == $primaryKey) {
+			continue;
 		}
-		if (!empty($associations['hasAndBelongsToMany'])) {
-			foreach ($associations['hasAndBelongsToMany'] as $assocName => $assocData) {
-				echo "\t\techo \$this->Form->input('{$assocName}');\n";
-			}
+		if ($schema[$field]['type'] == 'boolean') {
+			echo "\t\techo \$this->Form->input('{$modelClass}.{$field}',\n";
+			echo "\t\t\tarray('type' => 'select', 'options' => array('0' => 'No', '1' => 'Yes')));\n";
+			continue;
 		}
-		echo "\t?>\n";
+		if ($field == 'owned_by') {
+			echo "\t\techo \$this->Form->input('{$modelClass}.{$field}',\n";
+			echo "\t\t\tarray('type' => 'select', 'options' => \$owners));\n";
+			continue;
+		}
+		if ($field == 'assigned_to') {
+			echo "\t\techo \$this->Form->input('{$modelClass}.{$field}',\n";
+			echo "\t\t\tarray('type' => 'select', 'options' => \$assignedTos));\n";
+			continue;
+		}
+		if ($field == 'password') {
+			echo "\t\techo \$this->Form->input('{$modelClass}.new_{$field}',\n";
+			echo "\t\t\tarray('label' => __('Password', true), 'type' => 'password');\n";
+			continue;
+		}
+		echo "\t\techo \$this->Form->input('{$modelClass}.{$field}');\n";
+	}
+	if (!empty($associations['hasAndBelongsToMany'])) {
+		foreach ($associations['hasAndBelongsToMany'] as $assocName => $assocData) {
+			echo "\t\techo \$this->Form->input('{$assocName}');\n";
+		}
+	}
+	echo "\t?>\n";
 ?>
 <?php echo "<?php echo \$this->Form->submit(__('Submit', true), array('class' => 'awesome cake'));?>\n"; ?>
 <?php echo "<?php echo \$this->Form->end();?>\n"; ?>
