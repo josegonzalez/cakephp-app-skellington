@@ -1,7 +1,33 @@
 <?php
 class ResourceHelper extends Helper {
 
+	var $helpers = array('Html');
 	var $view = null;
+	var $sidebar_simple_blocks = array();
+	var $sidebar_navigations = array();
+	var $secondary_navigations = array();
+
+/**
+ * Set captured navigation and blocks for the view
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ */
+	function afterRender() {
+		parent::afterRender();
+		if (!$this->view) {
+			$this->view = ClassRegistry::getObject('view');
+		}
+
+		// Start Secondary Nagivation
+		ob_start();
+		foreach ($this->secondary_navigations as $i => $nav) {
+			$first = ($i == 0) ? ' first' : '';
+			$active = ($i == 0) ? ' active' : '';
+			echo "<li class='{$active}{$first}'>" . $this->Html->link($nav['title'], $nav['url'], $nav['options']) . '</li>';
+		}
+		$this->view->set("secondary_navigation_for_layout", ob_get_clean());
+	}
 
 /**
  * Begin capturing a block of HTML content
@@ -25,6 +51,53 @@ class ResourceHelper extends Helper {
 		}
 		$this->view->set("{$variable}_for_layout", ob_get_clean());
 	}
+
+/**
+ * undocumented function
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+	function sidebar_simple_block($title, $content) {
+		$this->sidebar_simple_blocks[] = array(
+			'title' => $title,
+			'content' => $content
+		);
+	}
+
+/**
+ * undocumented function
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+	function sidebar_navigation($navigation = null, $html_link = array()) {
+		if (is_array($nagivation)) {
+			$html_link = $navigation;
+			$navigation = 'default';
+		}
+
+		$this->sidebar_navigations[$navigation][] = array(
+			'title' => $html_link['title'],
+			'url' => (isset($html_link['url'])) ? $html_link['url'] : array(),
+			'options' => (isset($html_link['options'])) ? $html_link['options'] : array(),
+		);
+	}
+
+/**
+ * undocumented function
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+	function secondary_navigation($title = null, $url = array(), $options = array()) {
+		$this->secondary_navigations[] = array(
+			'title' => $title,
+			'url' => $url,
+			'options' => $options,
+		);
+	}
+
 
 /**
  * Truncates text.
