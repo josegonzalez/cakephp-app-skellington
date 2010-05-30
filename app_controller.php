@@ -6,7 +6,6 @@
  * @package       cake
  * @subpackage    cake.app
  */
-App::import('Core', 'Controller');
 class AppController extends Controller {
 	var $components = array(
 		'Authsome.Authsome' => array('model' => 'User'),
