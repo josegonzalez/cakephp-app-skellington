@@ -73,10 +73,11 @@ class TrackableBehavior extends ModelBehavior {
 	function beforeValidate(&$model) {
 		$settings = $this->settings[$model->alias];
 		$trackable_id = (isset($model->trackable_id)) ? $model->trackable_id : Authsome::get('id');
+ 		$trackable_id = (!$trackable_id) ? '0' : $trackable_id;
 		if (empty($model->data[$model->alias][$model->primaryKey])) {
-			$model->data[$model->alias][$settings['created_by_field']] = Authsome::get('id');
+			$model->data[$model->alias][$settings['created_by_field']] = $trackable_id;
 		}
-		$model->data[$model->alias][$settings['modified_by_field']] = Authsome::get('id');
+		$model->data[$model->alias][$settings['modified_by_field']] = $trackable_id;
 		return true;
 	}
 }

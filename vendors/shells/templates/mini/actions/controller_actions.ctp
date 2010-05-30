@@ -52,7 +52,7 @@ if (isset($schema['assigned_to'])) {
 		$<?php echo $singularName; ?> = Authsome::login($this->data['<?php echo $currentModelName; ?>']);
 
 		if (!$<?php echo $singularName; ?>) {
-			$this->Session->setFlash(__('Unknown user or Wrong Password', true));
+			$this->Session->setFlash(__('Unknown user or Wrong Password', true), 'flash/error');
 			return;
 		}
 
@@ -62,7 +62,7 @@ if (isset($schema['assigned_to'])) {
 		}
 
 		if ($<?php echo $singularName; ?>) {
-			$this->Session->setFlash(__('You have been logged in', true));
+			$this->Session->setFlash(__('You have been logged in', true), 'flash/success');
 			$this->redirect(array('action' => 'dashboard'));
 		}
 	}
@@ -77,13 +77,13 @@ if (isset($schema['assigned_to'])) {
 	function <?php echo $admin; ?>forgot_password() {
 		if (!empty($this->data) && isset($this->data['<?php echo $currentModelName; ?>']['email'])) {
 			if ($this->data['<?php echo $currentModelName; ?>']['email'] == '') {
-				$this->Session->setFlash(__('Invalid email address', true));
+				$this->Session->setFlash(__('Invalid email address', true), 'flash/error');
 				$this->redirect(array('action' => 'forgot_password'));
 			}
 
 			$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('forgot_password', $this->data['<?php echo $currentModelName; ?>']['email']);
 			if (!$<?php echo $singularName; ?>) {
-				$this->Session->setFlash(__('No <?php echo $singularName; ?> found for this email address', true));
+				$this->Session->setFlash(__('No <?php echo $singularName; ?> found for this email address', true), 'flash/error');
 				$this->redirect(array('action' => 'forgot_password'));
 			}
 
@@ -95,14 +95,14 @@ if (isset($schema['assigned_to'])) {
 					'mailer' => 'swift',
 					'subject' => '[' . Configure::read('Settings.SiteTitle') .'] ' . __('Reset Password', true),
 					'variables' => compact('<?php echo $singularName; ?>', 'activationKey')))) {
-						$this->Session->setFlash(__('An email has been sent with instructions for resetting your password', true));
+						$this->Session->setFlash(__('An email has been sent with instructions for resetting your password', true), 'flash/success');
 						$this->redirect(array('action' => 'login'));
 				} else {
-					$this->Session->setFlash(__('An error occurred', true));
+					$this->Session->setFlash(__('An error occurred', true), 'flash/error');
 					$this->log("Error sending email");
 				}
 			} catch (Exception $e) {
-				$this->Session->setFlash(__('An error occurred', true));
+				$this->Session->setFlash(__('An error occurred', true), 'flash/error');
 				$this->log("Failed to send email: " . $e->getMessage());
 			}
 		}
@@ -111,22 +111,22 @@ if (isset($schema['assigned_to'])) {
 	function <?php echo $admin; ?>reset_password($username = null, $key = null) {
 		$this->layout = 'alternate';
 		if ($username == null || $key == null) {
-			$this->Session->setFlash(__('An error occurred', true));
+			$this->Session->setFlash(__('An error occurred', true), 'flash/error');
 			$this->redirect(array('action' => 'login'));
 		}
 
 		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('reset_password', array('username' => $username, 'key' => $key));
 		if (!isset($<?php echo $singularName; ?>)) {
-			$this->Session->setFlash(__('An error occurred', true));
+			$this->Session->setFlash(__('An error occurred', true), 'flash/error');
 			$this->redirect(array('action' => 'login'));
 		}
 
 		if (!empty($this->data) && isset($this->data['<?php echo $currentModelName; ?>']['password'])) {
 			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('fields' => array('id', 'password', 'activation_key'), 'callback' => 'reset_password', 'user_id' => $<?php echo $singularName; ?>['<?php echo $currentModelName; ?>']['id']))) {
-				$this->Session->setFlash(__('Your password has been reset successfully', true));
+				$this->Session->setFlash(__('Your password has been reset successfully', true), 'flash/success');
 				$this->redirect(array('action' => 'login'));
 			} else {
-				$this->Session->setFlash(__('An error occurred please try again', true));
+				$this->Session->setFlash(__('An error occurred please try again', true), 'flash/error');
 			}
 		}
 
@@ -137,16 +137,42 @@ if (isset($schema['assigned_to'])) {
 		$this->layout = 'alternate';
 		if (!empty($this->data)) {
 			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('fieldList' => array('id', 'password'), 'callback' => 'change_password'))) {
-				$this->Session->setFlash(__('Your password has been successfully changed', true));
+				$this->Session->setFlash(__('Your password has been successfully changed', true), 'flash/success');
 				$this->redirect(array('action' => 'dashboard'));
 			} else {
-				$this->Session->setFlash(__('Your password could not be changed', true));
+				$this->Session->setFlash(__('Your password could not be changed', true), 'flash/error');
 			}
 		}
 	}
 <?php endif; ?>
 
+<?php
+	// Find all the paginate displayFields
+	$paginate_models = array();
+	foreach ($modelObj->belongsTo as $associationName => $relation) {
+		$related_model = ClassRegistry::init($relation['className']);
+		if (is_object($related_model)) {
+			$paginate_model = array(
+				'alias' => $this->_modelName($associationName),
+				'displayField' => $related_model->displayField,
+				'primaryKey' => $related_model->primaryKey
+			);
+			if ($related_model->hasField('slug')) {
+				$paginate_model['primaryKey'] = 'slug';
+			}
+			$paginate_models[] = $paginate_model;
+		}
+	}
+?>
+
 	function <?php echo $admin ?>index() {
+		$this->paginate = array(
+			'contain' => array(
+<?php foreach ($paginate_models as $p_model): ?>
+				'<?php echo $p_model['alias']; ?>' => array('fields' => array('<?php echo $p_model['primaryKey']?>', '<?php echo $p_model['displayField']?>')),
+<?php endforeach; ?>
+			)
+		);
 		$<?php echo $pluralName ?> = $this->paginate();
 		$this->set(compact('<?php echo $pluralName ?>'));
 	}
@@ -155,7 +181,7 @@ if (isset($schema['assigned_to'])) {
 		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('view', $slug);
 		if (!$<?php echo $singularName; ?>) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(sprintf(__('Invalid %s', true), '<?php echo strtolower($singularHumanName) ?>'));
+			$this->Session->setFlash(sprintf(__('Invalid %s', true), '<?php echo strtolower($singularHumanName) ?>'), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
 			$this->flash(sprintf(__('Invalid %s', true), '<?php echo strtolower($singularHumanName); ?>'), array('action' => 'index'));
@@ -170,14 +196,14 @@ if (isset($schema['assigned_to'])) {
 			$this-><?php echo $currentModelName; ?>->create();
 			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('callback' => '<?php echo $admin ?>add'))) {
 <?php if ($wannaUseSession): ?>
-				$this->Session->setFlash(sprintf(__('The %s has been saved', true), '<?php echo strtolower($singularHumanName); ?>'));
+				$this->Session->setFlash(sprintf(__('The %s has been saved', true), '<?php echo strtolower($singularHumanName); ?>'), 'flash/success');
 				$this->redirect(array('action' => 'index'));
 <?php else: ?>
 				$this->flash(sprintf(__('%s saved.', true), '<?php echo ucfirst(strtolower($currentModelName)); ?>'), array('action' => 'index'));
 <?php endif; ?>
 			} else {
 <?php if ($wannaUseSession): ?>
-				$this->Session->setFlash(sprintf(__('The %s could not be saved. Please, try again.', true), '<?php echo strtolower($singularHumanName); ?>'));
+				$this->Session->setFlash(sprintf(__('The %s could not be saved. Please, try again.', true), '<?php echo strtolower($singularHumanName); ?>'), 'flash/error');
 <?php endif; ?>
 			}
 		}
@@ -203,7 +229,7 @@ if (isset($schema['assigned_to'])) {
 	function <?php echo $admin; ?>edit($id = null) {
 		if (!$id && empty($this->data)) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(sprintf(__('Invalid %s', true), '<?php echo strtolower($singularHumanName); ?>'));
+			$this->Session->setFlash(sprintf(__('Invalid %s', true), '<?php echo strtolower($singularHumanName); ?>'), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
 			$this->flash(sprintf(__('Invalid %s', true), '<?php echo strtolower($singularHumanName); ?>'), array('action' => 'index'));
@@ -212,14 +238,14 @@ if (isset($schema['assigned_to'])) {
 		if (!empty($this->data)) {
 			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('callback' => '<?php echo $admin ?>edit'))) {
 <?php if ($wannaUseSession): ?>
-				$this->Session->setFlash(sprintf(__('The %s has been saved', true), '<?php echo strtolower($singularHumanName); ?>'));
+				$this->Session->setFlash(sprintf(__('The %s has been saved', true), '<?php echo strtolower($singularHumanName); ?>'), 'flash/success');
 				$this->redirect(array('action' => 'index'));
 <?php else: ?>
 				$this->flash(sprintf(__('The %s has been saved.', true), '<?php echo strtolower($singularHumanName); ?>'), array('action' => 'index'));
 <?php endif; ?>
 			} else {
 <?php if ($wannaUseSession): ?>
-				$this->Session->setFlash(sprintf(__('The %s could not be saved. Please, try again.', true), '<?php echo strtolower($singularHumanName); ?>'));
+				$this->Session->setFlash(sprintf(__('The %s could not be saved. Please, try again.', true), '<?php echo strtolower($singularHumanName); ?>'), 'flash/error');
 <?php endif; ?>
 			}
 		}
@@ -228,7 +254,7 @@ if (isset($schema['assigned_to'])) {
 		}
 		if (empty($this->data)) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(sprintf(__('Invalid %s', true), '<?php echo strtolower($singularHumanName); ?>'));
+			$this->Session->setFlash(sprintf(__('Invalid %s', true), '<?php echo strtolower($singularHumanName); ?>'), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
 			$this->flash(sprintf(__('Invalid %s', true), '<?php echo strtolower($singularHumanName); ?>'), array('action' => 'index'));
@@ -255,7 +281,7 @@ if (isset($schema['assigned_to'])) {
 	function <?php echo $admin; ?>delete($id = null) {
 		if (!$id) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(sprintf(__('Invalid id for %s', true), '<?php echo strtolower($singularHumanName); ?>'));
+			$this->Session->setFlash(sprintf(__('Invalid id for %s', true), '<?php echo strtolower($singularHumanName); ?>'), 'flash/error');
 			$this->redirect(array('action'=>'index'));
 <?php else: ?>
 			$this->flash(sprintf(__('Invalid %s', true), '<?php echo strtolower($singularHumanName); ?>'), array('action' => 'index'));
@@ -263,14 +289,14 @@ if (isset($schema['assigned_to'])) {
 		}
 		if ($this-><?php echo $currentModelName; ?>->delete($id)) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(sprintf(__('%s deleted', true), '<?php echo ucfirst(strtolower($singularHumanName)); ?>'));
+			$this->Session->setFlash(sprintf(__('%s deleted', true), '<?php echo ucfirst(strtolower($singularHumanName)); ?>'), 'flash/success');
 			$this->redirect(array('action'=>'index'));
 <?php else: ?>
 			$this->flash(sprintf(__('%s deleted', true), '<?php echo ucfirst(strtolower($singularHumanName)); ?>'), array('action' => 'index'));
 <?php endif; ?>
 		}
 <?php if ($wannaUseSession): ?>
-		$this->Session->setFlash(sprintf(__('%s was not deleted', true), '<?php echo ucfirst(strtolower($singularHumanName)); ?>'));
+		$this->Session->setFlash(sprintf(__('%s was not deleted', true), '<?php echo ucfirst(strtolower($singularHumanName)); ?>'), 'flash/error');
 <?php else: ?>
 		$this->flash(sprintf(__('%s was not deleted', true), '<?php echo ucfirst(strtolower($singularHumanName)); ?>'), array('action' => 'index'));
 <?php endif; ?>

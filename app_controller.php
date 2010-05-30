@@ -6,11 +6,10 @@
  * @package       cake
  * @subpackage    cake.app
  */
-App::import('Core', 'Controller');
 class AppController extends Controller {
 	var $components = array(
 		'Authsome.Authsome' => array('model' => 'User'),
-		'DebugKit.Toolbar',
+		'DebugKit.Toolbar' => array('panels' => array('Interactive.interactive', 'Settings.settings')),
 		'Mail',
 		'RequestHandler',
 		'Sanction.Permit',
