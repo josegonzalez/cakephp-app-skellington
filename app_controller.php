@@ -9,7 +9,7 @@
 class AppController extends Controller {
 	var $components = array(
 		'Authsome.Authsome' => array('model' => 'User'),
-		'DebugKit.Toolbar' => array('panels' => array('Interactive.interactive', 'Settings.settings')),
+		'DebugKit.Toolbar' => array('panels' => array('Interactive.interactive', 'Sanction.permit', 'Settings.settings')),
 		'Mail',
 		'RequestHandler',
 		'Sanction.Permit',
