@@ -96,9 +96,9 @@ class ResourceHelper extends Helper {
 		if (!empty($url)) $definition = $this->Html->link($definition, $url, $options);
 
 		if ($this->definition_list++ % 2 == 0) {
-			return "<dt{$this->definition_list_class}>{$definition}&nbsp;</dt>";
+			return "<dd{$this->definition_list_class}>{$definition}&nbsp;</dd>";
 		}
-		return "<dt>{$definition}&nbsp;</dt>";
+		return "<dd>{$definition}&nbsp;</dd>";
 	}
 
 /**
