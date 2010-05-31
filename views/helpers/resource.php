@@ -6,7 +6,8 @@ class ResourceHelper extends Helper {
 	var $sidebar_simple_blocks = array();
 	var $sidebar_navigations = array();
 	var $secondary_navigations = array();
-
+	var $definition_list = 0;
+	var $definition_list_class = ' class="altrow"';
 /**
  * Set captured navigation and blocks for the view
  *
@@ -82,6 +83,22 @@ class ResourceHelper extends Helper {
 			'url' => (isset($html_link['url'])) ? $html_link['url'] : array(),
 			'options' => (isset($html_link['options'])) ? $html_link['options'] : array(),
 		);
+	}
+
+	function term($term) {
+		if ($this->definition_list % 2 == 0) {
+			return "<dt{$this->definition_list_class}>{$term}</dt>";
+		}
+		return "<dt>{$term}</dt>";
+	}
+
+	function definition($definition, $url = array(), $options = array()) {
+		if (!empty($url)) $definition = $this->Html->link($definition, $url, $options);
+
+		if ($this->definition_list++ % 2 == 0) {
+			return "<dt{$this->definition_list_class}>{$definition}&nbsp;</dt>";
+		}
+		return "<dt>{$definition}&nbsp;</dt>";
 	}
 
 /**
