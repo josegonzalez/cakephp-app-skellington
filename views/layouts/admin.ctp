@@ -71,12 +71,7 @@
 			</div>
 			<div id="main-navigation">
 				<ul class="wat-cf">
-					<li class="first"><a href="#block-text">Main Page</a></li>
-					<li class="active"><a href="#block-text">Active</a></li>
-					<li><?php echo $this->Html->link(__('Login', true), array(
-						'controller' => 'users', 'action' => 'login')); ?></li>
-					<li><?php echo $this->Html->link(__('Register', true), array(
-						'controller' => 'users', 'action' => 'register')); ?></li>
+					<?php echo $this->element('admin/main_navigation'); ?>
 				</ul>
 			</div>
 		</div>
