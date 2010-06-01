@@ -372,7 +372,7 @@ class AppException extends Exception {
 		$View = new View($Controller);
 
 		$view = @$info['type'];
-		if (!file_exists(VIEWS . 'errors' . DS . $view . '.ctp')) {
+		if (!file_exists(VIEWS . 'exceptions' . DS . $view . '.ctp')) {
 			$view = 'unknown';
 		}
 		Configure::write('debug', 0);
