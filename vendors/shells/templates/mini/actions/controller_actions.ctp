@@ -34,6 +34,9 @@ if (isset($schema['assigned_to'])) {
 		'foreignKey' => 'assigned_to'
 	);
 }
+
+$slugField = (in_array('slug', array_keys($modelObj->schema()))) ? '$slug' : "\${$modelObj->primaryKey}";
+
 ?>
 <?php if ($singularHumanName == 'User') : ?>
 
@@ -164,8 +167,10 @@ if (isset($schema['assigned_to'])) {
 		}
 	}
 ?>
-
 	function <?php echo $admin ?>index() {
+<?php if (empty($paginate_models)) : ?>
+		$this->paginate = array('contain' => false);
+<?php else : ?>
 		$this->paginate = array(
 			'contain' => array(
 <?php foreach ($paginate_models as $p_model): ?>
@@ -173,12 +178,13 @@ if (isset($schema['assigned_to'])) {
 <?php endforeach; ?>
 			)
 		);
+<?php endif; ?>
 		$<?php echo $pluralName ?> = $this->paginate();
 		$this->set(compact('<?php echo $pluralName ?>'));
 	}
 
-	function <?php echo $admin ?>view($slug = null) {
-		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('view', $slug);
+	function <?php echo $admin ?>view(<?php echo $slugField; ?> = null) {
+		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('view', <?php echo $slugField; ?>);
 		if (!$<?php echo $singularName; ?>) {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(sprintf(__('Invalid %s', true), '<?php echo strtolower($singularHumanName) ?>'), 'flash/error');
@@ -203,7 +209,7 @@ if (isset($schema['assigned_to'])) {
 <?php endif; ?>
 			} else {
 <?php if ($wannaUseSession): ?>
-				$this->Session->setFlash(sprintf(__('The %s could not be saved. Please, try again.', true), '<?php echo strtolower($singularHumanName); ?>'), 'flash/error');
+				$this->Session->setFlash(sprintf(__('The %s could not be saved.', true), '<?php echo strtolower($singularHumanName); ?>'), 'flash/error');
 <?php endif; ?>
 			}
 		}
@@ -245,7 +251,7 @@ if (isset($schema['assigned_to'])) {
 <?php endif; ?>
 			} else {
 <?php if ($wannaUseSession): ?>
-				$this->Session->setFlash(sprintf(__('The %s could not be saved. Please, try again.', true), '<?php echo strtolower($singularHumanName); ?>'), 'flash/error');
+				$this->Session->setFlash(sprintf(__('The %s could not be saved.', true), '<?php echo strtolower($singularHumanName); ?>'), 'flash/error');
 <?php endif; ?>
 			}
 		}
