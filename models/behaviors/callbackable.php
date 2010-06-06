@@ -3,7 +3,7 @@ class CallbackableBehavior extends ModelBehavior {
 
 /**
  * Contains configuration settings for use with individual model objects.
- * Individual model settings should be stored as an associative array, 
+ * Individual model settings should be stored as an associative array,
  * keyed off of the model name.
  *
  * @var array
@@ -34,7 +34,7 @@ class CallbackableBehavior extends ModelBehavior {
  * @return boolean True if the operation should continue, false if it should abort
  * @access public
  */
-	function beforeFind(&$model, $query) { 
+	function beforeFind(&$model, $query) {
 		return true;
 	}
 
@@ -47,7 +47,7 @@ class CallbackableBehavior extends ModelBehavior {
  * @return mixed Result of the find operation
  * @access public
  */
-	function afterFind(&$model, $results, $primary) { 
+	function afterFind(&$model, $results, $primary) {
 		return $results;
 	}
 

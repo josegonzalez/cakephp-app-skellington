@@ -156,7 +156,7 @@ class SoftDeletableBehavior extends ModelBehavior {
 				$this->__settings[$Model->alias]['field'] => '0'
 			));
 
-			if (isset($this->__settings[$Model->alias]['field_date']) 
+			if (isset($this->__settings[$Model->alias]['field_date'])
 			&& $Model->hasField($this->__settings[$Model->alias]['field_date'])) {
 				$data[$Model->alias][$this->__settings[$Model->alias]['field_date']] = null;
 			}
@@ -235,8 +235,8 @@ class SoftDeletableBehavior extends ModelBehavior {
 					}
 				}
 			}
-			else if (empty($queryData['conditions']) 
-			|| (!in_array($this->__settings[$Model->alias]['field'], array_keys($queryData['conditions'])) 
+			else if (empty($queryData['conditions'])
+			|| (!in_array($this->__settings[$Model->alias]['field'], array_keys($queryData['conditions']))
 			&& !in_array($Model->alias . '.' . $this->__settings[$Model->alias]['field'], array_keys($queryData['conditions'])))) {
 				$include = true;
 			}

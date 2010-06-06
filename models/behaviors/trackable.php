@@ -3,7 +3,7 @@
  * Trackable Behavior class file
  *
  * Combines WhoDidIt behavior (the setup phase) with Matt Curry's Trackable Behavior
- * 
+ *
  * @author Jose Diaz-Gonzalez
  * @package app
  * @subpackage app.models.behaviors
@@ -38,7 +38,7 @@ class TrackableBehavior extends ModelBehavior {
 
 		$hasFieldCreatedBy = $model->hasField($this->settings[$model->alias]['created_by_field']);
 		$hasFieldModifiedBy = $model->hasField($this->settings[$model->alias]['modified_by_field']);
-		
+
 		$this->settings[$model->alias]['has_created_by'] = $hasFieldCreatedBy;
 		$this->settings[$model->alias]['has_modified_by'] = $hasFieldModifiedBy;
 
