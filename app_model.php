@@ -210,12 +210,12 @@ class AppModel extends Model {
  * argument.
  *
  * Two queries are executed, first a find('list') to generate a list of primary
- * keys, and then either a find('all') or find('first') depending on the return 
- * amount specified (default 1). 
+ * keys, and then either a find('all') or find('first') depending on the return
+ * amount specified (default 1).
  *
  * Pass find options to each query using the $options['list'] and $options['find']
- * arguments. 
- * 
+ * arguments.
+ *
  * Specify $options['amount'] as the maximum number of random items that should
  * be returned.
  *
@@ -286,7 +286,7 @@ class AppModel extends Model {
  *
  * Modified version of Validation::postal - allows for multiple
  * countries to be specified as an array.
- * 
+ *
  * @param   mixed $check Value to check
  * @param   string $regex Regular expression to use
  * @param   mixed $country Countries to use for formatting
@@ -325,6 +325,5 @@ class AppModel extends Model {
 
 		return false;
 	}
-
 }
 ?>
