@@ -93,12 +93,30 @@ class ResourceHelper extends Helper {
 	}
 
 	function definition($definition, $url = array(), $options = array()) {
+		$definition = $this->categorize_definition($definition, $options);
 		if (!empty($url)) $definition = $this->Html->link($definition, $url, $options);
 
 		if ($this->definition_list++ % 2 == 0) {
 			return "<dd{$this->definition_list_class}>{$definition}&nbsp;</dd>";
 		}
 		return "<dd>{$definition}&nbsp;</dd>";
+	}
+
+	function categorize_definition($definition, $options) {
+		if (!isset($options['type'])) return $definition;
+
+		switch ($options['type']) {
+			case 'boolean' :
+				$definition = ($definition == 0) ? 'No' : 'Yes';
+				break;
+			case 'date' :
+				break;
+			case 'time' :
+				break;
+			case 'datetime' :
+				break;
+		}
+		return $definition;
 	}
 
 /**
