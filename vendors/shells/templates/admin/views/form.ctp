@@ -49,7 +49,7 @@ $fields = array_diff($fields, $invalid_polymorphic_fields);
 			}
 			if ($field == 'password') {
 				echo "\t\t\techo \$this->Form->input('{$modelClass}.new_{$field}',\n";
-				echo "\t\t\t\tarray('label' => __('Password', true), 'type' => 'password');\n";
+				echo "\t\t\t\tarray('class' => 'text_field', 'type' => 'password'));\n";
 				echo "\t\techo '</div>';\n";
 				continue;
 			}
@@ -96,7 +96,7 @@ $fields = array_diff($fields, $invalid_polymorphic_fields);
 		echo "\t\t\techo \$this->Form->label('{$modelClass}.{$field}', '" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', array('class' => 'label'));\n";
 		if ($field == 'password') {
 			echo "\t\t\techo \$this->Form->input('{$modelClass}.new_{$field}',\n";
-			echo "\t\t\t\tarray('label' => __('Password', true), 'type' => 'password');\n";
+			echo "\t\t\t\tarray('class' => 'text_field', 'type' => 'password'));\n";
 			echo "\t\techo '</div>';\n";
 			continue;
 		}
