@@ -18,7 +18,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-if (file_exists(dirname(__FILE__) . DS . 'bake.php')) include_once dirname(__FILE__) . DS . 'bake.php';
+include_once dirname(__FILE__) . DS . 'rebake.php';
 
 /**
  * Task class for creating and updating model files.
@@ -26,7 +26,7 @@ if (file_exists(dirname(__FILE__) . DS . 'bake.php')) include_once dirname(__FIL
  * @package       cake
  * @subpackage    cake.cake.console.libs.tasks
  */
-class ModelTask extends BakeTask {
+class ModelTask extends RebakeTask {
 
 /**
  * path to MODELS directory
@@ -43,14 +43,6 @@ class ModelTask extends BakeTask {
  * @access public
  */
 	var $tasks = array('DbConfig', 'Fixture', 'Test', 'Template');
-
-/**
- * Tables to skip when running all()
- *
- * @var array
- * @access protected
- */
-	var $skipTables = array('i18n', 'search_index');
 
 /**
  * Holds tables found on connection.
@@ -108,9 +100,7 @@ class ModelTask extends BakeTask {
 		$this->listAll($this->connection, false);
 		$unitTestExists = $this->_checkUnitTest();
 		foreach ($this->_tables as $table) {
-			if (in_array($table, $this->skipTables)) {
-				continue;
-			}
+			if (in_array($table, $this->skipTables)) continue;
 			$modelClass = Inflector::classify($table);
 			$this->out(sprintf(__('Baking %s', true), $modelClass));
 			$object = $this->_getModelObject($modelClass);
@@ -928,4 +918,3 @@ class ModelTask extends BakeTask {
 		$this->Fixture->bake($className, $useTable);
 	}
 }
-?>

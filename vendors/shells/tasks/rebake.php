@@ -1,6 +1,6 @@
 <?php
 /**
- * Base class for Bake Tasks.
+ * Base class for Rebake Tasks.
  *
  * PHP versions 4 and 5
  *
@@ -17,7 +17,16 @@
  * @since         CakePHP(tm) v 1.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-class BakeTask extends Shell {
+class RebakeTask extends Shell {
+
+/**
+ * Tables to skip when running all()
+ *
+ * @var array
+ * @access protected
+ */
+	var $skipTables = array('i18n', 'logs', 'search_index', 'settings');
+	var $skipTablesView = array('login_tokens');
 
 /**
  * Name of plugin
