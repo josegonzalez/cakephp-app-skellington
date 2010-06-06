@@ -25,7 +25,7 @@ class ResourceHelper extends Helper {
 		foreach ($this->secondary_navigations as $i => $nav) {
 			$first = ($i == 0) ? ' first' : '';
 			$active = ($i == 0) ? ' active' : '';
-			echo "<li class='{$active}{$first}'>" . $this->Html->link($nav['title'], $nav['url'], $nav['options']) . '</li>';
+			echo "<li class='{$active}{$first}'>" . $this->Html->link($nav['title'], $nav['url'], $nav['options'], $nav['confirmMessage']) . '</li>';
 		}
 		$this->view->set("secondary_navigation_for_layout", ob_get_clean());
 	}
@@ -107,11 +107,12 @@ class ResourceHelper extends Helper {
  * @return void
  * @author Jose Diaz-Gonzalez
  **/
-	function secondary_navigation($title = null, $url = array(), $options = array()) {
+	function secondary_navigation($title = null, $url = array(), $options = array(), $confirmMessage = null) {
 		$this->secondary_navigations[] = array(
 			'title' => $title,
 			'url' => $url,
 			'options' => $options,
+			'confirmMessage' => $confirmMessage
 		);
 	}
 
