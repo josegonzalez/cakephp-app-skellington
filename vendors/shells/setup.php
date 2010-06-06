@@ -25,7 +25,7 @@ class SetupShell extends Shell {
  */
 	function main() {
 		if(!empty($this->params[0])) {
-			$this->command = substr($this->params[0], 0, 1);
+			$this->command = strtolower(substr($this->params[0], 0, 1));
 		}
 
 		$this->__run();
@@ -50,7 +50,7 @@ class SetupShell extends Shell {
 			$this->out("[Q]uit");
 			$temp = $this->in("What command would you like to perform?", $validCommands, 'i');
 			if (in_array(strtolower($temp), $validCommands)) {
-				$this->command = $temp;
+				$this->command = strtolower($temp);
 			} else {
 				$this->out("Try again.");
 			}
