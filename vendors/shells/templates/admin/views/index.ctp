@@ -140,7 +140,7 @@ echo "\t\t\t<td><input type='checkbox' class='checkbox' name='id' value='1' /></
 			} else if ($schema[$field]['type'] == 'time') {
 				echo "\t\t\t<td><?php echo \$this->Time->time(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
 			} else if (in_array($field, array('created_by', 'modified_by', 'created_by_id', 'modified_by_id'))) {
-				echo "\t\t\t<td><?php echo \$this->Html->link(\${$singularVar}['" . Inflector::classify($field) . "']['username'],\n"; 
+				echo "\t\t\t<td><?php echo \$this->Html->link(\${$singularVar}['" . Inflector::classify($field) . "']['username'],\n";
 				echo "\t\t\t\tarray('controller' => 'users', 'action' => 'view', \${$singularVar}['{$modelClass}']['{$field}'],";
 				echo " Inflector::slug(\${$singularVar}['". Inflector::classify($field) . "']['username']))); ?></td>\n";
 			} else {
@@ -161,7 +161,7 @@ echo "\t\t\t<td><input type='checkbox' class='checkbox' name='id' value='1' /></
 		echo "\t\t\t\t\tarray('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?> | \n";
 		echo "\t\t\t\t<?php echo \$this->Html->link(__('Delete', true),\n";
 		echo "\t\t\t\t\tarray('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']),\n";
-		echo "\t\t\t\t\tnull, sprintf(__('Are you sure you want to delete # %s?', true), \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>\n";
+		echo "\t\t\t\t\tnull, sprintf(__('Are you sure you want to delete %s?', true), \${$singularVar}['{$modelClass}']['{$displayField}'])); ?>\n";
 		echo "\t\t\t</td>\n";
 	}
 echo "\t\t</tr>\n";

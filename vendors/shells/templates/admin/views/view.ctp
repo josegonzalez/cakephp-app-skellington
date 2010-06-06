@@ -24,5 +24,5 @@ foreach ($fields as $field) {
 <?php echo "<?php \$this->Resource->secondary_navigation('Index', array('action' => 'index')); ?>\n"?>
 <?php echo "<?php \$this->Resource->secondary_navigation('Edit', array('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>"?>
 <?php echo "<?php \$this->Resource->secondary_navigation('Add', array('action' => 'add')); ?>"?>
-<?php echo "<?php \$this->Resource->secondary_navigation('Delete', array('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']), null, sprintf(__('Are you sure you want to delete # %s?', true), \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>\n";
+<?php echo "<?php \$this->Resource->secondary_navigation('Delete', array('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']), null, sprintf(__('Are you sure you want to delete %s?', true), \${$singularVar}['{$modelClass}']['{$displayField}'])); ?>\n";
 ?>
