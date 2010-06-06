@@ -3,6 +3,7 @@ $invalidFields = array();
 $invalid_fields = array('created', 'created_by', 'created_by_id', 'modified', 'modified_by', 'modified_by_id', 'updated');
 $invalid_behavior_fields = array('lft', 'rght', 'slug');
 $invalid_polymorphic_fields = array('class', 'foreign_id', 'model', 'model_id', 'model_key');
+$original_fields = $fields;
 foreach ($fields as $i => $field) {
 	if (substr($field, -6) == '_count') unset($fields[$i]);
 }
@@ -170,4 +171,12 @@ $fields = array_diff($fields, $invalid_polymorphic_fields);
 			<?php echo "\tarray('action' => 'index'), array('escape' => false, 'class' => 'button')); ?>\n"; ?>
 	</div>
 <?php echo "<?php echo \$this->Form->end();?>\n"; ?>
-<?php echo "<?php \$this->Resource->secondary_navigation('Index', array('action' => 'index')); ?>\n"?>
+<?php
+echo "<?php \$this->Resource->secondary_navigation('Index', array('action' => 'index')); ?>\n";
+if (strpos($action, 'add') === false) {
+	$the_key = (in_array('slug', $original_fields)) ? 'slug' : $primaryKey;
+	echo "<?php \$this->Resource->secondary_navigation('View', array('action' => 'view', \$this->data['{$modelClass}']['{$the_key}'])); ?>\n";
+	echo "<?php \$this->Resource->secondary_navigation('Add', array('action' => 'add')); ?>\n";
+	echo "<?php \$this->Resource->secondary_navigation('Delete', array('action' => 'delete', \$this->data['{$modelClass}']['{$primaryKey}']), null, sprintf(__('Are you sure you want to delete # %s?', true), \$this->data['{$modelClass}']['{$primaryKey}'])); ?>\n";
+}
+?>
