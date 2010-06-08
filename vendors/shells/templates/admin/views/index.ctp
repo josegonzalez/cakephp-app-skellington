@@ -11,7 +11,7 @@
 	$invalid_online_contact_fields = array('email', 'email_address', 'site', 'url', 'website');
 	$invalid_polymorphic_fields = array('class', 'foreign_id', 'model', 'model_id', 'model_key', 'type', 'type_id');
 	$invalid_relation_fields = array('milestone_id');
-	$invalid_time_fields = array('date', 'time', 'when');
+	$invalid_time_fields = array('date', 'time', 'when', 'date_due_by');
 	$invalid_user_fields = array('password', 'photo', 'profile_picture');
 	$invalid_visibility_fields = array('enabled', 'deleted', 'published', 'visible');
 
