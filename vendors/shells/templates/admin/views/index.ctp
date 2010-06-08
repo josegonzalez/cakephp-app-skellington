@@ -4,12 +4,13 @@
 	$view_params = $this->params;
 
 	$invalid_fields = array('created', 'created_by', 'created_by_id', 'modified', 'modified_by', 'modified_by_id', 'updated', 'owned_by', 'owner_id');
-	$invalid_contact_fields = array('address', 'cell_number', 'city', 'fax_number', 'latitude', 'location', 'longitude', 'phone_number', 'state_id', 'zipcode');
 	$invalid_behavior_fields = array('lft', 'parent_id', 'position', 'rght', 'slug');
+	$invalid_contact_fields = array('address', 'cell_number', 'city', 'fax_number', 'latitude', 'location', 'longitude', 'phone_number', 'state_id', 'zipcode');
 	$invalid_content_fields = array('body', 'content', 'contents', 'description', 'text');
 	$invalid_file_fields = array('dir', 'filename', 'filesize', 'mimetype', 'picture');
 	$invalid_online_contact_fields = array('email', 'email_address', 'site', 'url', 'website');
 	$invalid_polymorphic_fields = array('class', 'foreign_id', 'model', 'model_id', 'model_key', 'type', 'type_id');
+	$invalid_relation_fields = array('milestone_id');
 	$invalid_time_fields = array('date', 'time', 'when');
 	$invalid_user_fields = array('password', 'photo', 'profile_picture');
 	$invalid_visibility_fields = array('enabled', 'deleted', 'published', 'visible');
@@ -34,49 +35,24 @@
 		}
 	}
 
-	if (!in_array('show_behavior_fields', array_keys($view_params))) {
-		unset($view_params['show_behavior_fields']);
-		$invalid_fields = array_merge($invalid_behavior_fields, $invalid_fields);
-	}
+	$invalid_field_types = array(
+		'show_behavior_fields' => 'invalid_behavior_fields',
+		'show_contact_fields' => 'invalid_contact_fields',
+		'show_content_fields' => 'invalid_content_fields',
+		'show_file_fields' => 'invalid_file_fields',
+		'show_online_contact_fields' => 'invalid_online_contact_fields',
+		'show_polymorphic_fields' => 'invalid_polymorphic_fields',
+		'show_relation_fields' => 'invalid_relation_fields',
+		'show_time_fields' => 'invalid_time_fields',
+		'show_user_fields' => 'invalid_user_fields',
+		'show_visibility_fields' => 'invalid_visibility_fields'
+	);
 
-	if (!in_array('show_contact_fields', array_keys($view_params))) {
-		unset($view_params['show_contact_fields']);
-		$invalid_fields = array_merge($invalid_contact_fields, $invalid_fields);
-	}
-
-	if (!in_array('show_content_fields', array_keys($view_params))) {
-		unset($view_params['show_content_fields']);
-		$invalid_fields = array_merge($invalid_content_fields, $invalid_fields);
-	}
-
-	if (!in_array('show_file_fields', array_keys($view_params))) {
-		unset($view_params['show_file_fields']);
-		$invalid_fields = array_merge($invalid_file_fields, $invalid_fields);
-	}
-
-	if (!in_array('show_online_contact_fields', array_keys($view_params))) {
-		unset($view_params['show_online_contact_fields']);
-		$invalid_fields = array_merge($invalid_online_contact_fields, $invalid_fields);
-	}
-
-	if (!in_array('show_polymorphic_fields', array_keys($view_params))) {
-		unset($view_params['show_polymorphic_fields']);
-		$invalid_fields = array_merge($invalid_polymorphic_fields, $invalid_fields);
-	}
-
-	if (!in_array('show_time_fields', array_keys($view_params))) {
-		unset($view_params['show_time_fields']);
-		$invalid_fields = array_merge($invalid_time_fields, $invalid_fields);
-	}
-
-	if (!in_array('show_user_fields', array_keys($view_params))) {
-		unset($view_params['show_user_fields']);
-		$invalid_fields = array_merge($invalid_user_fields, $invalid_fields);
-	}
-
-	if (!in_array('show_visibility_fields', array_keys($view_params))) {
-		unset($view_params['show_visibility_fields']);
-		$invalid_fields = array_merge($invalid_visibility_fields, $invalid_fields);
+	foreach ($invalid_field_types as $key => $value) {
+		if (!in_array($key, array_keys($view_params))) {
+			unset($view_params[$key]);
+			$invalid_fields = array_merge($$value, $invalid_fields);
+		}
 	}
 
 	foreach ($view_params as $key => $value) {
@@ -136,7 +112,7 @@ echo "\t\t\t<td><input type='checkbox' class='checkbox' name='id' value='1' /></
 			} else if ($schema[$field]['type'] == 'datetime') {
 				echo "\t\t\t<td><?php echo \$this->Time->niceShort(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
 			} else if ($schema[$field]['type'] == 'date') {
-				echo "\t\t\t<td><?php echo \$this->Time->relativeTime(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
+				echo "\t\t\t<td><?php echo \$this->Time->timeAgoInWords(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
 			} else if ($schema[$field]['type'] == 'time') {
 				echo "\t\t\t<td><?php echo \$this->Time->time(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
 			} else if (in_array($field, array('created_by', 'modified_by', 'created_by_id', 'modified_by_id'))) {
@@ -172,7 +148,7 @@ echo "\t<?php endforeach; ?>\n";
 	<div class="actions-bar wat-cf">
 		<div class="actions">
 			<button class="button" type="submit">
-				<?php echo "<?php echo \$this->Html->image('icons/cross.png', array('alt' => 'Delete')); ?> Delete"; ?>
+				<?php echo "<?php echo \$this->Html->image('icons/cross.png', array('alt' => 'Delete')); ?> Delete\n"; ?>
 			</button>
 		</div>
 		<div class="pagination">

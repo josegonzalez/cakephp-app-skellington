@@ -153,11 +153,11 @@
 				} else if ($schema[$field]['type'] == 'datetime') {
 					echo "\t\t<td><?php echo \$this->Time->niceShort(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
 				} else if ($schema[$field]['type'] == 'date') {
-					echo "\t\t<td><?php echo \$this->Time->relativeTime(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
+					echo "\t\t<td><?php echo \$this->Time->timeAgoInWords(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
 				} else if ($schema[$field]['type'] == 'time') {
 					echo "\t\t<td><?php echo \$this->Time->time(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
 				} else if (in_array($field, array('created_by', 'modified_by', 'created_by_id', 'modified_by_id'))) {
-					echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['" . Inflector::classify($field) . "']['username'],\n"; 
+					echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['" . Inflector::classify($field) . "']['username'],\n";
 					echo "\t\t\tarray('controller' => 'users', 'action' => 'view', \${$singularVar}['{$modelClass}']['{$field}'],";
 					echo " Inflector::slug(\${$singularVar}['". Inflector::classify($field) . "']['username']))); ?></td>\n";
 				} else {
