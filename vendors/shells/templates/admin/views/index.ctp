@@ -145,11 +145,6 @@ echo "\t<?php endforeach; ?>\n";
 ?>
 	</table>
 	<div class="actions-bar wat-cf">
-		<div class="actions">
-			<button class="button" type="submit">
-				<?php echo "<?php echo \$this->Html->image('icons/cross.png', array('alt' => 'Delete')); ?> Delete\n"; ?>
-			</button>
-		</div>
 		<div class="pagination">
 			<?php echo "<?php echo \$this->Paginator->prev('« '.__('Previous', true), array('class' => 'next_page'), null, array('class' => 'disabled')); ?>\n";?>
 			<?php echo "<?php echo \$this->Paginator->numbers(); ?>\n"?>
