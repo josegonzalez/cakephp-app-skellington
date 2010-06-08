@@ -72,6 +72,21 @@ class ResourceHelper extends Helper {
  * @return void
  * @author Jose Diaz-Gonzalez
  **/
+	function secondary_navigation($title = null, $url = array(), $options = array(), $confirmMessage = null) {
+		$this->secondary_navigations[] = array(
+			'title' => $title,
+			'url' => $url,
+			'options' => $options,
+			'confirmMessage' => $confirmMessage
+		);
+	}
+
+/**
+ * undocumented function
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
 	function sidebar_navigation($navigation = null, $html_link = array()) {
 		if (is_array($nagivation)) {
 			$html_link = $navigation;
@@ -118,22 +133,6 @@ class ResourceHelper extends Helper {
 		}
 		return $definition;
 	}
-
-/**
- * undocumented function
- *
- * @return void
- * @author Jose Diaz-Gonzalez
- **/
-	function secondary_navigation($title = null, $url = array(), $options = array(), $confirmMessage = null) {
-		$this->secondary_navigations[] = array(
-			'title' => $title,
-			'url' => $url,
-			'options' => $options,
-			'confirmMessage' => $confirmMessage
-		);
-	}
-
 
 /**
  * Truncates text.
