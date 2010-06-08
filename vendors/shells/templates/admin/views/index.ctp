@@ -68,7 +68,7 @@
 
 	$fields = array_diff($fields, $invalid_fields);
 
-	foreach($fields as $field) {
+	foreach ($fields as $field) {
 		if (substr($field, -3) === '_id') {
 			$fields = array_diff($fields, array($field));
 			$fields[] = $field;
@@ -79,16 +79,15 @@
 <form action="#" class="form">
 	<table class="table">
 		<tr>
-			<th class="first"><input type="checkbox" class="checkbox toggle" /></th>
+<?php $first_field = true; ?>
 <?php foreach ($fields as $field):?>
-			<th><?php echo "<?php echo \$this->Paginator->sort('" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', '{$modelClass}.{$field}');?>";?></th>
+			<th<?php if ($first_field) {echo ' class="first"';$first_field = false;}?>><?php echo "<?php echo \$this->Paginator->sort('" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', '{$modelClass}.{$field}');?>";?></th>
 <?php endforeach;?>
 			<?php if ($doActions) : ?><?php echo "<th class=\"actions last\">&nbsp;</th>\n";?><?php endif; ?>
 		</tr>
 <?php
 echo "\t\t<?php \$i = 0; foreach (\${$pluralVar} as \${$singularVar}) : ?>\n";
 echo "\t\t\t<tr<?php echo (\$i++ % 2 == 0) ? ' class=\"altrow odd\"' : 'even';?>>\n";
-echo "\t\t\t<td><input type='checkbox' class='checkbox' name='id' value='1' /></td>\n";
 	foreach ($fields as $field) {
 		$isKey = false;
 		if (!empty($associations['belongsTo'])) {
