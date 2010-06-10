@@ -37,7 +37,24 @@ endif;
 if ($primaryKey !== 'id'): ?>
 	var $primaryKey = '<?php echo $primaryKey; ?>';
 <?php endif;
-if ($displayField): ?>
+if (!$displayField) {
+	foreach ($schema as $fieldName => $fieldConfig) {
+		if (in_array($fieldName, array('title', 'name'))) {
+			$displayField = $fieldName;
+			break;
+		}
+	}
+}
+if (!$displayField) {
+	foreach ($schema as $fieldName => $fieldConfig) {
+		if ($fieldName == 'model') continue;
+		if ($fieldConfig['type'] == 'string') {
+			$displayField = $fieldName;
+			break;
+		}
+	}
+}
+if ($displayField) : ?>
 	var $displayField = '<?php echo $displayField; ?>';
 <?php endif;
 
