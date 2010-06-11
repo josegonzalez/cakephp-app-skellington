@@ -16,6 +16,8 @@
 	$invalid_user_fields = array('password', 'photo', 'profile_picture');
 	$invalid_visibility_fields = array('enabled', 'deleted', 'published', 'visible');
 
+	$invalid_fashion_fields = array('season', 'main_color_id', 'received_date', 'sold_for_price', 'original_retail_price', 'purchase_price', 'retail_source', 'sell_date');
+
 	foreach ($schema as $key => $value) {
 		if (in_array($value['type'], array('text', 'datetime')) and !in_array($key, array_keys($this->params))) {
 			$invalid_fields[] = $key;
@@ -47,7 +49,9 @@
 		'show_relation_fields' => 'invalid_relation_fields',
 		'show_time_fields' => 'invalid_time_fields',
 		'show_user_fields' => 'invalid_user_fields',
-		'show_visibility_fields' => 'invalid_visibility_fields'
+		'show_visibility_fields' => 'invalid_visibility_fields',
+
+		'show_fashion_fields' => 'invalid_fashion_fields'
 	);
 
 	foreach ($invalid_field_types as $key => $value) {
