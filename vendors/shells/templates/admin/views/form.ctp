@@ -1,5 +1,4 @@
 <?php
-$invalidFields = array();
 $invalid_fields = array('created', 'created_by', 'created_by_id', 'modified', 'modified_by', 'modified_by_id', 'updated');
 $invalid_behavior_fields = array('lft', 'rght', 'slug');
 $invalid_polymorphic_fields = array('class', 'foreign_id', 'model', 'model_id', 'model_key');
