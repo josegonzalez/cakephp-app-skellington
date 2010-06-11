@@ -74,6 +74,8 @@
 		if (substr($field, -3) === '_id') {
 			$fields = array_diff($fields, array($field));
 			$fields[] = $field;
+		} else if (substr($field, -10) == '_file_name') {
+			$fields = array_diff($fields, array($field));
 		}
 	}
 ?>
