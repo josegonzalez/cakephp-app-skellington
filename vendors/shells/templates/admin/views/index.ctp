@@ -4,6 +4,7 @@
 	$view_params = $this->params;
 
 	$invalid_fields = array('created', 'created_by', 'created_by_id', 'modified', 'modified_by', 'modified_by_id', 'updated', 'owned_by', 'owner_id');
+	$invalid_address_fields = array('address_one', 'address_two', 'state', 'zip_code');
 	$invalid_behavior_fields = array('lft', 'parent_id', 'position', 'rght', 'slug');
 	$invalid_contact_fields = array('address', 'cell_number', 'city', 'fax_number', 'latitude', 'location', 'longitude', 'phone_number', 'state_id', 'zipcode');
 	$invalid_content_fields = array('body', 'content', 'contents', 'description', 'text');
@@ -36,6 +37,7 @@
 	}
 
 	$invalid_field_types = array(
+		'show_address_fields' => 'invalid_address_fields',
 		'show_behavior_fields' => 'invalid_behavior_fields',
 		'show_contact_fields' => 'invalid_contact_fields',
 		'show_content_fields' => 'invalid_content_fields',
