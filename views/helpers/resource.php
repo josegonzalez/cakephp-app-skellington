@@ -150,6 +150,54 @@ class ResourceHelper extends Helper {
 	}
 
 /**
+ * Turns any phrase into a 6 character hexadecimal color
+ *
+ * @param string $word
+ * @return string
+ * @author Jose Diaz-Gonzalez
+ */
+	function colorize($word) {
+		preg_match('/[\dA-Fa-f]{6}/', sha1($word), $color);
+		return (in_array($this->color_mkwebsafe($color[0]), array('ffffcc', 'ffffff'))) ? 'ff9933' : $color[0];
+	}
+
+	function colorizeText($word) {
+		return (hexdec($this->colorize($word)) > 0xffffff/2) ? '000' : 'fff';
+	}
+
+	function stylize($word) {
+		return "background:#{$this->colorize($word)};color:#fff;";
+	}
+
+	function color_mkwebsafe($in) {
+		$vals['r'] = hexdec(substr($in, 0, 2));
+		$vals['g'] = hexdec(substr($in, 2, 2));
+		$vals['b'] = hexdec(substr($in, 4, 2));
+
+		$out = '';
+		foreach ($vals as $val) {
+			$val = (round($val/51) * 51);
+			$out .= str_pad(dechex($val), 2, '0', STR_PAD_LEFT);
+		}
+
+		return $out;
+	}
+
+	function correctShade($row1, $c) {
+		$rgb = array(substr($row1,0,2), substr($row1,2,2), substr($row1,4,2));
+		for($i=0; $i < 3; $i++) {
+			if ((hexdec($rgb[$i])-$c) >= 0) {
+				$rgb[$i] = hexdec($rgb[$i])-$c;
+				$rgb[$i] = dechex($rgb[$i]);
+				if (hexdec($rgb[0]) <= 9) $rgb[$i] = "0".$rgb[$i];
+			} else {
+				$rgb[$i] = "00";
+			}
+		}
+ 		return $rgb[0].$rgb[1].$rgb[2];
+	}
+
+/**
  * Truncates text.
  *
  * Cuts a string to the length of $length and replaces the last characters
