@@ -10,21 +10,32 @@ $fields = array_diff($fields, $invalid_fields);
 $fields = array_diff($fields, $invalid_behavior_fields);
 $fields = array_diff($fields, $invalid_polymorphic_fields);
 
+$form_fields = array();
+// Shuffle fields around for left and right input
+$left_fields = array();
+$right_fields = array();
+$has_form_field = false;
+foreach ($fields as $field) {
+	if (substr($field, -10) == '_file_name') {
+		$form_fields[$field] = substr($field, 0, -10);
+		$right_fields[] = $field;
+		$has_form_field = true;
+		continue;
+	}
+	if (in_array($schema[$field]['type'], array('string', 'text'))) {
+		$left_fields[] = $field;
+	} else {
+		$right_fields[] = $field;
+	}
+}
+if ($has_form_field) $has_form_field = ", 'type' => 'file'";
 ?>
 <?php echo "<?php \$this->Html->h2(sprintf(__('Add %s', true), __('{$pluralHumanName}', true))); ?>\n"; ?>
-<?php echo "<?php echo \$this->Form->create('{$modelClass}', array('class' => 'form', 'inputDefaults' => array('div' => false, 'label' => false)));?>\n";?>
 <?php
-	// Shuffle fields around for left and right input
-	$left_fields = array();
-	$right_fields = array();
-	foreach ($fields as $field) {
-		if (in_array($schema[$field]['type'], array('string', 'text'))) {
-			$left_fields[] = $field;
-		} else {
-			$right_fields[] = $field;
-		}
-	}
-
+echo "<?php echo \$this->Form->create('{$modelClass}', array(\n";
+echo "\t'class' => 'form', 'inputDefaults' => array('div' => false, 'label' => false){$has_form_field}));?>\n";
+?>
+<?php
 	if (empty($left_fields) || empty($right_fields)) {
 		echo "\t<?php\n";
 		foreach ($fields as $field) {
@@ -128,6 +139,12 @@ $fields = array_diff($fields, $invalid_polymorphic_fields);
 		if ($field != $primaryKey) {
 			echo "\t\techo '<div class=\"group\">';\n";
 			echo "\t\t\techo \$this->Form->label('{$modelClass}.{$field}', '" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', array('class' => 'label'));\n";
+		}
+		if (in_array($field, (array) array_keys($form_fields))) {
+			echo "\t\t\techo \$this->Form->input('{$modelClass}.{$form_fields[$field]}',\n";
+			echo "\t\t\t\tarray('class' => 'text_field', 'type' => 'file'));\n";
+			echo "\t\techo '</div>';\n";
+			continue;
 		}
 		if ($field == 'owned_by') {
 			echo "\t\t\techo \$this->Form->input('{$modelClass}.{$field}',\n";
