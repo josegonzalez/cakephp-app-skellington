@@ -8,6 +8,8 @@ class ResourceHelper extends Helper {
 	var $secondary_navigations = array();
 	var $definition_list = 0;
 	var $definition_list_class = ' class="altrow"';
+	var $lastSeen = null;
+
 /**
  * Set captured navigation and blocks for the view
  *
@@ -132,6 +134,19 @@ class ResourceHelper extends Helper {
 				break;
 		}
 		return $definition;
+	}
+
+/**
+ * Check if a value has changed from the last iteration of a loop.
+ *
+ * @param string $compareTo String you want to check against.
+ * @return bool True if changed, otherwise false.
+ * @author Bjorn Post
+ */
+	function checkIfChanged($compareTo) {
+		$return = ($this->lastSeen === $compareTo) ? false : true;
+		$this->lastSeen = $compareTo;
+		return $return;
 	}
 
 /**
