@@ -100,9 +100,6 @@ class LogableBehavior extends ModelBehavior  {
 		} else {
 			$this->UserModel = $Model;
 		}
-		if (Authsome::get('guest') === false) {
-			$this->user = Authsome::get();
-		}
 	}
 
 	function settings(&$Model) {
