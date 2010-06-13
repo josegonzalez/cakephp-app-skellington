@@ -1,6 +1,6 @@
 <?php
 class AppModel extends Model {
-	var $actsAs = array('Callbackable', 'Containable', 'Lookupable', 'Log.Logable');
+	var $actsAs = array('Callbackable', 'Containable', 'Lookupable', 'Log.Logable' => array('change' => 'full'));
 	var $recursive = -1;
 	var $behaviorData = null;
 	var $query = null;
