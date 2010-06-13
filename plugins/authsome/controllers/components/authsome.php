@@ -1,17 +1,17 @@
 <?php
 /**
  * Copyright (c) 2009 Debuggable Ltd (debuggable.com)
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -72,7 +72,7 @@ class AuthsomeComponent extends Object{
 
 		$args = func_get_args();
 		if (!method_exists($userModel, 'authsomeLogin')) {
-			throw new Exception(
+			throw new AppException(
 				$userModel->alias.'::authsomeLogin() is not implemented!'
 			);
 		}
@@ -101,7 +101,7 @@ class AuthsomeComponent extends Object{
 		$userModel = $this->__getUserModel();
 
 		if (!method_exists($userModel, 'authsomePersist')) {
-			throw new Exception(
+			throw new AppException(
 				$userModel->alias.'::authsomePersist() is not implemented!'
 			);
 		}
@@ -143,7 +143,7 @@ class AuthsomeComponent extends Object{
 
 		$user = Configure::read($this->settings['configureKey']);
 		if (is_null($user)) {
-			throw new Exception(
+			throw new AppException(
 				'Unable to initilize user'
 			);
 		}
@@ -201,7 +201,7 @@ class Authsome{
 		}
 
 		if (!$instance) {
-			throw new Exception(
+			throw new AppException(
 				'AuthsomeComponent not initialized properly!'
 			);
 		}
