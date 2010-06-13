@@ -8,18 +8,18 @@
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach ($logs as $log) : ?>
+		<?php foreach ($logs as $a_log) : ?>
 			<tr>
-			<?php if ($this->Log->checkIfChanged(date('Y-m-d', strtotime($log['Log']['created'])))) : ?>
+			<?php if ($this->Log->checkIfChanged(date('Y-m-d', strtotime($a_log['Log']['created'])))) : ?>
 				<td colspan="3">
 					<strong>
 						<?php
-							if ($this->Time->isToday($log['Log']['created'])) {
+							if ($this->Time->isToday($a_log['Log']['created'])) {
 								echo "<mark>" . __('Today', true) . "</mark>";
-							} elseif ($this->Time->wasYesterday($log['Log']['created'])) {
+							} elseif ($this->Time->wasYesterday($a_log['Log']['created'])) {
 								__('Yesterday');
 							} else {
-								echo $this->Time->format('d M', $log['Log']['created']);
+								echo $this->Time->format('d M', $a_log['Log']['created']);
 							}
 						?>
 					</strong>
@@ -28,18 +28,18 @@
 			<tr>
 			<?php endif; ?>
 				<td class="frontpage-type">
-					<span class="<?php echo strtolower($log['Log']['model']);?>" style="<?php echo $this->Log->stylize($log['Log']['model']); ?>"><?php echo $log['Log']['model']; ?></span>
+					<span class="<?php echo strtolower($a_log['Log']['model']);?>" style="<?php echo $this->Log->stylize($a_log['Log']['model']); ?>"><?php echo $a_log['Log']['model']; ?></span>
 				</td>
 				<td class="frontpage-title">
-					<?php echo $this->Html->link($log['Log']['title'], array(
-						'controller' => Inflector::pluralize(Inflector::camelize($log['Log']['model'])),
+					<?php echo $this->Html->link($a_log['Log']['title'], array(
+						'controller' => Inflector::pluralize(Inflector::camelize($a_log['Log']['model'])),
 						'action' => 'view',
-						'id' => $log['Log']['model_id'])); ?>
+						'id' => $a_log['Log']['model_id'])); ?>
 				</td>
 				<td class="frontpage-owner">
 					<?php
 						$message = __('Created by %s ', true);
-						switch ($log['Log']['action']) {
+						switch ($a_log['Log']['action']) {
 							case 'add' :
 								$message = __('Created by %s ', true);
 								break;
