@@ -1,5 +1,7 @@
 <?php
 class LogHelper extends AppHelper {
+	var $lastSeen = null;
+
 /**
  * Check if a value has changed from the last iteration of a loop.
  *
