@@ -57,7 +57,7 @@
 <body>
 	<div id="container">
 		<div id="header">
-			<h1><a href="index.html">Web App Theme</a></h1>
+			<h1><?php echo $this->Html->link('Web App Theme', '/'); ?></h1>
 			<div id="user-navigation">
 				<ul class="wat-cf">
 					<li><?php echo $this->Html->link(__('Profile', true), array(
