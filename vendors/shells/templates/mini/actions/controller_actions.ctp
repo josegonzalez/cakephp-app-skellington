@@ -35,7 +35,7 @@ if (isset($schema['assigned_to'])) {
 	);
 }
 
-$slugField = (in_array('slug', array_keys($modelObj->schema()))) ? '$slug' : "\${$modelObj->primaryKey}";
+$slugField = (in_array('slug', array_keys($modelObj->schema()))) ? 'slug' : $modelObj->primaryKey;
 
 // Find all the paginate displayFields
 $paginate_models = array();
@@ -181,8 +181,8 @@ foreach ($modelObj->belongsTo as $associationName => $relation) {
 		$this->set(compact('<?php echo $pluralName ?>'));
 	}
 
-	function <?php echo $admin ?>view(<?php echo $slugField; ?> = null) {
-		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('view', <?php echo $slugField; ?>);
+	function <?php echo $admin ?>view($<?php echo $slugField; ?> = null) {
+		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('view', $<?php echo $slugField; ?>);
 		if (!$<?php echo $singularName; ?>) {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(__('Invalid <?php echo strtolower($singularHumanName) ?>', true), 'flash/error');
