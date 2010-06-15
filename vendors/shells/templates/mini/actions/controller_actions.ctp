@@ -37,6 +37,22 @@ if (isset($schema['assigned_to'])) {
 
 $slugField = (in_array('slug', array_keys($modelObj->schema()))) ? '$slug' : "\${$modelObj->primaryKey}";
 
+// Find all the paginate displayFields
+$paginate_models = array();
+foreach ($modelObj->belongsTo as $associationName => $relation) {
+	$related_model = ClassRegistry::init($relation['className']);
+	if (is_object($related_model)) {
+		$paginate_model = array(
+			'alias' => $this->_modelName($associationName),
+			'displayField' => $related_model->displayField,
+			'primaryKey' => $related_model->primaryKey
+		);
+		if ($related_model->hasField('slug')) {
+			$paginate_model['primaryKey'] = 'slug';
+		}
+		$paginate_models[] = $paginate_model;
+	}
+}
 ?>
 <?php if ($singularHumanName == 'User') : ?>
 
@@ -149,24 +165,6 @@ $slugField = (in_array('slug', array_keys($modelObj->schema()))) ? '$slug' : "\$
 	}
 <?php endif; ?>
 
-<?php
-	// Find all the paginate displayFields
-	$paginate_models = array();
-	foreach ($modelObj->belongsTo as $associationName => $relation) {
-		$related_model = ClassRegistry::init($relation['className']);
-		if (is_object($related_model)) {
-			$paginate_model = array(
-				'alias' => $this->_modelName($associationName),
-				'displayField' => $related_model->displayField,
-				'primaryKey' => $related_model->primaryKey
-			);
-			if ($related_model->hasField('slug')) {
-				$paginate_model['primaryKey'] = 'slug';
-			}
-			$paginate_models[] = $paginate_model;
-		}
-	}
-?>
 	function <?php echo $admin ?>index() {
 <?php if (empty($paginate_models)) : ?>
 		$this->paginate = array('contain' => false);
