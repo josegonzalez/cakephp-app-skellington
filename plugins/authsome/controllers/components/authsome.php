@@ -72,9 +72,11 @@ class AuthsomeComponent extends Object{
 
 		$args = func_get_args();
 		if (!method_exists($userModel, 'authsomeLogin')) {
-			throw new AppException(
-				$userModel->alias.'::authsomeLogin() is not implemented!'
-			);
+			$this->cakeError('missing_method', array(
+				'className' => $userModel,
+				'methodName' => 'authsomeLogin',
+				'parameters' => '$type, $credentials = array()'
+			));
 		}
 
 		if (!is_string($type) && is_null($credentials)) {
@@ -101,9 +103,11 @@ class AuthsomeComponent extends Object{
 		$userModel = $this->__getUserModel();
 
 		if (!method_exists($userModel, 'authsomePersist')) {
-			throw new AppException(
-				$userModel->alias.'::authsomePersist() is not implemented!'
-			);
+			$this->cakeError('missing_method', array(
+				'className' => $userModel,
+				'methodName' => 'authsomePersist',
+				'parameters' => '$user, $duration'
+			));
 		}
 
 		$token = $userModel->authsomePersist(Authsome::get(), $duration);
