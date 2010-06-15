@@ -57,13 +57,13 @@ foreach ($modelObj->belongsTo as $associationName => $relation) {
 <?php if ($singularHumanName == 'User') : ?>
 
 	function <?php echo $admin; ?>dashboard() {
-		$this->layout = 'alternate';
+<?php if (!$admin) : echo "\t\t\$this->layout = 'alternate';\n"; endif; ?>
 		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('dashboard');
 		$this->set(compact('<?php echo $singularName; ?>'));
 	}
 
 	function <?php echo $admin; ?>login() {
-		$this->layout = 'alternate';
+		$this->layout = '<?php echo $admin; ?>alternate';
 		if (empty($this->data)) {
 			return;
 		}
@@ -93,6 +93,7 @@ foreach ($modelObj->belongsTo as $associationName => $relation) {
 	}
 
 	function <?php echo $admin; ?>forgot_password() {
+		$this->layout = '<?php echo $admin; ?>alternate';
 		if (!empty($this->data) && isset($this->data['<?php echo $currentModelName; ?>']['email'])) {
 			if ($this->data['<?php echo $currentModelName; ?>']['email'] == '') {
 				$this->Session->setFlash(__('Invalid email address', true), 'flash/error');
@@ -127,7 +128,7 @@ foreach ($modelObj->belongsTo as $associationName => $relation) {
 	}
 
 	function <?php echo $admin; ?>reset_password($username = null, $key = null) {
-		$this->layout = 'alternate';
+		$this->layout = '<?php echo $admin; ?>alternate';
 		if ($username == null || $key == null) {
 			$this->Session->setFlash(__('An error occurred', true), 'flash/error');
 			$this->redirect(array('action' => 'login'));
@@ -152,7 +153,7 @@ foreach ($modelObj->belongsTo as $associationName => $relation) {
 	}
 
 	function <?php echo $admin; ?>change_password() {
-		$this->layout = 'alternate';
+<?php if (!$admin) : echo "\t\t\$this->layout = 'alternate';\n"; endif; ?>
 		if (!empty($this->data)) {
 			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('fieldList' => array('id', 'password'), 'callback' => 'change_password'))) {
 				$this->Session->setFlash(__('Your password has been successfully changed', true), 'flash/success');
@@ -164,7 +165,7 @@ foreach ($modelObj->belongsTo as $associationName => $relation) {
 	}
 
 	function <?php echo $admin; ?>profile() {
-		$this->layout = 'alternate';
+<?php if (!$admin) : echo "\t\t\$this->layout = 'alternate';\n"; endif; ?>
 		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('profile');
 		$this->set(compact('<?php echo $singularName; ?>'));
 	}
