@@ -1,4 +1,11 @@
 <?php
+/**
+ * Application Model class
+ *
+ * Add your application-wide methods to the class, your models will inherit them.
+ *
+ * @package       app
+ */
 class AppModel extends Model {
 	var $actsAs = array('Callbackable', 'Containable', 'Lookupable', 'Log.Logable' => array('change' => 'full'));
 	var $recursive = -1;

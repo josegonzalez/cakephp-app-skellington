@@ -1,10 +1,11 @@
 <?php
 /**
+ * Application Controller class
+ *
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
  *
- * @package       cake
- * @subpackage    cake.app
+ * @package       app
  */
 App::import('Core', 'Controller');
 class AppController extends Controller {

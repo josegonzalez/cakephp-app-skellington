@@ -1,10 +1,11 @@
 <?php
 /**
+ * Application Helper class
+ *
  * Add your application-wide methods in the class below, your helpers
  * will inherit them.
  *
- * @package       cake
- * @subpackage    cake.cake
+ * @package       app
  */
 class AppHelper extends Helper {
 	var $view = null;

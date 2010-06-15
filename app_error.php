@@ -1,10 +1,21 @@
 <?php
+/**
+ * Application Error class
+ *
+ * Contains Application Specific cakeErrors
+ *
+ * @package       app
+ */
 class AppError extends ErrorHandler {
 
 /**
  * Output message
  *
+ * Does not output debug info on errors
+ *
+ * @param string $action Action name to render
  * @access protected
+ * @author Jose Diaz-Gonzalez
  */
 	function _outputMessage($template) {
 		Configure::write('debug', 0);
@@ -18,6 +29,7 @@ class AppError extends ErrorHandler {
  *
  * @param array $params Parameters for controller
  * @access public
+ * @author Jose Diaz-Gonzalez
  */
 	function assertion($params) {
 		extract($params, EXTR_OVERWRITE);
