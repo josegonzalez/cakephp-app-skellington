@@ -13,6 +13,7 @@ class AppController extends Controller {
 		'DebugKit.Toolbar' => array('panels' => array(
 			'Interactive.interactive', 'Sanction.permit', 'Settings.settings'
 		)),
+		'Log.Logging',
 		'Mail',
 		'RequestHandler',
 		'Sanction.Permit',
