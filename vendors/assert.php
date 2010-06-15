@@ -1,11 +1,13 @@
 <?php
+App::import('Core', 'Object');
+
 /**
  * undocumented class
  *
  * @package default
  * @access public
  */
-class Assert{
+class Assert extends Object {
 /**
  * undocumented function
  *
