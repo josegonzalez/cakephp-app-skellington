@@ -87,7 +87,6 @@ foreach ($modelObj->belongsTo as $associationName => $relation) {
 	}
 
 	function <?php echo $admin; ?>logout() {
-		$this->layout = 'alternate';
 		$this->Authsome->logout();
 		$this->Session->delete('<?php echo $currentModelName; ?>');
 		$this->redirect(array('action' => 'login'));
