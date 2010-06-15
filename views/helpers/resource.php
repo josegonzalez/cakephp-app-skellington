@@ -3,8 +3,7 @@ class ResourceHelper extends Helper {
 
 	var $helpers = array('Html');
 	var $view = null;
-	var $sidebar_simple_blocks = array();
-	var $sidebar_navigations = array();
+	var $sidebar_for_layout = array();
 	var $secondary_navigations = array();
 	var $definition_list = 0;
 	var $definition_list_class = ' class="altrow"';
@@ -29,6 +28,7 @@ class ResourceHelper extends Helper {
 			$secondary_navigation_for_layout .= "<li class='{$active}{$first}'>" . $this->Html->link($nav['title'], $nav['url'], $nav['options'], $nav['confirmMessage']) . '</li>';
 		}
 		$this->view->set(compact('secondary_navigation_for_layout'));
+		$this->view->set('sidebar_for_layout', $this->sidebar_for_layout);
 	}
 
 /**
@@ -60,8 +60,53 @@ class ResourceHelper extends Helper {
  * @return void
  * @author Jose Diaz-Gonzalez
  **/
+	function sidebar_navigation($navigation = null, $html_link = array()) {
+		if (is_array($nagivation)) {
+			$html_link = $navigation;
+			$navigation = 'default';
+		}
+
+		$this->sidebar_for_layout['navigation'][$navigation][] = array(
+			'title' => $html_link['title'],
+			'url' => (isset($html_link['url'])) ? $html_link['url'] : array(),
+			'options' => (isset($html_link['options'])) ? $html_link['options'] : array(),
+		);
+	}
+
+/**
+ * undocumented function
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+	function sidebar_inner_block($title, $content) {
+		$this->sidebar_for_layout['inner'][] = array(
+			'title' => $title,
+			'content' => $content
+		);
+	}
+
+/**
+ * undocumented function
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+	function sidebar_notice_block($title, $content) {
+		$this->sidebar_for_layout['notice'][] = array(
+			'title' => $title,
+			'content' => $content
+		);
+	}
+
+/**
+ * undocumented function
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
 	function sidebar_simple_block($title, $content) {
-		$this->sidebar_simple_blocks[] = array(
+		$this->sidebar_for_layout['simple'][] = array(
 			'title' => $title,
 			'content' => $content
 		);
@@ -79,25 +124,6 @@ class ResourceHelper extends Helper {
 			'url' => $url,
 			'options' => $options,
 			'confirmMessage' => $confirmMessage
-		);
-	}
-
-/**
- * undocumented function
- *
- * @return void
- * @author Jose Diaz-Gonzalez
- **/
-	function sidebar_navigation($navigation = null, $html_link = array()) {
-		if (is_array($nagivation)) {
-			$html_link = $navigation;
-			$navigation = 'default';
-		}
-
-		$this->sidebar_navigations[$navigation][] = array(
-			'title' => $html_link['title'],
-			'url' => (isset($html_link['url'])) ? $html_link['url'] : array(),
-			'options' => (isset($html_link['options'])) ? $html_link['options'] : array(),
 		);
 	}
 
