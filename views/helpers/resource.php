@@ -22,13 +22,13 @@ class ResourceHelper extends Helper {
 		}
 
 		// Start Secondary Nagivation
-		ob_start();
+		$secondary_navigation_for_layout = '';
 		foreach ($this->secondary_navigations as $i => $nav) {
 			$first = ($i == 0) ? ' first' : '';
 			$active = ($i == 0) ? ' active' : '';
-			echo "<li class='{$active}{$first}'>" . $this->Html->link($nav['title'], $nav['url'], $nav['options'], $nav['confirmMessage']) . '</li>';
+			$secondary_navigation_for_layout .= "<li class='{$active}{$first}'>" . $this->Html->link($nav['title'], $nav['url'], $nav['options'], $nav['confirmMessage']) . '</li>';
 		}
-		$this->view->set("secondary_navigation_for_layout", ob_get_clean());
+		$this->view->set(compact('secondary_navigation_for_layout'));
 	}
 
 /**
