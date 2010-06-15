@@ -158,7 +158,7 @@ class Permit extends Object{
 		$self =& Permit::getInstance();
 		if (empty($rules)) return $permitComponent->routes;
 
-		$redirect = array_merge(array('redirect' => $this->redirect,
+		$redirect = array_merge(array('redirect' => $self->redirect,
 									'message' => __('Access denied', true),
 									'trace' => false,
 									'element' => 'default',
