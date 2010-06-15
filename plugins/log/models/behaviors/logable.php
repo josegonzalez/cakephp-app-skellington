@@ -62,6 +62,7 @@
 class LogableBehavior extends ModelBehavior  {
 	var $user = null;
 	var $UserModel = false;
+	var $userIP = false;
 	var $settings = array();
 	var $defaults = array(
 		'enabled' => true,
