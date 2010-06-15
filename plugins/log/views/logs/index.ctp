@@ -32,6 +32,7 @@
 				</td>
 				<td class="frontpage-title">
 					<?php echo $this->Html->link($a_log['Log']['title'], array(
+						'plugin' => false,
 						'controller' => Inflector::tableize($a_log['Log']['model']),
 						'action' => 'view',
 						'id' => $a_log['Log']['model_id'])); ?>
