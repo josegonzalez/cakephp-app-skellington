@@ -1,5 +1,6 @@
 <?php
 class LogHelper extends AppHelper {
+	var $helpers = array('Html', 'Time');
 	var $lastSeen = null;
 
 /**
@@ -13,6 +14,73 @@ class LogHelper extends AppHelper {
 		$return = ($this->lastSeen === $compareTo) ? false : true;
 		$this->lastSeen = $compareTo;
 		return $return;
+	}
+
+/**
+ * undocumented function
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+	function logDate($created) {
+		if ($this->Time->isToday($created)) {
+ 			$date = "<mark>" . __('Today', true) . "</mark>";
+		} elseif ($this->Time->wasYesterday($created)) {
+			$date = __('Yesterday', true);
+		} else {
+ 			$date = $this->Time->format('d M', $created);
+		}
+		return "<strong>{$date}</strong>";
+	}
+
+/**
+ * undocumented function
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+	function logTitle($log) {
+		return $this->Html->link($log['title'], array(
+			'plugin' => false,
+			'controller' => Inflector::tableize($log['model']),
+			'action' => 'view',
+			'id' => $log['model_id']
+		));
+	}
+
+/**
+ * undocumented function
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+	function logType($log) {
+		$class = strtolower($log['model']);
+		$styles = $this->stylize($log['model']);
+		return "<span class=\"{$class}\" style=\"{$styles}\">{$log['model']}</span>";
+	}
+
+/**
+ * undocumented function
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+	function logOwner($action, $user) {
+		$message = __('Created by %s ', true);
+		switch ($action) {
+			case 'add' :
+				$message = __('Created by %s ', true);
+				break;
+			case 'delete' :
+				$message = __('Deleted by %s ', true);
+				break;
+			default :
+				$message = __('Updated by %s ', true);
+				break;
+		}
+		$user_name = (isset($user['name'])) ? $user['name'] : __('System', true);
+		return sprintf($message, "<span class=\"username\">{$user_name}</span>");
 	}
 
 /**
@@ -44,6 +112,13 @@ class LogHelper extends AppHelper {
 		}
 	}
 
+/**
+ * Turns any hex color into a color safe version of itself
+ *
+ * @param string $in Hex color
+ * @return string
+ * @author Jose Diaz-Gonzalez
+ */
 	function color_mkwebsafe($in) {
 		$vals['r'] = hexdec(substr($in, 0, 2));
 		$vals['g'] = hexdec(substr($in, 2, 2));

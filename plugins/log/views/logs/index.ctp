@@ -1,4 +1,4 @@
-<?php $this->Html->h2(__('Application Activity', true)); ?>
+<h2><?php __('Application Activity'); ?></h2>
 <table id="recent-activity" class="table" cellpadding="0" cellspacing="0">
 	<thead class="hide">
 		<tr>
@@ -12,48 +12,19 @@
 			<tr>
 			<?php if ($this->Log->checkIfChanged(date('Y-m-d', strtotime($a_log['Log']['created'])))) : ?>
 				<td colspan="3">
-					<strong>
-						<?php
-							if ($this->Time->isToday($a_log['Log']['created'])) {
-								echo "<mark>" . __('Today', true) . "</mark>";
-							} elseif ($this->Time->wasYesterday($a_log['Log']['created'])) {
-								__('Yesterday');
-							} else {
-								echo $this->Time->format('d M', $a_log['Log']['created']);
-							}
-						?>
-					</strong>
+					<?php echo $this->Log->logDate($a_log['Log']['created']); ?>
 				</td>
 				</tr>
 			<tr>
 			<?php endif; ?>
 				<td class="frontpage-type">
-					<span class="<?php echo strtolower($a_log['Log']['model']);?>" style="<?php echo $this->Log->stylize($a_log['Log']['model']); ?>"><?php echo $a_log['Log']['model']; ?></span>
+					<?php echo $this->Log->logType($a_log['Log']); ?>
 				</td>
 				<td class="frontpage-title">
-					<?php echo $this->Html->link($a_log['Log']['title'], array(
-						'plugin' => false,
-						'controller' => Inflector::tableize($a_log['Log']['model']),
-						'action' => 'view',
-						'id' => $a_log['Log']['model_id'])); ?>
+					<?php echo $this->Log->logTitle($a_log['Log']); ?>
 				</td>
 				<td class="frontpage-owner">
-					<?php
-						$message = __('Created by %s ', true);
-						switch ($a_log['Log']['action']) {
-							case 'add' :
-								$message = __('Created by %s ', true);
-								break;
-							case 'delete' :
-								$message = __('Deleted by %s ', true);
-								break;
-							default :
-								$message = __('Updated by %s ', true);
-								break;
-						}
-					?>
-					<?php $user = (isset($activity['User']['name'])) ? $activity['User']['name'] : __('System', true); ?>
-					<?php echo sprintf($message, "<span class=\"username\">$user</span>"); ?>
+					<?php echo $this->Log->logOwner($a_log['Log']['action'], $a_log['User']); ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>
