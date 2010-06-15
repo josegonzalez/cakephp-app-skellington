@@ -63,6 +63,8 @@ class LogableBehavior extends ModelBehavior  {
 	var $user = null;
 	var $UserModel = false;
 	var $userIP = false;
+	var $userBrowser = false;
+	var $requestParameters = null;
 	var $settings = array();
 	var $defaults = array(
 		'enabled' => true,
@@ -297,6 +299,14 @@ class LogableBehavior extends ModelBehavior  {
 		$this->user = null;
 	}
 
+	function setRequestParameters(&$Model, $requestParams = array()) {
+		$this->requestParams = (array) $requestParams;
+	}
+
+	function setUserBrowser(&$Model, $userBrowser = null) {
+		$this->userBrowser = $userBrowser;
+	}
+
 	function setUserIp(&$Model, $userIP = null) {
 		$this->userIP = $userIP;
 	}
@@ -473,6 +483,14 @@ class LogableBehavior extends ModelBehavior  {
 
 		if (isset($this->Log->_schema['ip']) && $this->userIP) {
 			$logData['Log']['ip'] = $this->userIP;
+		}
+
+		if (isset($this->Log->_schema['browser']) && $this->userBrowser) {
+			$logData['Log']['browser'] = $this->userBrowser;
+		}
+
+		if (isset($this->Log->_schema['request']) && $this->requestParameters) {
+			$logData['Log']['request'] = serialize($this->requestParameters);
 		}
 
 		if (isset($this->Log->_schema[ $this->settings[$Model->alias]['userKey'] ]) && $this->user) {
