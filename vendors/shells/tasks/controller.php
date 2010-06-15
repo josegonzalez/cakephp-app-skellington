@@ -124,7 +124,16 @@ class ControllerTask extends RebakeTask {
 			$model = $this->_modelName($table);
 			$controller = $this->_controllerName($model);
 			if (App::import('Model', $model)) {
-				$actions = $this->bakeActions($controller);
+				$actions = $this->bakeActions($controller);;
+				if (!empty($this->args[1]) && ($this->args[1] == 'public' || $this->args[1] == 'scaffold')) {
+					$actions = $this->bakeActions($controller);
+				} elseif (!empty($this->args[1]) && $this->args[1] == 'admin') {
+					$actions = ($admin = $this->Project->getPrefix()) ? $this->bakeActions($controller, $admin) : null;
+				}
+
+				if (!empty($this->args[2]) && $this->args[2] == 'admin') {
+					$actions .= ($admin = $this->Project->getPrefix()) ? "\n" . $this->bakeActions($controller, $admin) : null;
+				}
 				if ($this->bake($controller, $actions) && $unitTestExists) {
 					$this->bakeTest($controller);
 				}
