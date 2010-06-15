@@ -68,7 +68,7 @@ class LogableBehavior extends ModelBehavior  {
 		'userModel' => 'User',
 		'userKey' => 'user_id',
 		'change' => 'list',
-		'description_ids' => TRUE,
+		'description_ids' => true,
 		'skip' => array(),
 		'ignore' => array(),
 		'classField' => 'model',
@@ -81,7 +81,7 @@ class LogableBehavior extends ModelBehavior  {
  *	userModel 		: 'User'. Class name of the user model you want to use (User by default), if you want to save User in log
  *	userKey   		: 'user_id'. The field for saving the user to (user_id by default).
  *	change    		: 'list' > [name, age]. Set to 'full' for [name (alek) => (Alek), age (28) => (29)]
- *	description_ids 	: TRUE. Set to FALSE to not include model id and user id in the title field
+ *	description_ids : TRUE. Set to FALSE to not include model id and user id in the title field
  *	skip  			: array(). String array of actions to not log
  *
  * @param Object $Model
@@ -135,18 +135,18 @@ class LogableBehavior extends ModelBehavior  {
  */
 	function findLog(&$Model, $params = array()) {
 		$defaults = array(
-			 $this->settings[$Model->alias]['classField'] => NULL,
-			 'action' => NULL,
+			 $this->settings[$Model->alias]['classField'] => null,
+			 'action' => null,
 			 'order' => 'created DESC',
-			 $this->settings[$Model->alias]['userKey'] => NULL,
+			 $this->settings[$Model->alias]['userKey'] => null,
 			 'conditions' => array(),
-			 $this->settings[$Model->alias]['foreignKey'] => NULL,
+			 $this->settings[$Model->alias]['foreignKey'] => null,
 			 'fields' => array(),
 			 'limit' => 50,
 		);
 		$params = array_merge($defaults, $params);
 		$options = array('order' => $params['order'], 'conditions' => $params['conditions'], 'fields' => $params['fields'], 'limit' => $params['limit']);
-		if ($params[$this->settings[$Model->alias]['classField']] === NULL) {
+		if ($params[$this->settings[$Model->alias]['classField']] === null) {
 			$params[$this->settings[$Model->alias]['classField']] = $Model->alias;
 		}
 		if ($params[$this->settings[$Model->alias]['classField']]) {
@@ -155,7 +155,7 @@ class LogableBehavior extends ModelBehavior  {
 			} elseif (isset($this->Log->_schema['description'])) {
 				$options['conditions']['description LIKE '] = $params[$this->settings[$Model->alias]['classField']].'%';
 			} else {
-				return FALSE;
+				return false;
 			}
 		}
 		if ($params['action'] && isset($this->Log->_schema['action'])) {
@@ -185,7 +185,7 @@ class LogableBehavior extends ModelBehavior  {
  */
 	function findUserActions(&$Model, $user_id, $params = array()) {
 		if (!$this->UserModel) {
-			return NULL;
+			return null;
 		}
 		// if logged in user is asking for her own log, use the data we allready have
 		if (isset($this->user)
@@ -283,7 +283,7 @@ class LogableBehavior extends ModelBehavior  {
 		if (isset($this->Log->_schema[$this->settings[$Model->alias]['foreignKey']]) && is_numeric($id)) {
 			$logData['Log'][$this->settings[$Model->alias]['foreignKey']] = $id;
 		}
-		$title = NULL;
+		$title = null;
 		if (isset($values['title'])) {
 			$title = $values['title'];
 			unset($logData['Log']['title']);
@@ -293,7 +293,7 @@ class LogableBehavior extends ModelBehavior  {
 	}
 
 	function clearUserData(&$Model) {
-		$this->user = NULL;
+		$this->user = null;
 	}
 
 	function setUserIp(&$Model, $userIP = null) {
@@ -328,7 +328,7 @@ class LogableBehavior extends ModelBehavior  {
 			if ($this->settings[$Model->alias]['description_ids']) {
 				$logData['Log']['description'] .= ' ('.$Model->id.') ';
 			}
-			$logData['Log']['description'] .= __('deleted',TRUE);
+			$logData['Log']['description'] .= __('deleted',true);
 		}
 		$logData['Log']['action'] = 'delete';
 		$this->_saveLog($Model, $logData);
@@ -374,9 +374,9 @@ class LogableBehavior extends ModelBehavior  {
 			}
 
 			if ($created) {
-				$logData['Log']['description'] .= __('added',TRUE);
+				$logData['Log']['description'] .= __('added',true);
 			} else {
-				$logData['Log']['description'] .= __('updated',TRUE);
+				$logData['Log']['description'] .= __('updated',true);
 			}
 		}
 		if (isset($this->Log->_schema['action'])) {
@@ -435,7 +435,7 @@ class LogableBehavior extends ModelBehavior  {
  * @param array $logData
  */
 	function _saveLog(&$Model, $logData, $title = null) {
-		if ($title !== NULL) {
+		if ($title !== null) {
 			$logData['Log']['title'] = $title;
 		} elseif ($Model->displayField == $Model->primaryKey) {
 			$logData['Log']['title'] = $Model->alias . ' ('. $Model->id.')';
@@ -458,19 +458,19 @@ class LogableBehavior extends ModelBehavior  {
 			}
 		}
 
-		if (!isset($this->Log->_schema[ 'action' ])) {
+		if (!isset($this->Log->_schema['action'])) {
 			unset($logData['Log']['action']);
 		} elseif (isset($Model->logableAction) && !empty($Model->logableAction)) {
 			$logData['Log']['action'] = implode(',',$Model->logableAction); // . ' ' . $logData['Log']['action'];
 			unset($Model->logableAction);
 		}
 
-		if (isset($this->Log->_schema[ 'version_id' ]) && isset($Model->version_id)) {
+		if (isset($this->Log->_schema['version_id']) && isset($Model->version_id)) {
 			$logData['Log']['version_id'] = $Model->version_id;
 			unset($Model->version_id);
 		}
 
-		if (isset($this->Log->_schema[ 'ip' ]) && $this->userIP) {
+		if (isset($this->Log->_schema['ip']) && $this->userIP) {
 			$logData['Log']['ip'] = $this->userIP;
 		}
 
