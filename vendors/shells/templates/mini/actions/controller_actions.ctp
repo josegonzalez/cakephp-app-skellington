@@ -163,6 +163,12 @@ foreach ($modelObj->belongsTo as $associationName => $relation) {
 			}
 		}
 	}
+
+	function <?php echo $admin; ?>profile() {
+		$this->layout = 'alternate';
+		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('profile');
+		$this->set(compact('<?php echo $singularName; ?>'));
+	}
 <?php endif; ?>
 
 	function <?php echo $admin ?>index() {
