@@ -50,7 +50,7 @@
  */
 if (!defined('STDIN')) App::import('Vendor', 'assert');
 
-function diebug($variables = false, $showHtml = true, $showFrom = true, $die = true) {
+function diebug($variable = false, $showHtml = true, $showFrom = true, $die = true) {
 	if (Configure::read() > 0) {
 		if (is_array($showHtml)) {
 			$showHtml = array_merge(array('showHtml' => true, 'showFrom' => true, 'die' => true), $showHtml);
@@ -61,18 +61,12 @@ function diebug($variables = false, $showHtml = true, $showFrom = true, $die = t
 			echo '<strong>' . substr(str_replace(ROOT, '', $calledFrom[0]['file']), 1) . '</strong>';
 			echo ' (line <strong>' . $calledFrom[0]['line'] . '</strong>)<br /><br />';
 		}
-		if (!is_array($variables)) $variables = array($variables);
 		if ($showHtml) {
 			App::import('Vendor', 'dBug', array('file' => 'dBug.php'));
-			foreach ($variables as $key => $variable) {
-				new dBug($variable);
-				echo '<br />';
-			}
+			new dBug($variable);
+			echo '<br />';
 		} else {
-			foreach ($variables as $variable) {
-				debug($var, $showHtml, $showFrom);
-				echo '<br />';
-			}
+			debug($variable, $showHtml, $showFrom);
 		}
 		if ($die) die;
 	}
