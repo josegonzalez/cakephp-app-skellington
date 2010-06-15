@@ -143,8 +143,8 @@ class AuthsomeComponent extends Object{
 
 		$user = Configure::read($this->settings['configureKey']);
 		if (is_null($user)) {
-			throw new AppException(
-				'Unable to initilize user'
+			throw new Exception(
+				'Unable to initialize user'
 			);
 		}
 
@@ -201,7 +201,7 @@ class Authsome{
 		}
 
 		if (!$instance) {
-			throw new AppException(
+			throw new Exception(
 				'AuthsomeComponent not initialized properly!'
 			);
 		}
