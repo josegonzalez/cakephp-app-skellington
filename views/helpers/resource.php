@@ -8,7 +8,6 @@ class ResourceHelper extends Helper {
 	var $secondary_navigations = array();
 	var $definition_list = 0;
 	var $definition_list_class = ' class="altrow"';
-	var $lastSeen = null;
 
 /**
  * Set captured navigation and blocks for the view
