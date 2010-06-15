@@ -182,7 +182,9 @@ foreach ($modelObj->belongsTo as $associationName => $relation) {
 	}
 
 	function <?php echo $admin ?>view($<?php echo $slugField; ?> = null) {
+		$<?php echo $slugField; ?> = (!$<?php echo $slugField; ?> && !empty($this->params['named']['id'])) ? $this->params['named']['id'] : $<?php echo $slugField; ?>;
 		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('view', $<?php echo $slugField; ?>);
+
 		if (!$<?php echo $singularName; ?>) {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(__('Invalid <?php echo strtolower($singularHumanName) ?>', true), 'flash/error');
