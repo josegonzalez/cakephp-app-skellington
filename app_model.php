@@ -165,16 +165,13 @@ class AppModel extends Model {
  * @access  public
  * @author  Jose Diaz-Gonzalez
  */
-	function detachAllBehaviors($except = array(), $detach = false) {
-		$except = (array) $except;
-		$behaviors = $this->Behaviors->attached();
+	function disableAllBehaviors($except = array(), $detach = false) {
+		$behaviors = array_diff($this->Behaviors->attached(), (array) $except);
 		foreach ($behaviors as &$behavior) {
-			if (!in_array($behavior, $except)) {
-				if (!$detach) {
-					$this->Behaviors->disable($behavior);
-				} else {
-					$this->Behaviors->detach($behavior);
-				}
+			if ($detach) {
+				$this->Behaviors->detach($behavior);
+			} else {
+				$this->Behaviors->disable($behavior);
 			}
 		}
 	}
