@@ -9,7 +9,6 @@
 class AppModel extends Model {
 	var $actsAs = array('Callbackable', 'Containable', 'Lookupable', 'Log.Logable' => array('change' => 'full'));
 	var $recursive = -1;
-	var $behaviorData = null;
 	var $query = null;
 
 /**
@@ -107,11 +106,11 @@ class AppModel extends Model {
 			$options = array_merge($options, compact('validate', 'fieldList', 'callbacks'));
 		}
 
-		$this->behaviorData = $extra;
+		$this->setCallbackableData($extra);
 
 		$method = null;
-		if (isset($extra['callback']) and is_string($extra['callback'])) {
-			$method = sprintf('__beforeSave%s', Inflector::camelize($extra['callback']));
+		if (($callback = $this->getCallbackableData('callback', 'string')) != false) {
+			$method = sprintf('__beforeSave%s', Inflector::camelize($callback));
 		}
 
 		if($method && method_exists($this, $method)) {
