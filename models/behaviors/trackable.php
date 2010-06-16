@@ -7,7 +7,7 @@
  * @author Jose Diaz-Gonzalez
  * @package app
  * @subpackage app.models.behaviors
- * @version 1.1
+ * @version 1.2
  */
 class TrackableBehavior extends ModelBehavior {
 /**
@@ -16,7 +16,7 @@ class TrackableBehavior extends ModelBehavior {
  * @var array
  * @access protected
  */
-	var $__settings = array(
+	var $_defaults = array(
 		'user_model' => 'User',    //name of User model
 		'created_by_field' => 'created_by',    //the name of the "created_by" field in DB (default 'created_by')
 		'modified_by_field' => 'modified_by',  //the name of the "modified_by" field in DB (default 'modified_by')
@@ -24,17 +24,14 @@ class TrackableBehavior extends ModelBehavior {
 	);
 
 /**
- * Initiate behaviour for the model using settings.
+ * Initiate behavior for the model using settings.
  *
- * @param object $Model Model using the behaviour
+ * @param object $model Model using the behavior
  * @param array $settings Settings to override for model.
  * @access public
  */
 	function setup(&$model, $config = array()) {
-		$this->settings[$model->alias] = $this->__settings;
-
-		//merge custom config with default settings
-		$this->settings[$model->alias] = array_merge($this->settings[$model->alias], (array)$config);
+		$this->settings[$model->alias] = array_merge($this->_defaults, (array) $config);
 
 		$hasFieldCreatedBy = $model->hasField($this->settings[$model->alias]['created_by_field']);
 		$hasFieldModifiedBy = $model->hasField($this->settings[$model->alias]['modified_by_field']);
@@ -67,6 +64,7 @@ class TrackableBehavior extends ModelBehavior {
 /**
  * Sets the User_id for the created_by and modified_by fields for this model
  *
+ * @param object $model Model using the behavior
  * @return void
  * @author Matt Curry
  **/
