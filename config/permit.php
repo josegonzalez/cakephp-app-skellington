@@ -1,6 +1,6 @@
 <?php
 
-App::import('Component', 'Sanction.PermitComponent');
+if (!class_exists('Permit')) App::import('Component', 'Sanction.PermitComponent');
 
 Permit::access(
 	array('plugin' => 'settings'),

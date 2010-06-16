@@ -48,7 +48,7 @@
  * Inflector::rules('plural', array('rules' => array(), 'irregular' => array(), 'uninflected' => array()));
  *
  */
-if (!defined('STDIN')) App::import('Vendor', 'assert');
+if (!defined('STDIN') && !class_exists('Assert')) App::import('Vendor', 'assert');
 
 function diebug($variable = false, $showHtml = true, $showFrom = true, $die = true) {
 	if (Configure::read() > 0) {
@@ -62,7 +62,7 @@ function diebug($variable = false, $showHtml = true, $showFrom = true, $die = tr
 			echo ' (line <strong>' . $calledFrom[0]['line'] . '</strong>)<br /><br />';
 		}
 		if ($showHtml) {
-			App::import('Vendor', 'dBug', array('file' => 'dBug.php'));
+			if (!class_exists('dBug')) App::import('Vendor', 'dBug', array('file' => 'dBug.php'));
 			new dBug($variable);
 			echo '<br />';
 		} else {

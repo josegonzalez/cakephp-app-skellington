@@ -39,7 +39,7 @@ class AppModel extends Model {
 			return $return;
 		}
 		if (!empty($options['cache'])) {
-			App::import('Vendor', 'mi_cache');
+			if (!class_exists('MiCache')) App::import('Vendor', 'mi_cache');
 			if (is_int($options['cache'])) MiCache::config(array('duration' => $options['cache']));
 			unset($options['cache']);
 			return MiCache::data($this->alias, 'find', $type, $options);
