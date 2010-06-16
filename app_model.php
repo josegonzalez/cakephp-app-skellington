@@ -7,19 +7,50 @@
  * @package       app
  */
 class AppModel extends Model {
-	var $actsAs = array('Callbackable', 'Containable', 'Lookupable', 'Log.Logable' => array('change' => 'full'));
+/**
+ * List of behaviors to load when the model object is initialized. Settings can be
+ * passed to behaviors by using the behavior name as index. Eg:
+ *
+ * var $actsAs = array('Translate', 'MyBehavior' => array('setting1' => 'value1'))
+ *
+ * @var array
+ * @access public
+ * @link http://book.cakephp.org/view/1072/Using-Behaviors
+ */
+	var $actsAs = array(
+		'Callbackable',
+		'Containable',
+		'Lookupable',
+		'Log.Logable' => array('change' => 'full')
+	);
+
+/**
+ * Number of associations to recurse through during find calls. Fetches only
+ * the first level by default.
+ *
+ * @var integer
+ * @access public
+ * @link http://book.cakephp.org/view/1057/Model-Attributes#recursive-1063
+ */
 	var $recursive = -1;
+
+/**
+ * Query currently executing.
+ *
+ * @var array
+ * @access public
+ */
 	var $query = null;
 
 /**
  * Custom find types, as per Matt Curry's method
  *
- * @param   string $type
- * @param   array $options
- * @return  mixed array|integer|boolean
- * @access  public
- * @author  Matt Curry
- * @link    http://github.com/mcurry/find
+ * @param string $type
+ * @param array $options
+ * @return mixed array|integer|boolean
+ * @access public
+ * @author Matt Curry
+ * @link http://github.com/mcurry/find
  */
 	function find($type, $options = array()) {
 		$method = null;
@@ -56,10 +87,12 @@ class AppModel extends Model {
 /**
  * Allows the returning of query parameters for use in pagination
  *
- * @param   array $query
- * @return  boolean
- * @access  public
- * @author  Matt Curry
+ * @param array $queryData Data used to execute this query, i.e. conditions, order, etc.
+ * @return mixed true if the operation should continue, false if it should abort; or, modified
+ *               $queryData to continue with new $queryData
+ * @access public
+ * @author Matt Curry
+ * @link http://book.cakephp.org/view/1048/Callback-Methods#beforeFind-1049
  */
 	function beforeFind($query = array()) {
 		$query = (array) $query;
@@ -78,17 +111,19 @@ class AppModel extends Model {
 	}
 
 /**
- * undocumented function
+ * Saves model data (based on white-list, if supplied) to the database. By
+ * default, validation occurs before save.
  *
- * @param   array $data Data to save.
- * @param   mixed $validate Either a boolean, or an array.
+ * @param array $data Data to save.
+ * @param mixed $validate Either a boolean, or an array.
  *   If a boolean, indicates whether or not to validate before saving.
  *   If an array, allows control of validate, callbacks, and fieldList
- * @param   array $fieldList List of fields to allow to be written
- * @param   array $extra controls access to optional data a Behavior may want
- * @return  mixed On success Model::$data if its not empty or true, false on failure
- * @access  public
- * @author  Jose Diaz-Gonzalez
+ * @param array $fieldList List of fields to allow to be written
+ * @param array $extra controls access to optional data a Behavior may want
+ * @return mixed On success Model::$data if its not empty or true, false on failure
+ * @access public
+ * @author Jose Diaz-Gonzalez
+ * @link http://book.cakephp.org/view/1031/Saving-Your-Data
  **/
 	function save($data = null, $validate = true, $fieldList = array(), $extra = array()) {
 		$this->data = (!$data) ? $this->data : $data;
@@ -123,12 +158,12 @@ class AppModel extends Model {
 /**
  * Unsets contain key for faster pagination counts
  *
- * @param   array $conditions
- * @param   integer $recursive
- * @param   array $extra
- * @return  integer
- * @access  public
- * @author  Jose Diaz-Gonzalez
+ * @param array $conditions
+ * @param integer $recursive
+ * @param array $extra
+ * @return integer
+ * @access public
+ * @author Jose Diaz-Gonzalez
  */
 	function paginateCount($conditions = null, $recursive = 0, $extra = array()) {
 		$extra = (array) $extra;
@@ -141,11 +176,15 @@ class AppModel extends Model {
 	}
 
 /**
- * Updates a particular record without invoking model callbacks
+ * Convenience method to update one record without invoking any callbacks
  *
- * @return  boolean True on success, false on Model::id is not set or failure
- * @access  public
- * @author  Jose Diaz-Gonzalez
+ * @param array $fields Set of fields and values, indexed by fields.
+ *    Fields are treated as SQL snippets, to insert literal values manually escape your data.
+ * @param mixed $conditions Conditions to match, true for all records
+ * @return boolean True on success, false on Model::id is not set or failure
+ * @access public
+ * @author Jose Diaz-Gonzalez
+ * @link http://book.cakephp.org/view/1031/Saving-Your-Data
  **/
 	function update($fields, $conditions = array()) {
 		$conditions = (array) $conditions;
@@ -159,11 +198,11 @@ class AppModel extends Model {
 /**
  * Disables/detaches all behaviors from model
  *
- * @param   mixed $except string or array of behaviors to exclude from detachment
- * @param   boolean $detach If true, detaches the behavior instead of disabling it
- * @return  void
- * @access  public
- * @author  Jose Diaz-Gonzalez
+ * @param mixed $except string or array of behaviors to exclude from detachment
+ * @param boolean $detach If true, detaches the behavior instead of disabling it
+ * @return void
+ * @access public
+ * @author Jose Diaz-Gonzalez
  */
 	function disableAllBehaviors($except = array(), $detach = false) {
 		$behaviors = array_diff($this->Behaviors->attached(), (array) $except);
@@ -179,9 +218,9 @@ class AppModel extends Model {
 /**
  * Enables all previously disabled attachments
  *
- * @return  void
- * @access  public
- * @author  Jose Diaz-Gonzalez
+ * @return void
+ * @access public
+ * @author Jose Diaz-Gonzalez
  */
 	function enableAllBehaviors() {
 		$behaviors = $this->Behaviors->attached();
@@ -225,11 +264,11 @@ class AppModel extends Model {
  * If you already have an array of IDs(/primary keys), you can skip the find('list')
  * query by passing the array as $options['suppliedList'].
  *
- * @param   $options  array of standard and function-specific find options.
- * @return  array
- * @access  public
- * @author  Jamie Nay
- * @link    http://github.com/jamienay/find_random
+ * @param $options array of standard and function-specific find options.
+ * @return array
+ * @access public
+ * @author Jamie Nay
+ * @link http://github.com/jamienay/find_random
  */
 	function __findRandom($options = array()) {
 		if (!isset($options['amount'])) {
@@ -290,13 +329,13 @@ class AppModel extends Model {
  * Modified version of Validation::postal - allows for multiple
  * countries to be specified as an array.
  *
- * @param   mixed $check Value to check
- * @param   string $regex Regular expression to use
- * @param   mixed $country Countries to use for formatting
- * @return  boolean Success
- * @access  public
- * @author  Jamie Nay
- * @link    http://github.com/jamienay/postal_validation
+ * @param mixed $check Value to check
+ * @param string $regex Regular expression to use
+ * @param mixed $country Countries to use for formatting
+ * @return boolean Success
+ * @access public
+ * @author Jamie Nay
+ * @link http://github.com/jamienay/postal_validation
  */
 	function postal_multiple($check, $regex = null, $country = null) {
 		// List of regular expressions to use, if a custom one isn't specified.
