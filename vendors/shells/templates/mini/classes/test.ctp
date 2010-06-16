@@ -21,15 +21,26 @@
 echo "<?php\n";
 echo "/* ". $className ." Test cases generated on: " . date('Y-m-d H:m:s') . " : ". time() . "*/\n";
 ?>
-App::import('<?php echo $type; ?>', '<?php echo $plugin . $className;?>');
+App::import('<?php echo $type; ?>', '<?php echo $plugin . $className; ?>');
 
 <?php if ($mock and strtolower($type) == 'controller'): ?>
 class Test<?php echo $fullClassName; ?> extends <?php echo $fullClassName; ?> {
+	var $name = '<?php echo $className; ?>';
+
 	var $autoRender = false;
 
 	function redirect($url, $status = null, $exit = true) {
 		$this->redirectUrl = $url;
 	}
+
+	function render($action = null, $layout = null, $file = null) {
+		$this->renderedAction = $action;
+	}
+
+	function _stop($status = 0) {
+		$this->stopped = $status;
+	}
+
 }
 
 <?php endif; ?>
