@@ -1,7 +1,20 @@
 <?php
 class ResourceHelper extends Helper {
 
+/**
+ * Other helpers used by ResourceHelper
+ *
+ * @var array
+ * @access public
+ */
 	var $helpers = array('Html');
+
+/**
+ * Instance of View class this helper sends output to.
+ *
+ * @var string
+ * @access public
+ */
 	var $view = null;
 	var $sidebar_for_layout = array();
 	var $secondary_navigations = array();
@@ -55,21 +68,23 @@ class ResourceHelper extends Helper {
 	}
 
 /**
- * undocumented function
+ * Adds a Navigation Link to the sidebar
  *
+ * @param string $navigation Name of the navigation block to append link to
+ * @param array $link Array of link options
  * @return void
  * @author Jose Diaz-Gonzalez
  **/
-	function sidebar_navigation($navigation = null, $html_link = array()) {
+	function sidebar_navigation($navigation = null, $link = array()) {
 		if (is_array($nagivation)) {
-			$html_link = $navigation;
+			$link = $navigation;
 			$navigation = 'default';
 		}
 
 		$this->sidebar_for_layout['navigation'][$navigation][] = array(
-			'title' => $html_link['title'],
-			'url' => (isset($html_link['url'])) ? $html_link['url'] : array(),
-			'options' => (isset($html_link['options'])) ? $html_link['options'] : array(),
+			'title' => $link['title'],
+			'url' => (isset($link['url'])) ? $link['url'] : array(),
+			'options' => (isset($link['options'])) ? $link['options'] : array(),
 		);
 	}
 
