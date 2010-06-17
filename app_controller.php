@@ -47,15 +47,5 @@ class AppController extends Controller {
 		'Form', 'Html', 'Js', 'Resource', 'Sanction.Clearance',
 		'Session', 'Time', 'Wysiwyg.Tinymce',  'UploadPack.Upload'
 	);
-
-/**
- * Used to create cached instances of models a controller uses.
- * When set to true, all models related to the controller will be cached.
- * This can increase performance in many cases.
- *
- * @var boolean
- * @access public
- */
-	var $persistModel = true;
 }
 ?>
