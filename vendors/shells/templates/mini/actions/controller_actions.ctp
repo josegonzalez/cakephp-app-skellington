@@ -173,8 +173,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 	}
 
 	function <?php echo $admin; ?>profile() {
-		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('profile');
-		$this->set(compact('<?php echo $singularName; ?>'));
+		$this->data = $this-><?php echo $currentModelName; ?>->find('profile');
 	}
 <?php endif; ?>
 
