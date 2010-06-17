@@ -50,9 +50,15 @@ class ResourceHelper extends Helper {
 		// Start Secondary Nagivation
 		$secondary_navigation_for_layout = '';
 		foreach ($this->secondary_navigations as $i => $nav) {
-			$first = ($i == 0) ? ' first' : '';
-			$active = ($i == 0) ? ' active' : '';
-			$secondary_navigation_for_layout .= "<li class='{$active}{$first}'>" . $this->Html->link($nav['title'], $nav['url'], $nav['options'], $nav['confirmMessage']) . '</li>';
+			$class = 'class="';
+			if ($i == 0) $class .= 'first';
+			if (is_array($nav['url']) && isset($nav['url']['action']) && $nav['url']['action'] == $this->params['action']) {
+				$class .= ($class == 'class="') ? 'active' : ' active';
+			}
+			$class .= '"';
+			if ($class == 'class=""') $class = '';
+			$secondary_navigation_for_layout .= "<li {$class}>" .
+				$this->Html->link($nav['title'], $nav['url'], $nav['options'], $nav['confirmMessage']) . '</li>';
 		}
 		$this->view->set(compact('secondary_navigation_for_layout'));
 		$this->view->set('sidebar_for_layout', $this->sidebar_for_layout);
