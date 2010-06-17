@@ -61,7 +61,7 @@
 			<div id="user-navigation">
 				<ul class="wat-cf">
 					<li><?php echo $this->Html->link(__('Profile', true), array(
-						'controller' => 'users', 'action' => 'profile')); ?></li>
+						'plugin' => null, 'controller' => 'users', 'action' => 'profile')); ?></li>
 					<li><?php echo $this->Html->link(__('Settings', true), array(
 						'plugin' => 'settings', 'controller' => 'settings', 'action' => 'index')); ?></li>
 					<li><?php echo $this->Html->link(__('Logout', true), array(
