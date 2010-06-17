@@ -322,7 +322,7 @@ class ViewTask extends RebakeTask {
 	function bakeActions($actions, $vars) {
 		foreach ($actions as $action) {
 			$content = $this->getContent($action, $vars);
-			$this->bake($action, $content);
+			if ($content) $this->bake($action, $content);
 		}
 	}
 
