@@ -109,6 +109,7 @@ class ModelTask extends RebakeTask {
 				$this->bakeTest($modelClass);
 			}
 		}
+		$this->clearCache();
 	}
 
 /**

@@ -139,6 +139,7 @@ class ControllerTask extends RebakeTask {
 				}
 			}
 		}
+		$this->clearCache();
 	}
 
 /**

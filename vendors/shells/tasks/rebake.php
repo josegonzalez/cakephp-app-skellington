@@ -66,4 +66,45 @@ class RebakeTask extends Shell {
 		}
 		return $path;
 	}
+
+/**
+ * Clears the Cache using the Folder class
+ *
+ * @param boolean $empty True to delete empty files
+ * @param boolean $aggressive Deletes both files and folders
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ */
+	function clearCache($empty = false, $aggressive = true) {
+		$return = array();
+
+		$paths = array('data', 'models', 'persistent', 'views');
+		$folder = new Folder();
+		foreach ($paths as $path) {
+			clearCache(null, $path, null);
+			if (!$folder->cd(CACHE . $path)) continue;
+			$files = $folder->read();
+
+			foreach ($files[1] as $file) {
+				if ($file == 'empty' && !$empty) continue;
+				$return[] = CACHE . $path . DS . $file;
+				unlink(CACHE . $path . DS . $file);
+			}
+			if ($aggressive) foreach ($files[0] as $a_folder) {
+				$return[] = CACHE . $path . DS . $a_folder;
+				unlink(CACHE . $path . DS . $a_folder);
+			}
+		}
+		$folder->cd(CACHE);
+		$files = $folder->read();
+		foreach ($files[1] as $file) {
+			if ($file == 'empty' && !$empty) continue;
+			$return[] = CACHE . $file;
+			unlink(CACHE . $file);
+		}
+		foreach ($paths as $path) {
+			clearCache(null, $path, null);
+		}
+		return $return;
+	}
 }

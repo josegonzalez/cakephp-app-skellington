@@ -202,6 +202,7 @@ class ViewTask extends RebakeTask {
 				$actions = null;
 			}
 		}
+		$this->clearCache();
 	}
 
 /**
