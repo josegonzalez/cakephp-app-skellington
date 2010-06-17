@@ -7,10 +7,10 @@ $headers = array(
 );
 $rows = array();
 
-echo "<h3>Neat Array</h3>";
+echo '<h3>' . __d('settings', 'Neat Array', true) . '</h3>';
 echo $toolbar->makeNeatArray($content);
 
-echo "<h3>Summary</h3>";
+echo '<h3>' . __d('settings', 'Summary', true) . '</h3>';
 foreach ($content as $key => $value) {
 	if (!is_array($value)) {
 		$rows['General'][] = array($key, gettype($value), $value);
@@ -26,5 +26,4 @@ foreach ($rows as $title => $row) {
 	echo "<h4>{$title}</h4>";
 	echo $toolbar->table($row, $headers, array('title' => $title));
 }
-
 ?>
