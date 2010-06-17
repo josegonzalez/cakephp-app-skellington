@@ -192,6 +192,7 @@ echo "<?php \$this->Resource->secondary_navigation('Index', array('action' => 'i
 if (strpos($action, 'add') === false) {
 	$the_key = (in_array('slug', $original_fields)) ? 'slug' : $primaryKey;
 	echo "<?php \$this->Resource->secondary_navigation('View', array('action' => 'view', \$this->data['{$modelClass}']['{$the_key}'])); ?>\n";
+	echo "<?php \$this->Resource->secondary_navigation('Edit', array('action' => 'edit', \$this->data['{$modelClass}']['{$primaryKey}'] . '#')); ?>\n";
 	echo "<?php \$this->Resource->secondary_navigation('Add', array('action' => 'add')); ?>\n";
 	echo "<?php \$this->Resource->secondary_navigation('Delete', array('action' => 'delete', \$this->data['{$modelClass}']['{$primaryKey}']), null, sprintf(__('Are you sure you want to delete %s?', true), \$this->data['{$modelClass}']['{$displayField}'])); ?>\n";
 }
