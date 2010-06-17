@@ -1,39 +1,32 @@
-
-<div id="box">
-	<h1>Web App Theme</h1>
-	<div class="block" id="block-login">
-		<h2>Login Box</h2>
-		<div class="content login">
-			<div class="flash">
-				<div class="message notice">
-					<p>Logged in successfully</p>
+<div class="block" id="block-login">
+	<h2>Login Box</h2>
+	<div class="content login">
+		<?php echo "<?php echo \$this->Session->flash(); ?>"; ?>
+		<?php echo "<?php echo \$this->Form->create('User', array('class' => 'form login')); ?>\n"; ?>
+			<div class="group wat-cf">
+				<div class="left">
+					<?php echo "<?php echo \$this->Form->label('{$modelClass}.email', __('Email', true), array('class' => 'label right')); ?>\n"; ?>
+				</div>
+				<div class="right">
+					<?php echo "<?php echo \$this->Form->input('{$modelClass}.email', array('class' => 'text_field', 'label' => false)); ?>\n"; ?>
 				</div>
 			</div>
-			<form action="#" class="form login">
-				<div class="group wat-cf">
-					<div class="left">
-						<label class="label right">Login</label>
-					</div>
-					<div class="right">
-						<input type="text" class="text_field" />
-					</div>
+			<div class="group wat-cf">
+				<div class="left">
+					<?php echo "<?php echo \$this->Form->label('{$modelClass}.password', __('Password', true), array('class' => 'label right')); ?>\n"; ?>
+
 				</div>
-				<div class="group wat-cf">
-					<div class="left">
-						<label class="label right">Password</label>
-					</div>
-					<div class="right">
-						<input type="password" class="text_field" />
-					</div>
+				<div class="right">
+					<?php echo "<?php echo \$this->Form->input('{$modelClass}.password', array('class' => 'text_field', 'label' => false)); ?>\n"; ?>
 				</div>
-				<div class="group navform wat-cf">
-					<div class="right">
-						<button class="button" type="submit">
-							<img src="img/icons/key.png" alt="Save" /> Login
-						</button>
-					</div>
+			</div>
+			<div class="group navform wat-cf">
+				<div class="right">
+					<button class="button" type="submit">
+						<?php echo "<?php echo \$this->Html->image('icons/key.png', array('alt' => __('Login', true))); ?> <?php __('Login'); ?>\n"; ?>
+					</button>
 				</div>
-			</form>
-		</div>
+			</div>
+		<?php echo "<?php echo \$this->Form->end(); ?>\n"; ?>
 	</div>
 </div>
