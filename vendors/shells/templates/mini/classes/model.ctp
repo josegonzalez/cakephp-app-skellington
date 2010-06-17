@@ -210,8 +210,8 @@ if (!empty($validate)):
 endif;
 ?>
 	}
-
 <?php if ($name == 'User') : ?>
+
 	function __beforeSaveAdd($data, $extra) {
 		$data[$this->alias]['password'] = Authsome::hash($data[$this->alias]['new_password']);
 		return $data;
@@ -224,7 +224,9 @@ endif;
 			$this->alias => array(
 				'password' => $data[$this->alias]['password'],
 				'new_password' => $data[$this->alias]['new_password'],
-				'new_password_confirm' => $data[$this->alias]['new_password_confirm']));
+				'new_password_confirm' => $data[$this->alias]['new_password_confirm']
+			)
+		);
 
 		if ($data[$this->alias]['new_password'] != $data[$this->alias]['new_password_confirm']) return false;
 		foreach($data[$this->alias] as $key => &$value) {
@@ -233,14 +235,15 @@ endif;
 				return false;
 			}
 		}
-		$data[$this->alias][$this->primaryKey] = Authsome::get('id');
+		$data[$this->alias]['<?php echo $primaryKey; ?>'] = Authsome::get('id');
 
 		$user = $this->find('first', array(
 			'conditions' => array(
 				"{$this->alias}.id" => Authsome::get('id'),
 				"{$this->alias}.password" => $data[$this->alias]['password']),
 			'contain' => false,
-			'fields' => array('id')));
+			'fields' => array('id')
+		));
 
 		if (!$user) return false;
 		return $data;
@@ -248,24 +251,27 @@ endif;
 
 	function __beforeSaveResetPassword($data, $extra) {
 		return array($this->alias => array(
-			$this->primaryKey => $extra['user_id'],
+			'<?php echo $primaryKey; ?>' => $extra['user_id'],
 			'password' => Authsome::hash($data[$this->alias]['password']),
-			'activation_key' => md5(uniqid())));
+			'activation_key' => md5(uniqid())
+		));
 	}
 
 	function __findDashboard() {
 		return $this->find('first', array(
 			'conditions' => array(
-				"{$this->alias}.{$this->primaryKey}" => Authsome::get($this->primaryKey)),
-			'contain' => false));
+				"{$this->alias}.<?php echo $primaryKey; ?>" => Authsome::get('<?php echo $primaryKey; ?>')),
+			'contain' => false
+		));
 	}
 <?php endif; ?>
+
 	function __findEdit($id = null) {
 		if (!$id) return false;
 
 		return $this->find('first', array(
-			'conditions' => array(
-				"{$this->alias}.{$this->primaryKey}" => $id)));
+			'conditions' => array("{$this->alias}.<?php echo $primaryKey; ?>" => $id)
+		));
 	}
 <?php if ($name == 'User') :?>
 
@@ -273,9 +279,26 @@ endif;
 		if (!$email) return false;
 
 		return $this->find('first', array(
-			'conditions' => array(
-				"{$this->alias}.email" => $email),
-			'contain' => false));
+			'conditions' => array("{$this->alias}.email" => $email),
+			'contain' => false
+		));
+	}
+
+<?php
+	$profile_fields = array_diff(array_keys($schema), array('password'));
+	$profile_fields_string = '';
+	foreach ($profile_fields as $key => $field) {
+		$profile_fields_string .= "'{$field}'";
+		if (count($profile_fields) == $key+1) break;
+		$profile_fields_string .= ", ";
+	}
+
+?>
+	function __findProfile() {
+		return $this->find('first', array(
+			'conditions' => array("{$this->alias}.<?php echo $primaryKey; ?>" => Authsome::get('<?php echo $primaryKey; ?>')),
+			'fields' => array(<?php echo $profile_fields_string; ?>)
+		));
 	}
 
 	function __findResetPassword($options = array()) {
@@ -283,8 +306,10 @@ endif;
 
 		return $this->find('first', array(
 			'conditions' => array(
-				"{$this->alias}.{$this->displayField}" => $options['username'],
-				"{$this->alias}.activation_key" => $options['key'])));
+				"{$this->alias}.<?php echo $displayField; ?>" => $options['username'],
+				"{$this->alias}.activation_key" => $options['key']
+			)
+		));
 	}
 <?php endif; ?>
 
@@ -312,7 +337,8 @@ endif;
 			)
 		));
 <?php else: ?>
-			'contain' => false));
+			'contain' => false
+		));
 <?php endif; ?>
 	}
 <?php if ($name == 'User') : ?>
@@ -359,7 +385,7 @@ endif;
 				$this->LoginToken->save($loginToken);
 
 				$conditions = array(
-					"{$this->alias}.{$this->primaryKey}" => $loginToken['LoginToken']['user_id'],
+					"{$this->alias}.<?php echo $primaryKey; ?>" => $loginToken['LoginToken']['user_id'],
 				);
 				break;
 			default:
@@ -376,7 +402,7 @@ endif;
 
 	function authsomePersist($user, $duration) {
 		$token = md5(uniqid(mt_rand(), true));
-		$userId = $user[$this->alias][$this->primaryKey];
+		$userId = $user[$this->alias]['<?php echo $primaryKey; ?>'];
 
 		$this->LoginToken->create(array(
 			'user_id' => $userId,
@@ -386,16 +412,16 @@ endif;
 		));
 		$this->LoginToken->save();
 
-		return "${token}:${userId}";
+		return "{$token}:{$userId}";
 	}
 
 	function changeActivationKey($id) {
 		$activationKey = md5(uniqid());
 		$data = array(
 			"{$this->alias}" => array(
-				"{$this->primaryKey}" => $id,
+				'<?php echo $primaryKey; ?>' => $id,
 				'activation_key' => $activationKey,
-			),
+			)
 		);
 
 		if (!$this->save($data, array('callbacks' => false))) return false;
