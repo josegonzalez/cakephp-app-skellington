@@ -16,7 +16,21 @@ class ResourceHelper extends Helper {
  * @access public
  */
 	var $view = null;
+
+/**
+ * Array of sidebar blocks for use in the layout
+ *
+ * @var array
+ * @access public
+ */
 	var $sidebar_for_layout = array();
+
+/**
+ * Array of Menu items for the secondary navigation
+ *
+ * @var array
+ * @access public
+ */
 	var $secondary_navigations = array();
 	var $definition_list = 0;
 	var $definition_list_class = ' class="altrow"';
