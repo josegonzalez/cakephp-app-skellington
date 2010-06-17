@@ -88,7 +88,7 @@
 						</h2>
 						<div class="inner">
 							<?php echo $this->Session->flash(); ?>
-							<?php if (isset($content_for_layout)) echo $content_for_layout; ?>
+							<?php echo $content_for_layout; ?>
 						</div>
 					</div>
 				</div>
