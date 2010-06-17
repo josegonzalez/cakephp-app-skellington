@@ -2,10 +2,10 @@
 .clear { clear: both; height: 0; }
 
 .wat-cf:after {
-     content: "."; 
-     display: block; 
-     height: 0; 
-     clear: both; 
+     content: ".";
+     display: block;
+     height: 0;
+     clear: both;
      visibility: hidden;
 }
 
@@ -26,7 +26,7 @@ a img { border: none; }
 
 body {
   font-size: 12px;
-  font-family: sans-serif;  
+  font-family: sans-serif;
 }
 
 #container {
@@ -39,12 +39,12 @@ body {
 
 #header {
   position: relative;
-  padding-top: 1px;  
+  padding-top: 1px;
 }
 
 #header h1 {
   margin: 0;
-  padding: 10px 0;  
+  padding: 10px 0;
   font-size: 26px;
 }
 
@@ -52,9 +52,14 @@ body {
   text-decoration: none;
 }
 
-#main {  
+#main {
   width: 70%;
-  float: left;    
+  float: left;
+}
+
+#main.wide {
+	width: 100%;
+	float: none;
 }
 
 .actions-bar {
@@ -73,10 +78,10 @@ body {
 
 #sidebar {
   width: 25%;
-  float: right;      
+  float: right;
 }
 
-#sidebar h3 {  
+#sidebar h3 {
   padding: 10px 15px;
   margin: 0;
   font-size: 13px;
@@ -110,7 +115,7 @@ body {
 }
 
 #main .block .content .inner {
-  padding: 0 15px 15px;  
+  padding: 0 15px 15px;
 }
 
 #main .main p.first {
@@ -120,7 +125,7 @@ body {
 #user-navigation {
   position: absolute;
   top: 0px;
-  right: 20px;  
+  right: 20px;
 }
 
 #main-navigation {
@@ -134,7 +139,7 @@ body {
 }
 
 #user-navigation ul li, #main-navigation ul li, .secondary-navigation ul li {
-  float: left;  
+  float: left;
 }
 
 #main-navigation ul li {
@@ -159,14 +164,14 @@ body {
 }
 
 .secondary-navigation {
-  font-size: 13px;  
+  font-size: 13px;
   border-bottom-width: 10px;
   border-bottom-style: solid;
 }
 
 .secondary-navigation ul li a {
   display: block;
-  padding: 10px 15px;  
+  padding: 10px 15px;
 }
 
 #footer {
@@ -177,7 +182,7 @@ body {
 
 .pagination a, .pagination span {
   padding: 2px 5px;
-  margin-right: 5px; 
+  margin-right: 5px;
   display: block;
   float: left;
   border-style: solid;
@@ -185,17 +190,17 @@ body {
 }
 
 .pagination span.current {
-  font-weight: bold;  
+  font-weight: bold;
 }
 
 .pagination a {
-  text-decoration: none;  
+  text-decoration: none;
 }
 
 /* tables */
 .table {
   width: 100%;
-  border-collapse: collapse;  
+  border-collapse: collapse;
   margin-bottom: 15px;
 }
 
@@ -210,7 +215,7 @@ body {
 }
 
 .table th.last {
-  width: 200px;  
+  width: 200px;
 }
 
 .table th a{
@@ -288,7 +293,7 @@ input.checkbox {
 
 .form label.label {
   display: block;
-  padding-bottom: 2px;  
+  padding-bottom: 2px;
   font-weight: bold;
 }
 
@@ -320,7 +325,7 @@ ul.list li {
 }
 
 ul.list li .left {
-  float: left;  
+  float: left;
 }
 
 ul.list li .left .avatar {
@@ -343,7 +348,7 @@ ul.list li .item .avatar {
 
 #box {
   width: 500px;
-  margin: 50px auto;  
+  margin: 50px auto;
 }
 
 #box .block {
@@ -352,7 +357,7 @@ ul.list li .item .avatar {
 
 #box .block h2 {
   padding: 10px 15px;
-  margin: 0;  
+  margin: 0;
 }
 
 #box .block .content {

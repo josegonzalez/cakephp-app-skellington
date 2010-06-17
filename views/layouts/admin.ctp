@@ -76,8 +76,7 @@
 			</div>
 		</div>
 		<div id="wrapper" class="wat-cf">
-			<div id="main">
-
+			<div id="main" <?php if (empty($sidebar_for_layout)) echo 'class="wide"';?>>
 				<div class="block" id="block-text">
 					<div class="secondary-navigation">
 						<ul class="wat-cf">
@@ -101,12 +100,23 @@
 					</div>
 				</div>
 			</div>
-			<div id="sidebar">
-				<?php echo $this->element('admin/sidebar_navigation'); ?>
-				<?php echo $this->element('admin/sidebar_notice_block'); ?>
-				<?php echo $this->element('admin/sidebar_inner_block'); ?>
-				<?php echo $this->element('admin/sidebar_simple_block'); ?>
-			</div>
+			<?php if (!empty($sidebar_for_layout)) : ?>
+				<div id="sidebar">
+					<?php debug($sidebar_for_layout); ?>
+					<?php if (!empty($sidebar_for_layout['navigation'])) : ?>
+						<?php echo $this->element('admin/sidebar_navigation'); ?>
+					<?php endif; ?>
+					<?php if (!empty($sidebar_for_layout['notice'])) : ?>
+						<?php echo $this->element('admin/sidebar_notice_block'); ?>
+					<?php endif; ?>
+					<?php if (!empty($sidebar_for_layout['inner'])) : ?>
+						<?php echo $this->element('admin/sidebar_inner_block'); ?>
+					<?php endif; ?>
+					<?php if (!empty($sidebar_for_layout['simple'])) : ?>
+						<?php echo $this->element('admin/sidebar_simple_block'); ?>
+					<?php endif; ?>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
 </body>
