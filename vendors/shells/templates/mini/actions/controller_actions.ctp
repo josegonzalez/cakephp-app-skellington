@@ -71,12 +71,6 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 ?>
 <?php if ($singularHumanName == 'User') : ?>
 
-	function <?php echo $admin; ?>dashboard() {
-<?php if (!$admin) : echo "\t\t\$this->layout = 'alternate';\n"; endif; ?>
-		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('dashboard');
-		$this->set(compact('<?php echo $singularName; ?>'));
-	}
-
 	function <?php echo $admin; ?>login() {
 		$this->layout = '<?php echo $admin; ?>alternate';
 		if (empty($this->data)) {
@@ -97,7 +91,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 
 		if ($<?php echo $singularName; ?>) {
 			$this->Session->setFlash(__('You have been logged in', true), 'flash/success');
-			$this->redirect(array('action' => 'dashboard'));
+			$this->redirect('/');
 		}
 	}
 
