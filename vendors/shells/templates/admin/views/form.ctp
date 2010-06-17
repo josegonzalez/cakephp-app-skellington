@@ -142,7 +142,7 @@ echo "\t'class' => 'form', 'inputDefaults' => array('div' => false, 'label' => f
 		}
 		if (in_array($field, (array) array_keys($form_fields))) {
 			echo "\t\t\techo \$this->Form->input('{$modelClass}.{$form_fields[$field]}',\n";
-			echo "\t\t\t\tarray('class' => 'text_field', 'type' => 'file'));\n";
+			echo "\t\t\t\tarray('type' => 'file'));\n";
 			echo "\t\techo '</div>';\n";
 			continue;
 		}
