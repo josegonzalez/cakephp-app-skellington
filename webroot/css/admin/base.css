@@ -411,3 +411,45 @@ dl{line-height: 2em;margin: 0em 0em;}
 dl .altrow{background: #f4f4f4;}
 dt{font-weight: bold;padding-left: 4px;vertical-align: top;}
 dd{margin-left: 10em;margin-top: -2em;vertical-align: top;}
+
+table#recent-activity {
+	border: none;
+}
+
+table#recent-activity td.frontpage-type {
+	text-align: right;
+}
+
+table#recent-activity td.frontpage-owner {
+	color: #bbb;
+	text-align: right;
+}
+
+mark {
+	background: yellow;
+	padding: 2px 4px;
+	font-weight: bold;
+}
+
+/** Dashboard **/
+table#recent-activity td a {
+	color: #181818;
+	text-decoration: underline;
+}
+.hide {
+	float: left;
+	margin-left: -5000em;
+}
+
+table .hide {
+	display: none;
+}
+span.username {
+	color: #000;
+}
+.frontpage-type span {
+	-webkit-border-radius: 2px;
+	padding: 2px 3px;
+	font-size: 10px;
+	color: #fff;
+}
