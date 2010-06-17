@@ -420,7 +420,30 @@ class ControllerTask extends RebakeTask {
 			}
 			return $this->_controllerNames;
 		}
-		return $this->__tables;
+		return $this->__tables = $this->specializeTables($this->__tables);
+	}
+
+/**
+ * Removes special tables (Attachments, Comments, Images)
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+	function specializeTables($tables = null) {
+		foreach ($tables as $key => $table) $tables[$key] = Inflector::classify($table);
+
+		$invalid_tables = array();
+		foreach ($tables as $key => $table) {
+			foreach (array('Attachment', 'Comment', 'Image') as $special_case) {
+				foreach ($tables as $k => $v) {
+					if ("{$table}{$special_case}" == $v) $invalid_tables[] = $v;
+				}
+			}
+		}
+		$tables = array_diff($tables, $invalid_tables);
+
+		foreach ($tables as $key => $table) $tables[$key] = Inflector::tableize($table);
+		return $tables;
 	}
 
 /**
