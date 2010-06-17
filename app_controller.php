@@ -27,7 +27,10 @@ class AppController extends Controller {
 		'Log.Logging',
 		'Mail',
 		'RequestHandler',
-		'Sanction.Permit',
+		'Sanction.Permit' => array(
+			'path' => 'User.User',
+			'check' => 'role'
+		),
 		'Session',
 		'Settings.Settings',
 		'Webservice.Webservice'
