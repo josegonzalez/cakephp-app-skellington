@@ -29,6 +29,11 @@ foreach ($fields as $field) {
 </dl>
 <?php
 	echo "<?php \$this->Resource->secondary_navigation('Index', array('action' => 'index')); ?>\n";
+	if (in_array('slug', $fields)) {
+		echo "<?php \$this->Resource->secondary_navigation('View', array('action' => 'view', \${$singularVar}['{$modelClass}']['slug'] . '#')); ?>\n";
+	} else {
+		echo "<?php \$this->Resource->secondary_navigation('View', array('action' => 'view', \${$singularVar}['{$modelClass}']['{$primaryKey}'] . '#')); ?>\n";
+	}
 	echo "<?php \$this->Resource->secondary_navigation('Edit', array('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>\n";
 	echo "<?php \$this->Resource->secondary_navigation('Add', array('action' => 'add')); ?>\n";
 	echo "<?php \$this->Resource->secondary_navigation('Delete', array('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']), null, sprintf(__('Are you sure you want to delete %s?', true), \${$singularVar}['{$modelClass}']['{$displayField}'])); ?>";
