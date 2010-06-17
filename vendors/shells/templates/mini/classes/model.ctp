@@ -328,12 +328,12 @@ endif;
 <?php else : ?>
 			'conditions' => array("{$this->alias}.<?php echo (isset($schema['slug'])) ? 'slug' : "{\$this->primaryKey}"; ?>" => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>),
 <?php endif?>
-<?php if (!empty($associations['belongsTo'])) : ?>
+<?php if (!empty($associations['belongsTo']) || $isTrackable) : ?>
 			'contain' => array(
 <?php foreach ($associations['belongsTo'] as $i => $relation) : ?>
 <?php echo "\t\t\t\t'" . $relation['alias'] ."',\n"; ?>
 <?php endforeach; ?>
-<?php if ($isTrackable) echo "\t\t\t\t'CreatedBy',\n\t\t\t\t'ModifiedBy',\n"; ?>
+<?php if ($isTrackable) echo "\t\t\t\t'CreatedBy',\n\t\t\t\t'ModifiedBy'\n"; ?>
 			)
 		));
 <?php else: ?>
