@@ -53,6 +53,21 @@ foreach ($modelObj->belongsTo as $associationName => $relation) {
 		$paginate_models[] = $paginate_model;
 	}
 }
+$has_attachments = false;
+$has_comments = false;
+$has_images = false;
+
+// We need to guess what type of Relationship this Model may have to any other
+if (in_array("{$singularHumanName}Attachment", array_keys($modelObj->hasMany))) {
+	$has_attachments = true;
+}
+if (in_array("{$singularHumanName}Comment", array_keys($modelObj->hasMany))) {
+	$has_comments = true;
+}
+if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
+	$has_images = true;
+}
+
 ?>
 <?php if ($singularHumanName == 'User') : ?>
 
@@ -314,3 +329,87 @@ foreach ($modelObj->belongsTo as $associationName => $relation) {
 <?php endif; ?>
 		$this->redirect(array('action' => 'index'));
 	}
+<?php if ($has_attachments) : ?>
+
+	function add_attachment($id = null) {
+		if (!$id)  {
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('Invalid id for <?php echo strtolower($singularHumanName); ?>', true), 'flash/error');
+			$this->redirect(array('action'=>'index'));
+<?php else: ?>
+			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+<?php endif; ?>
+		}
+		if (!empty($this->data['<?php echo $singularHumanName . 'Attachment'?>'])) {
+			if ($this-><?php echo $currentModelName; ?>-><?php echo $singularHumanName . 'Attachment'?>->save($this->data, array('callback' => '<?php echo $admin ?>edit'))) {
+<?php if ($wannaUseSession): ?>
+				$this->Session->setFlash(__('The Attachment has been saved', true), 'flash/success');
+				$this->redirect(array('action' => 'index'));
+<?php else: ?>
+				$this->flash(__('The Attachment has been saved.', true), array('action' => 'index'));
+<?php endif; ?>
+			} else {
+<?php if ($wannaUseSession): ?>
+				$this->Session->setFlash(__('The Attachment could not be saved.', true), 'flash/error');
+<?php endif; ?>
+			}
+		}
+		$this->redirect(array('action' => 'view', $id));
+	}
+<?php endif; ?>
+<?php if ($has_comments) : ?>
+
+	function add_comment($id = null) {
+		if (!$id)  {
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('Invalid id for <?php echo strtolower($singularHumanName); ?>', true), 'flash/error');
+			$this->redirect(array('action'=>'index'));
+<?php else: ?>
+			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+<?php endif; ?>
+		}
+		if (!empty($this->data['<?php echo $singularHumanName . 'Comment'?>'])) {
+			if ($this-><?php echo $currentModelName; ?>-><?php echo $singularHumanName . 'Comment'?>->save($this->data, array('callback' => '<?php echo $admin ?>edit'))) {
+<?php if ($wannaUseSession): ?>
+				$this->Session->setFlash(__('The Comment has been saved', true), 'flash/success');
+				$this->redirect(array('action' => 'index'));
+<?php else: ?>
+				$this->flash(__('The Comment has been saved.', true), array('action' => 'index'));
+<?php endif; ?>
+			} else {
+<?php if ($wannaUseSession): ?>
+				$this->Session->setFlash(__('The Comment could not be saved.', true), 'flash/error');
+<?php endif; ?>
+			}
+		}
+		$this->redirect(array('action' => 'view', $id));
+	}
+<?php endif; ?>
+<?php if ($has_images) : ?>
+
+	function add_image($id = null) {
+		if (!$id)  {
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('Invalid id for <?php echo strtolower($singularHumanName); ?>', true), 'flash/error');
+			$this->redirect(array('action'=>'index'));
+<?php else: ?>
+			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+<?php endif; ?>
+		}
+		if (!empty($this->data['<?php echo $singularHumanName . 'Image'?>'])) {
+			if ($this-><?php echo $currentModelName; ?>-><?php echo $singularHumanName . 'Image'?>->save($this->data, array('callback' => '<?php echo $admin ?>edit'))) {
+<?php if ($wannaUseSession): ?>
+				$this->Session->setFlash(__('The Image has been saved', true), 'flash/success');
+				$this->redirect(array('action' => 'index'));
+<?php else: ?>
+				$this->flash(__('The Image has been saved.', true), array('action' => 'index'));
+<?php endif; ?>
+			} else {
+<?php if ($wannaUseSession): ?>
+				$this->Session->setFlash(__('The Image could not be saved.', true), 'flash/error');
+<?php endif; ?>
+			}
+		}
+		$this->redirect(array('action' => 'view', $id));
+	}
+<?php endif; ?>
