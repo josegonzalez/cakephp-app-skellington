@@ -64,9 +64,9 @@
 						'plugin' => null, 'controller' => 'users', 'action' => 'profile')); ?></li>
 					<li><?php echo $this->Html->link(__('Settings', true), array(
 						'plugin' => 'settings', 'controller' => 'settings', 'action' => 'index')); ?></li>
-					<li><?php echo $this->Html->link(__('Logout', true), array(
-						'controller' => 'users', 'action' => 'logout')); ?></li>
-					<li><a class="logout" href="#">Logout</a></li>
+					<li><?php echo $this->Html->link(__('Logout', true),
+						array('plugin' => null, 'controller' => 'users', 'action' => 'logout'),
+						array('class' => 'logout')); ?></li>
 				</ul>
 			</div>
 			<div id="main-navigation">
