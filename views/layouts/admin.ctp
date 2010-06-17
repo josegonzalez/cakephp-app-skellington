@@ -3,8 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Web App Theme</title>
-	<?php echo $this->Html->css(array('admin/base')); ?>
-	<?php echo $this->Html->css(array('admin/themes/default/style'), null, array('id' => 'current-theme')); ?>
+	<?php echo $this->Html->css(array('admin/base', 'admin/themes/lighthouseapp/style')); ?>
 	<?php echo $this->Html->script(array('jquery/jquery-1.3.min', 'jquery/jquery.scrollTo', 'jquery/jquery.localscroll')); ?>
 	<script type="text/javascript" charset="utf-8">
 		// <![CDATA[
