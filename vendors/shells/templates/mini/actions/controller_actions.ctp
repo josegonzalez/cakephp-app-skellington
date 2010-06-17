@@ -162,7 +162,6 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 	}
 
 	function <?php echo $admin; ?>change_password() {
-<?php if (!$admin) : echo "\t\t\$this->layout = 'alternate';\n"; endif; ?>
 		if (!empty($this->data)) {
 			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('fieldList' => array('id', 'password'), 'callback' => 'change_password'))) {
 				$this->Session->setFlash(__('Your password has been successfully changed', true), 'flash/success');
@@ -174,7 +173,6 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 	}
 
 	function <?php echo $admin; ?>profile() {
-<?php if (!$admin) : echo "\t\t\$this->layout = 'alternate';\n"; endif; ?>
 		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('profile');
 		$this->set(compact('<?php echo $singularName; ?>'));
 	}
