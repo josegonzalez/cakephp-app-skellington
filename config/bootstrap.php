@@ -71,4 +71,5 @@ function diebug($variable = false, $showHtml = true, $showFrom = true, $die = tr
 		if ($die) die;
 	}
 }
+Configure::write('Settings.layout', 'admin');
 ?>
