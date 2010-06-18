@@ -61,7 +61,6 @@
 			</div>
 			<?php if (!empty($sidebar_for_layout)) : ?>
 				<div id="sidebar">
-					<?php debug($sidebar_for_layout); ?>
 					<?php if (!empty($sidebar_for_layout['navigation'])) : ?>
 						<?php echo $this->element('admin/sidebar_navigation'); ?>
 					<?php endif; ?>
