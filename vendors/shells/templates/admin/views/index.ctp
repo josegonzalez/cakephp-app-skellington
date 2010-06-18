@@ -83,8 +83,9 @@
 		}
 	}
 ?>
+<h2 class="title"><?php echo "<?php echo __('{$pluralHumanName}', true); ?>"; ?></h2>
 <?php echo "<?php \$this->Html->h2(__('{$pluralHumanName}', true)); ?>\n"; ?>
-<form action="#" class="form">
+<div class="inner">
 	<table class="table">
 		<tr>
 <?php $first_field = true; ?>
@@ -152,6 +153,7 @@ echo "\t\t</tr>\n";
 echo "\t<?php endforeach; ?>\n";
 ?>
 	</table>
+</div>
 	<div class="actions-bar wat-cf">
 		<div class="pagination">
 			<?php echo "<?php echo \$this->Paginator->prev('« '.__('Previous', true), array('class' => 'next_page'), null, array('class' => 'disabled')); ?>\n";?>
@@ -159,6 +161,5 @@ echo "\t<?php endforeach; ?>\n";
 			<?php echo "<?php echo \$this->Paginator->next(__('Next', true).' »', array('rel' => 'next', 'class' => 'next_page'), null, array('class' => 'disabled')); ?>\n";?>
 		</div>
 	</div>
-</form>
 <?php echo "<?php \$this->Resource->secondary_navigation('Index', array('action' => 'index')); ?>\n"?>
 <?php echo "<?php \$this->Resource->secondary_navigation('Add', array('action' => 'add')); ?>"?>

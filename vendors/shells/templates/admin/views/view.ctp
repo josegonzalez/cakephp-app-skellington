@@ -1,10 +1,13 @@
+<h2 class="title"><?php echo "<?php echo \${$singularVar}['{$modelClass}']['{$displayField}']; ?>"; ?></h2>
 <?php echo "<?php \$this->Html->h2(\${$singularVar}['{$modelClass}']['{$displayField}']); ?>\n"; ?>
 <?php echo "<?php \$simple_block_meta = ''; ?>\n"; ?>
-<dl>
+<div class="inner">
+	<?php echo "<?php echo \$this->Session->flash(); ?>"; ?>
+	<dl>
 <?php
 $simple_block_meta = '';
 foreach ($fields as $field) {
-	if (in_array($field, array($primaryKey, $displayField, 'slug', 'deleted', 'modified_by', 'modified_by_id'))) continue;
+	if (in_array($field, array($primaryKey, $displayField, 'slug', 'deleted', 'password', 'modified_by', 'modified_by_id'))) continue;
 	$isKey = false;
 	if (!empty($associations['belongsTo'])) {
 		foreach ($associations['belongsTo'] as $alias => $details) {
@@ -29,11 +32,12 @@ foreach ($fields as $field) {
 		$simple_block_meta .= "<?php \$simple_block_meta .= \$this->Resource->definition(\${$singularVar}['{$modelClass}']['{$field}']); ?>\n";
 		continue;
 	}
-	echo "\t<?php echo \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n";
-	echo "\t<?php echo \$this->Resource->definition(\${$singularVar}['{$modelClass}']['{$field}']); ?>\n";
+	echo "\t\t<?php echo \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n";
+	echo "\t\t<?php echo \$this->Resource->definition(\${$singularVar}['{$modelClass}']['{$field}']); ?>\n";
 }
 ?>
-</dl>
+	</dl>
+</div>
 <?php
 	echo "<?php \$this->Resource->secondary_navigation('Index', array('action' => 'index')); ?>\n";
 	if (in_array('slug', $fields)) {
@@ -47,5 +51,14 @@ foreach ($fields as $field) {
 	if (!empty($simple_block_meta)) {
 		echo "\n{$simple_block_meta}";
 		echo "<?php echo \$this->Resource->sidebar_simple_block(__('{$singularHumanName} Metadata', true), \"<dl>{\$simple_block_meta}</dl>\"); ?>\n";
+	}
+?>
+<?php
+	if (!empty($associations['hasMany'])) {
+		foreach ($associations['hasMany'] as $alias => $details) {
+			if ($alias == "{$singularHumanName}Comment") {
+
+			}
+		}
 	}
 ?>

@@ -1,11 +1,27 @@
+<h2 class="title"><?php __('Search Results'); ?></h2>
 <?php $this->Html->h2(__('Search Results', true)); ?>
-<?php echo $this->Form->create('SearchIndex', array(
+<div class="inner">
+	<?php echo $this->Session->flash(); ?>
+	<?php echo $this->Form->create('SearchIndex', array(
+		'class' => 'form', 'inputDefaults' => array('div' => false, 'label' => false),
 		'url' => array(
 			'plugin' => 'searchable',
 			'controller' => 'search_indexes',
 			'action' => 'index'))); ?>
-	<?php echo $this->Form->input('term', array('label' => 'Search')); ?>
-<?php echo $this->Form->end('View Search Results'); ?>
+		<div class="columns wat-cf">
+			<div class="column left">
+				<div class="group">
+					<?php echo $this->Form->label('SearchIndex.term', __('Terms', true), array('class' => 'label')); ?>
+					<?php echo $this->Form->input('SearchIndex.term', array('class' => 'text_field', 'label' => false)); ?>
+				</div>
+			</div>
+		</div>
+		<div class="group navform wat-cf">
+			<button class="button" type="submit">
+				<?php echo $this->Html->image('icons/tick.png', array('alt' => __('View Search Results', true))) . __('View Search Results', true); ?>
+			</button>
+		</div>
+	<?php echo $this->Form->end(); ?>
 <?php if (!empty($results)) : ?>
 	<table cellpadding="0" cellspacing="0">
 		<tr>
@@ -41,3 +57,4 @@
 <?php elseif ($term) : ?>
 	<p>Sorry, your search did not return any matches.</p>
 <?php endif; ?>
+</div>

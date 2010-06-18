@@ -43,13 +43,7 @@
 						</ul>
 					</div>
 					<div class="content">
-						<h2 class="title">
-							<?php echo (isset($h2_for_layout)) ? $h2_for_layout : $this->params['action']; ?>
-						</h2>
-						<div class="inner">
-							<?php echo $this->Session->flash(); ?>
-							<?php echo $content_for_layout; ?>
-						</div>
+						<?php echo $content_for_layout; ?>
 					</div>
 				</div>
 
