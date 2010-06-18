@@ -20,8 +20,13 @@ foreach ($fields as $field) {
 		continue;
 	}
 	if ($schema[$field]['type'] == 'boolean') {
-		echo "\t<?php echo \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n";
-		echo "\t<?php echo \$this->Resource->definition(\${$singularVar}['{$modelClass}']['{$field}'], array(), array('type' => 'boolean')); ?>\n";
+		$simple_block_meta .= "<?php \$simple_block_meta .= \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n";
+		$simple_block_meta .= "<?php \$simple_block_meta .= \$this->Resource->definition(\${$singularVar}['{$modelClass}']['{$field}'], array(), array('type' => 'boolean')); ?>\n";
+		continue;
+	}
+	if (in_array($field, array('created', 'modified', 'updated'))) {
+		$simple_block_meta .= "<?php \$simple_block_meta .= \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n";
+		$simple_block_meta .= "<?php \$simple_block_meta .= \$this->Resource->definition(\${$singularVar}['{$modelClass}']['{$field}']); ?>\n";
 		continue;
 	}
 	echo "\t<?php echo \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n";
