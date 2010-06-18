@@ -115,6 +115,7 @@ class ControllerTask extends RebakeTask {
  * @return void
  */
 	function all() {
+		$this->resetFolder('controllers');
 		$this->interactive = false;
 		$this->listAll($this->connection, false);
 		ClassRegistry::config('Model', array('ds' => $this->connection));

@@ -107,4 +107,62 @@ class RebakeTask extends Shell {
 		}
 		return $return;
 	}
+
+/**
+ * Resets a particular bake type to the "defaults"
+ *
+ * @return void
+ * @author Jose Diaz-Gonzalez
+ **/
+	function resetFolder($type = 'views') {
+		$return = array();
+		$validViewFolders = array('elements', 'errors', 'helpers', 'layouts', 'pages', 'plugins', 'scaffolds');
+		$validControllerFiles = array('pages_controller.php');
+
+		$folder = new Folder();
+		if ($type == 'views') {
+			$folder->cd(VIEWS);
+			$files = $folder->read();
+			foreach ($files[0] as $a_folder) {
+				if (!in_array($a_folder, $validViewFolders)) {
+					$return[] = VIEWS . $a_folder;
+					$folder->delete(VIEWS . $a_folder);
+					@unlink(VIEWS . $a_folder);
+				}
+			}
+		}
+		if ($type == 'controllers') {
+			$folder->cd(CONTROLLERS);
+			$files = $folder->read();
+			foreach ($files[1] as $a_file) {
+				if (!in_array($a_file, $validControllerFiles)) {
+					$return[] = CONTROLLERS . $a_file;
+					$file = new File(CONTROLLERS . $a_file);
+					$file->delete();
+					@unlink(CONTROLLERS . $a_file);
+				}
+			}
+			$folder->cd(CONTROLLER_TESTS);
+			$files = $folder->read();
+			foreach ($files[1] as $a_file) {
+				$return[] = CONTROLLER_TESTS . $a_file;
+				$file = new File(CONTROLLER_TESTS . $a_file);
+				$file->delete();
+				@unlink(CONTROLLER_TESTS . $a_file);
+			}
+		}
+		if ($type == 'models') {
+			foreach (array(MODELS, TESTS . 'fixtures', MODEL_TESTS) as $path) {
+				$folder->cd($path);
+				$files = $folder->read();
+				foreach ($files[1] as $a_file) {
+					$return[] = $path . $a_file;
+					$file = new File($path . $a_file);
+					$file->delete();
+					@unlink($path . $a_file);
+				}
+			}
+		}
+		return $return;
+	}
 }

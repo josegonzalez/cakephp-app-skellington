@@ -179,6 +179,7 @@ class ViewTask extends RebakeTask {
  * @return void
  */
 	function all() {
+		$this->resetFolder();
 		$this->Controller->interactive = false;
 		$tables = $this->Controller->listAll($this->connection, false);
 

@@ -97,6 +97,7 @@ class ModelTask extends RebakeTask {
  * @return void
  */
 	function all() {
+		$this->resetFolder('models');
 		$this->listAll($this->connection, false);
 		$unitTestExists = $this->_checkUnitTest();
 		foreach ($this->_tables as $table) {
