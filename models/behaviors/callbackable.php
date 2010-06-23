@@ -16,7 +16,7 @@ class CallbackableBehavior extends ModelBehavior {
  * @author Jose Diaz-Gonzalez
  * @access public
  **/
-	function setCallbackableData($data = null) {
+	function setCallbackableData(&$model, $data = null) {
 		$this->__data = $data;
 	}
 
@@ -32,7 +32,7 @@ class CallbackableBehavior extends ModelBehavior {
  * @author Jose Diaz-Gonzalez
  * @access public
  **/
-	function getCallbackableData($key = null, $type = null) {
+	function getCallbackableData(&$model, $key = null, $type = null) {
 		if (!$key) return $this->__data;
 
 		if (empty($this->__data[$key])) {
