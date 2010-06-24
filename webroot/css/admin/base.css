@@ -179,8 +179,7 @@ body {
 }
 
 /* pagination */
-
-.pagination a, .pagination span {
+.pagination span a, .pagination span.disabled, .pagination span.current {
   padding: 2px 5px;
   margin-right: 5px;
   display: block;
