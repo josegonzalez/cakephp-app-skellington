@@ -157,7 +157,7 @@ echo "\t<?php endforeach; ?>\n";
 	<div class="actions-bar wat-cf">
 		<div class="pagination">
 			<?php echo "<?php echo \$this->Paginator->prev('« '.__('Previous', true), array('class' => 'next_page'), null, array('class' => 'disabled')); ?>\n";?>
-			<?php echo "<?php echo \$this->Paginator->numbers(); ?>\n"?>
+			<?php echo "<?php echo \$this->Paginator->numbers(array('separator' => false)); ?>\n"?>
 			<?php echo "<?php echo \$this->Paginator->next(__('Next', true).' »', array('rel' => 'next', 'class' => 'next_page'), null, array('class' => 'disabled')); ?>\n";?>
 		</div>
 	</div>
