@@ -84,7 +84,7 @@ class LogableBehavior extends ModelBehavior  {
  *	userModel 		: 'User'. Class name of the user model you want to use (User by default), if you want to save User in log
  *	userKey   		: 'user_id'. The field for saving the user to (user_id by default).
  *	change    		: 'list' > [name, age]. Set to 'full' for [name (alek) => (Alek), age (28) => (29)]
- *	description_ids : TRUE. Set to FALSE to not include model id and user id in the title field
+ *	description_ids	: TRUE. Set to FALSE to not include model id and user id in the title field
  *	skip  			: array(). String array of actions to not log
  *
  * @param Object $Model
@@ -347,7 +347,7 @@ class LogableBehavior extends ModelBehavior  {
 
 	function beforeSave(&$Model) {
 		if (isset($this->Log->_schema['change']) && $Model->id) {
-			$this->old = $Model->find('first',array('conditions'=>array($Model->primaryKey => $Model->id),'recursive'=>-1));
+			$this->old = $Model->find('first',array('conditions'=>array("{$Model->alias}.{$Model->primaryKey}" => $Model->id),'recursive'=>-1));
 		}
 		return true;
 	}
