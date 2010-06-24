@@ -426,7 +426,7 @@ class ControllerTask extends RebakeTask {
 	}
 
 /**
- * Removes special tables (Attachments, Comments, Images)
+ * Removes special tables (Attachments, Comments, Images, HABTM Tables etc)
  *
  * @return void
  * @author Jose Diaz-Gonzalez
@@ -440,6 +440,14 @@ class ControllerTask extends RebakeTask {
 				foreach ($tables as $k => $v) {
 					if ("{$table}{$special_case}" == $v) $invalid_tables[] = $v;
 				}
+			}
+		}
+		$tables = array_diff($tables, $invalid_tables);
+
+		$invalid_tables = array();
+		foreach ($tables as $key => $table) {
+			foreach ($tables as $k => $t) {
+				if (in_array("{$table}s{$t}", $tables)) $invalid_tables[] = "{$table}s{$t}";
 			}
 		}
 		$tables = array_diff($tables, $invalid_tables);
