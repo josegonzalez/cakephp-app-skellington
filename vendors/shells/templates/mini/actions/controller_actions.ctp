@@ -404,3 +404,109 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 		$this->redirect(array('action' => 'view', $id));
 	}
 <?php endif; ?>
+<?php if ($modelObj->Behaviors->enabled('Tree')) : ?>
+
+	function movedown($<?php echo $modelObj->primaryKey; ?> = null, $delta = null) {
+		if (!$delta || $delta <= 0) {
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('Please provide the number of positions the <?php echo strtolower($singularHumanName); ?> should be moved up.', true), 'flash/error');
+			$this->redirect(array('action' => 'index'));
+<?php else: ?>
+			$this->flash(__('Please provide the number of positions the <?php echo strtolower($singularHumanName); ?> should be moved up', true), array('action' => 'index'));
+<?php endif; ?>
+		}
+
+		$this-><?php echo $currentModelName; ?>-><?php echo $modelObj->primaryKey; ?> = $<?php echo $modelObj->primaryKey; ?>;
+		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->findBy<?php echo ucfirst($modelObj->primaryKey); ?>($<?php echo $modelObj->primaryKey; ?>);
+		if (!$<?php echo $singularName; ?>) {
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('Invalid <?php echo strtolower($singularHumanName) ?>', true), 'flash/error');
+			$this->redirect(array('action' => 'index'));
+<?php else: ?>
+			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+<?php endif; ?>
+		}
+
+		if ($this-><?php echo $currentModelName; ?>->moveDown($<?php echo $modelObj->primaryKey; ?>, abs($delta))) {
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('Moved <?php echo strtolower($singularHumanName) ?> down', true), 'flash/error');
+			$this->redirect(array('action' => 'index'));
+<?php else: ?>
+			$this->flash(__('Moved <?php echo strtolower($singularHumanName); ?> down', true), array('action' => 'index'));
+<?php endif; ?>
+		}
+
+<?php if ($wannaUseSession): ?>
+		$this->Session->setFlash(__('Unable to move <?php echo strtolower($singularHumanName) ?> down', true), 'flash/error');
+		$this->redirect(array('action' => 'index'));
+<?php else: ?>
+		$this->flash(__('Unable to move <?php echo strtolower($singularHumanName); ?> down', true), array('action' => 'index'));
+<?php endif; ?>
+	}
+
+	function moveup($<?php echo $modelObj->primaryKey; ?> = null, $delta = null) {
+		if (!$delta || $delta <= 0) {
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('Please provide the number of positions the <?php echo strtolower($singularHumanName); ?> should be moved up.', true), 'flash/error');
+			$this->redirect(array('action' => 'index'));
+<?php else: ?>
+			$this->flash(__('Please provide the number of positions the <?php echo strtolower($singularHumanName); ?> should be moved up', true), array('action' => 'index'));
+<?php endif; ?>
+		}
+
+		$this-><?php echo $currentModelName; ?>-><?php echo $modelObj->primaryKey; ?> = $<?php echo $modelObj->primaryKey; ?>;
+		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->findBy<?php echo ucfirst($modelObj->primaryKey); ?>($<?php echo $modelObj->primaryKey; ?>);
+		if (!$<?php echo $singularName; ?>) {
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('Invalid <?php echo strtolower($singularHumanName) ?>', true), 'flash/error');
+			$this->redirect(array('action' => 'index'));
+<?php else: ?>
+			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+<?php endif; ?>
+		}
+
+		if ($this-><?php echo $currentModelName; ?>->moveUp($<?php echo $modelObj->primaryKey; ?>, abs($delta))) {
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('Moved <?php echo strtolower($singularHumanName) ?> up', true), 'flash/error');
+			$this->redirect(array('action' => 'index'));
+<?php else: ?>
+			$this->flash(__('Moved <?php echo strtolower($singularHumanName); ?> up', true), array('action' => 'index'));
+<?php endif; ?>
+		}
+
+<?php if ($wannaUseSession): ?>
+		$this->Session->setFlash(__('Unable to move <?php echo strtolower($singularHumanName) ?> up', true), 'flash/error');
+		$this->redirect(array('action' => 'index'));
+<?php else: ?>
+		$this->flash(__('Unable to move <?php echo strtolower($singularHumanName); ?> up', true), array('action' => 'index'));
+<?php endif; ?>
+	}
+
+	function removefromtree($<?php echo $modelObj->primaryKey; ?> = null) {
+		$this-><?php echo $currentModelName; ?>-><?php echo $modelObj->primaryKey; ?> = $<?php echo $modelObj->primaryKey; ?>;
+		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->findBy<?php echo ucfirst($modelObj->primaryKey); ?>($<?php echo $modelObj->primaryKey; ?>);
+		if (!$<?php echo $singularName; ?>) {
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('Invalid <?php echo strtolower($singularHumanName) ?>', true), 'flash/error');
+			$this->redirect(array('action' => 'index'));
+<?php else: ?>
+			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+<?php endif; ?>
+		}
+
+		if ($this-><?php echo $currentModelName; ?>->removefromtree($<?php echo $modelObj->primaryKey; ?>)) {
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('Removed <?php echo strtolower($singularHumanName) ?>', true), 'flash/error');
+			$this->redirect(array('action' => 'index'));
+<?php else: ?>
+			$this->flash(__('Removed <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+<?php endif; ?>
+		}
+<?php if ($wannaUseSession): ?>
+		$this->Session->setFlash(__('Unable to remove <?php echo strtolower($singularHumanName) ?>', true), 'flash/success');
+		$this->redirect(array('action' => 'index'));
+<?php else: ?>
+		$this->flash(__('Unable to remove <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+<?php endif; ?>
+	}
+<?php endif; ?>

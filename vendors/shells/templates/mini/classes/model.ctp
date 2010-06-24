@@ -62,6 +62,7 @@ $behaviors = array();
 $isPublishable = false;
 $isDeletable = false;
 $isTrackable = false;
+$isTree = false;
 foreach($schema as $fieldName => $fieldConfig) :
 	if (substr($fieldName, -10) == '_file_name' && $fieldConfig['type'] == 'string') {
 		$uploadField = substr($fieldName, 0, -10);
@@ -80,6 +81,15 @@ foreach($schema as $fieldName => $fieldConfig) :
 	if (in_array($fieldName, array('published', 'active'))) $isPublishable = $fieldName;
 	if ($fieldName == 'deleted') $isDeletable = $fieldName;
 endforeach;
+
+foreach (array('parent_id', 'lft', 'rght') as $fieldName) {
+	if (!in_array($fieldName, array_keys($schema))) {
+		$isTree = false;
+		break;
+	}
+	$isTree = true;
+}
+if ($isTree) $behaviors[] = "'Tree'";
 
 if (!empty($behaviors)) :
 	$behaviorCount = count($behaviors);
@@ -119,6 +129,7 @@ foreach (array('hasOne', 'belongsTo') as $assocType):
 		$typeCount = count($associations[$assocType]);
 		echo "\tvar \$$assocType = array(";
 		foreach ($associations[$assocType] as $i => $relation):
+			if ($name == $relation['alias']) $assocations[$assocType][$i]['alias'] = $relation['alias'] = "Parent{$name}";
 			$out = "\n\t\t'{$relation['alias']}' => array(\n";
 			$out .= "\t\t\t'className' => '{$relation['className']}',\n";
 			$out .= "\t\t\t'foreignKey' => '{$relation['foreignKey']}',\n";
