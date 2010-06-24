@@ -7,13 +7,13 @@
 	$invalid_address_fields = array('address_one', 'address_two', 'state', 'zip_code');
 	$invalid_behavior_fields = array('lft', 'parent_id', 'position', 'rght', 'slug');
 	$invalid_contact_fields = array('address', 'cell_number', 'city', 'fax_number', 'latitude', 'location', 'longitude', 'phone_number', 'state_id', 'zipcode');
-	$invalid_content_fields = array('body', 'content', 'contents', 'description', 'text');
+	$invalid_content_fields = array('body', 'content', 'contents', 'description', 'text', 'interests');
 	$invalid_file_fields = array('dir', 'filename', 'filesize', 'mimetype', 'picture');
 	$invalid_online_contact_fields = array('email', 'email_address', 'site', 'url', 'website');
 	$invalid_polymorphic_fields = array('class', 'foreign_id', 'model', 'model_id', 'model_key', 'type', 'type_id');
 	$invalid_relation_fields = array('milestone_id');
 	$invalid_time_fields = array('date', 'time', 'when', 'date_due_by');
-	$invalid_user_fields = array('password', 'photo', 'profile_picture');
+	$invalid_user_fields = array('psword', 'password', 'photo', 'profile_picture', 'user_icon', 'aim', 'icq', 'yahoo', 'msnm', 'msn', 'jabber');
 	$invalid_visibility_fields = array('enabled', 'deleted', 'published', 'visible');
 
 	$invalid_fashion_fields = array('season', 'main_color_id', 'received_date', 'sold_for_price', 'original_retail_price', 'purchase_price', 'retail_source', 'sell_date');
@@ -35,6 +35,12 @@
 			$invalid_file_fields[] = $key;
 		} elseif (substr($key, -6) === '_photo') {
 			$invalid_file_fields[] = $key;
+		}
+		if (strstr($key, 'password') !== false) {
+			$invalid_user_fields[] = $key;
+		}
+		if (strstr($key, '_token') !== false) {
+			$invalid_user_fields[] = $key;
 		}
 	}
 
@@ -75,7 +81,7 @@
 	$fields = array_diff($fields, $invalid_fields);
 
 	foreach ($fields as $field) {
-		if (substr($field, -3) === '_id') {
+		if (substr($field, -3) === '_id' && $field != 'user_id') {
 			$fields = array_diff($fields, array($field));
 			$fields[] = $field;
 		} else if (substr($field, -10) == '_file_name') {
@@ -86,6 +92,7 @@
 <h2 class="title"><?php echo "<?php echo __('{$pluralHumanName}', true); ?>"; ?></h2>
 <?php echo "<?php \$this->Html->h2(__('{$pluralHumanName}', true)); ?>\n"; ?>
 <div class="inner">
+	<?php echo "<?php echo \$this->Session->flash(); ?>\n"; ?>
 	<table class="table">
 		<tr>
 <?php $first_field = true; ?>
@@ -103,6 +110,9 @@ echo "\t\t\t<tr<?php echo (\$i++ % 2 == 0) ? ' class=\"altrow odd\"' : 'even';?>
 			foreach ($associations['belongsTo'] as $alias => $details) {
 				if ($field === $details['foreignKey']) {
 					$isKey = true;
+					if (is_object($aliased_model = ClassRegistry::init($alias))) {
+						if (in_array('slug', array_keys($aliased_model->schema()))) $details['primaryKey'] = 'slug';
+					}
 					echo "\t\t\t<td>\n\t\t\t\t<?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$details['displayField']}'],\n";
 					echo "\t\t\t\t\tarray('controller' => '{$details['controller']}', 'action' => 'view', \${$singularVar}['{$alias}']['{$details['primaryKey']}'])); ?>\n\t\t\t</td>\n";
 					break;
