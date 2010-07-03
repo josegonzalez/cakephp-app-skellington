@@ -27,14 +27,13 @@ $schema = $modelObj->schema();
 echo "<?php\n"; ?>
 class <?php echo $name ?> extends <?php echo $plugin; ?>AppModel {
 	var $name = '<?php echo $name; ?>';
-<?php if ($useDbConfig != 'default'): ?>
+<?php if ($useDbConfig != 'default') : ?>
 	var $useDbConfig = '<?php echo $useDbConfig; ?>';
-<?php endif;?>
-<?php if ($useTable && $useTable !== Inflector::tableize($name)):
-	$table = "'$useTable'";
-	echo "\tvar \$useTable = $table;\n";
-endif;
-if ($primaryKey !== 'id'): ?>
+<?php endif; ?>
+<?php if ($useTable && $useTable !== Inflector::tableize($name)) : ?>
+	var $useTable = <?php echo "'{$useTable}'"; ?>;
+<?php endif; ?>
+<?php if ($primaryKey !== 'id') : ?>
 	var $primaryKey = '<?php echo $primaryKey; ?>';
 <?php endif;
 if (!$displayField) {
@@ -63,16 +62,18 @@ $hasComments = false;
 $hasImages = false;
 
 // We need to guess what type of Relationship this Model may have to any other
-if (in_array("{$name}Attachment", array_keys($associations['hasMany']))) $hasAttachments = true;
-if (in_array("{$name}Comment", array_keys($associations['hasMany']))) $hasComments = true;
-if (in_array("{$name}Image", array_keys($associations['hasMany']))) $hasImages = true;
+foreach ($associations['hasMany'] as $i => $details) {
+	if ($details['alias'] == "{$name}Attachment") $hasAttachments = true;
+	if ($details['alias'] == "{$name}Comment") $hasComments = true;
+	if ($details['alias'] == "{$name}Image") $hasImages = true;
+}
 
 $behaviors = array();
 $isPublishable = false;
 $isDeletable = false;
 $isTrackable = false;
 $isTree = false;
-foreach($schema as $fieldName => $fieldConfig) :
+foreach ($schema as $fieldName => $fieldConfig) {
 	if (substr($fieldName, -10) == '_file_name' && $fieldConfig['type'] == 'string') {
 		$uploadField = substr($fieldName, 0, -10);
 		if (strlen($uploadField) == 0) continue;
@@ -89,7 +90,7 @@ foreach($schema as $fieldName => $fieldConfig) :
 	}
 	if (in_array($fieldName, array('published', 'active'))) $isPublishable = $fieldName;
 	if ($fieldName == 'deleted') $isDeletable = $fieldName;
-endforeach;
+}
 
 foreach (array('parent_id', 'lft', 'rght') as $fieldName) {
 	if (!in_array($fieldName, array_keys($schema))) {
@@ -100,22 +101,20 @@ foreach (array('parent_id', 'lft', 'rght') as $fieldName) {
 }
 if ($isTree) $behaviors[] = "'Tree'";
 
-if (!empty($behaviors)) :
+if (!empty($behaviors)) {
 	$behaviorCount = count($behaviors);
-	if ($behaviorCount == 1) :
+	if ($behaviorCount == 1) {
 		echo "\tvar \$actsAs = array({$behaviors['0']});\n";
-	else :
+	} else {
 		echo "\tvar \$actsAs = array(";
-		foreach ($behaviors as $i => $behavior) :
+		foreach ($behaviors as $i => $behavior) {
 			$out = "\n\t\t{$behavior}";
-			if ($i + 1 < $behaviorCount) :
-				$out .= ",";
-			endif;
+			if ($i + 1 < $behaviorCount) $out .= ",";
 			echo $out;
-		endforeach;
+		}
 		echo "\n\t);\n";
-	endif;
-endif;
+	}
+}
 
 if (isset($schema['owned_by'])) {
 	$associations['belongsTo'][] = array(
@@ -133,46 +132,68 @@ if (isset($schema['assigned_to'])) {
 	);
 }
 
-foreach (array('hasOne', 'belongsTo') as $assocType):
-	if (!empty($associations[$assocType])):
+foreach (array('hasOne', 'belongsTo') as $assocType) {
+	if (!empty($associations[$assocType])) {
 		$typeCount = count($associations[$assocType]);
 		echo "\tvar \$$assocType = array(";
-		foreach ($associations[$assocType] as $i => $relation):
-			if ($name == $relation['alias']) $assocations[$assocType][$i]['alias'] = $relation['alias'] = "Parent{$name}";
+		$simpleAssociationArray = true;
+		foreach ($associations[$assocType] as $i => $relation) {
+			if ($relation['alias'] != $relation['className']) {
+				$simpleAssociationArray = false;
+				break;
+			}
+		}
+		foreach ($associations[$assocType] as $i => $relation) {
+			if ($name == $relation['alias']) {
+				$assocations[$assocType][$i]['alias'] = $relation['alias'] = "Parent{$name}";
+			}
+			$out = '';
+			if ($relation['alias'] != $relation['className']) {
+				$out = "\n\t\t'{$relation['alias']}' => array(\n";
+				$out .= "\t\t\t'className' => '{$relation['className']}',\n";
+				$out .= "\t\t\t'foreignKey' => '{$relation['foreignKey']}',\n";
+				$out .= "\t\t)";
+			} else {
+				$out = ($simpleAssociationArray === true) ? "'{$relation['alias']}'" : "\n\t\t'{$relation['alias']}'";
+			}
+			if ($i + 1 < $typeCount) $out .= ($simpleAssociationArray === true) ? ", " : ",";
+			echo $out;
+		}
+		echo ($simpleAssociationArray === true) ? ");\n" : "\n\t);\n";
+	}
+}
+
+if (!empty($associations['hasMany'])) {
+	$belongsToCount = count($associations['hasMany']);
+	echo "\tvar \$hasMany = array(";
+	$simpleAssociationArray = true;
+	foreach ($associations['hasMany'] as $i => $relation) {
+		if ($relation['alias'] != $relation['className']) {
+			$simpleAssociationArray = false;
+			break;
+		}
+	}
+	foreach ($associations['hasMany'] as $i => $relation) {
+		$out = '';
+		if ($relation['alias'] != $relation['className']) {
 			$out = "\n\t\t'{$relation['alias']}' => array(\n";
 			$out .= "\t\t\t'className' => '{$relation['className']}',\n";
 			$out .= "\t\t\t'foreignKey' => '{$relation['foreignKey']}',\n";
+			$out .= "\t\t\t'dependent' => true,\n";
 			$out .= "\t\t)";
-			if ($i + 1 < $typeCount) {
-				$out .= ",";
-			}
-			echo $out;
-		endforeach;
-		echo "\n\t);\n";
-	endif;
-endforeach;
-
-if (!empty($associations['hasMany'])):
-	$belongsToCount = count($associations['hasMany']);
-	echo "\tvar \$hasMany = array(";
-	foreach ($associations['hasMany'] as $i => $relation):
-		$out = "\n\t\t'{$relation['alias']}' => array(\n";
-		$out .= "\t\t\t'className' => '{$relation['className']}',\n";
-		$out .= "\t\t\t'foreignKey' => '{$relation['foreignKey']}',\n";
-		$out .= "\t\t\t'dependent' => true,\n";
-		$out .= "\t\t)";
-		if ($i + 1 < $belongsToCount) {
-			$out .= ",";
+		} else {
+			$out = ($simpleAssociationArray === true) ? "'{$relation['alias']}'" : "\n\t\t'{$relation['alias']}'";
 		}
+		if ($i + 1 < $belongsToCount) $out .= ($simpleAssociationArray === true) ? ", " : ",";
 		echo $out;
-	endforeach;
-	echo "\n\t);\n\n";
-endif;
+	}
+	echo ($simpleAssociationArray === true) ? ");\n" : "\n\t);\n";
+}
 
-if (!empty($associations['hasAndBelongsToMany'])):
+if (!empty($associations['hasAndBelongsToMany'])) {
 	$habtmCount = count($associations['hasAndBelongsToMany']);
 	echo "\tvar \$hasAndBelongsToMany = array(";
-	foreach ($associations['hasAndBelongsToMany'] as $i => $relation):
+	foreach ($associations['hasAndBelongsToMany'] as $i => $relation) {
 		$out = "\n\t\t'{$relation['alias']}' => array(\n";
 		$out .= "\t\t\t'className' => '{$relation['className']}',\n";
 		$out .= "\t\t\t'joinTable' => '{$relation['joinTable']}',\n";
@@ -180,54 +201,45 @@ if (!empty($associations['hasAndBelongsToMany'])):
 		$out .= "\t\t\t'associationForeignKey' => '{$relation['associationForeignKey']}',\n";
 		$out .= "\t\t\t'unique' => true,\n";
 		$out .= "\t\t)";
-		if ($i + 1 < $habtmCount) {
-			$out .= ",";
-		}
+		if ($i + 1 < $habtmCount) $out .= ",";
 		echo $out;
-	endforeach;
-	echo "\n\t);\n\n";
-endif;
+	}
+	echo "\n\t);\n";
+}
 ?>
+
 	function __construct($id = false, $table = null, $ds = null) {
 		parent::__construct($id, $table, $ds);
 <?php
-if (!empty($validate)):
+if (!empty($validate)) {
 	echo "\t\t\$this->validate = array(\n";
-	foreach ($validate as $field => $validations):
+	foreach ($validate as $field => $validations) {
 		if (in_array($field, array('created_by', 'created_by_id', 'modified_by', 'modified_by_id'))) continue;
 		echo "\t\t\t'$field' => array(\n";
-		foreach ($validations as $key => $validator):
-			if ($validator == 'notempty') :
-			echo "\t\t\t\t'required' => array(\n";
-			else :
-			echo "\t\t\t\t'$key' => array(\n";
-			endif;
+		foreach ($validations as $key => $validator) {
+			if ($validator == 'notempty') {
+				echo "\t\t\t\t'required' => array(\n";
+			} else {
+				echo "\t\t\t\t'$key' => array(\n";
+			}
 			echo "\t\t\t\t\t'rule' => array('$validator'),\n";
-			if ($validator == 'notempty') :
-			echo "\t\t\t\t\t'message' => __('cannot be left empty', true),\n";
-			elseif ($validator == 'alphanumeric') :
-			echo "\t\t\t\t\t'message' => __('must contain only letters and numbers', true),\n";
-			elseif ($validator == 'boolean') :
-			echo "\t\t\t\t\t'message' => __('must be either yes or no', true),\n";
-			elseif ($validator == 'date') :
-			echo "\t\t\t\t\t'message' => __('must be a valid date in either YYYY-MM-DD or YY-MM-DD format', true),\n";
-			elseif ($validator == 'email') :
-			echo "\t\t\t\t\t'message' => __('must be a valid email', true),\n";
-			elseif ($validator == 'isunique') :
-			echo "\t\t\t\t\t'message' => __('cannot have been already defined in the database', true),\n";
-			elseif ($validator == 'numeric') :
-			echo "\t\t\t\t\t'message' => __('must contain only numbers', true),\n";
-			elseif ($validator == 'url') :
-			echo "\t\t\t\t\t'message' => __('must be a valid url', true),\n";
-			else :
-			echo "\t\t\t\t\t'message' => __('must be valid input', true),\n";
-			endif;
-			echo "\t\t\t\t),\n";
-		endforeach;
+			$message = 'must be valid input';
+			switch ($validator) {
+				case 'notempty' : $message = 'cannot be left empty'; break;
+				case 'alphanumeric' : $message = 'must contain only letters and numbers'; break;
+				case 'boolean' : $message = 'must be either yes or no'; break;
+				case 'date' : $message = 'must be a valid date in either YYYY-MM-DD or YY-MM-DD format'; break;
+				case 'email' : $message = 'must be a valid email'; break;
+				case 'isunique' : $message = 'cannot have been already defined in the database'; break;
+				case 'numeric' : $message = 'must contain only numbers'; break;
+				case 'url' : $message = 'must be a valid url'; break;
+			}
+			echo "\t\t\t\t\t'message' => __('{$message}', true),\n\t\t\t\t),\n";
+		}
 		echo "\t\t\t),\n";
-	endforeach;
+	}
 	echo "\t\t);\n";
-endif;
+}
 ?>
 	}
 <?php if ($name == 'User') : ?>
@@ -259,7 +271,7 @@ endif;
 
 		$user = $this->find('first', array(
 			'conditions' => array(
-				"{$this->alias}.id" => Authsome::get('id'),
+				"{$this->alias}.{$this->primaryKey}" => Authsome::get('id'),
 				"{$this->alias}.password" => $data[$this->alias]['password']),
 			'contain' => false,
 			'fields' => array('id')
@@ -283,13 +295,16 @@ endif;
 			'contain' => false
 		));
 	}
-
 <?php endif; ?>
 
 	function __findView($<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?> = null) {
 		if (!$<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>) return false;
 
+<?php if ($hasComments) : ?>
+		$<?php echo lcfirst(Inflector::camelize($name)); ?> = $this->find('first', array(
+<?php else :?>
 		return $this->find('first', array(
+<?php endif; ?>
 <?php if ($isPublishable != false) : ?>
 			'conditions' => array(
 				"{$this->alias}.<?php echo (isset($schema['slug'])) ? 'slug' : "{\$this->primaryKey}"; ?>" => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>,
@@ -300,19 +315,26 @@ endif;
 				"{$this->alias}.deleted" => 0),
 <?php else : ?>
 			'conditions' => array("{$this->alias}.<?php echo (isset($schema['slug'])) ? 'slug' : "{\$this->primaryKey}"; ?>" => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>),
-<?php endif?>
-<?php if (!empty($associations['belongsTo']) || $isTrackable || $hasComments) : ?>
+<?php endif; ?>
+<?php if (!empty($associations['belongsTo']) || $isTrackable) : ?>
 			'contain' => array(
 <?php foreach ($associations['belongsTo'] as $i => $relation) : ?>
 <?php echo "\t\t\t\t'" . $relation['alias'] ."',\n"; ?>
 <?php endforeach; ?>
-<?php if ($isTrackable) echo "\t\t\t\t'CreatedBy',\n"; ?>
-<?php if ($hasComments) echo "\t\t\t\t'{$name}Comment',\n"; ?>
+<?php if ($isTrackable) { echo "\t\t\t\t'CreatedBy',\n"; } ?>
 			)
 		));
 <?php else: ?>
 			'contain' => false
 		));
+<?php endif; ?>
+<?php if ($hasComments) : ?>
+		$<?php echo lcfirst(Inflector::camelize($name)); ?>Comments = $this-><?php echo "{$name}Comment"; ?>->find('all', array(
+			'conditions' => array('<?php echo "{$name}Comment"; ?>.<?php echo Inflector::underscore($name)?>_id' => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>),
+			'contain' => array('CreatedBy')
+		));
+		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Comment"; ?>'] = (!empty($<?php echo lcfirst(Inflector::camelize($name)); ?>Comments['<?php echo "{$name}Comment"; ?>'])) ? $<?php echo lcfirst(Inflector::camelize($name)); ?>Comments['<?php echo "{$name}Comment"; ?>'] : array();
+		return $<?php echo lcfirst(Inflector::camelize($name)); ?>;
 <?php endif; ?>
 	}
 
@@ -320,7 +342,8 @@ endif;
 		if (!$<?php echo $primaryKey; ?>) return false;
 
 		return $this->find('first', array(
-			'conditions' => array("{$this->alias}.<?php echo $primaryKey; ?>" => $<?php echo $primaryKey; ?>)
+			'conditions' => array("{$this->alias}.{$this->primaryKey}" => $<?php echo $primaryKey; ?>),
+			'contain' => false
 		));
 	}
 
@@ -328,11 +351,11 @@ endif;
 		if (!$<?php echo $primaryKey; ?>) return false;
 
 		return $this->find('first', array(
-			'conditions' => array("{$this->alias}.<?php echo $primaryKey; ?>" => <?php echo $primaryKey; ?>),
+			'conditions' => array("{$this->alias}.{$this->primaryKey}" => $<?php echo $primaryKey; ?>),
 			'contain' => false
 		));
 	}
-<?php if ($name == 'User') :?>
+<?php if ($name == 'User') : ?>
 
 	function __findForgotPassword($email = null) {
 		if (!$email) return false;
@@ -351,7 +374,6 @@ endif;
 		if (count($profile_fields) == $key+1) break;
 		$profile_fields_string .= ", ";
 	}
-
 ?>
 	function __findProfile() {
 		return $this->find('first', array(
