@@ -69,6 +69,17 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 }
 
 ?>
+<?php if (empty($paginate_models)) : ?>
+	var $paginate = array('contain' => false);
+<?php else : ?>
+	var $paginate = array(
+		'contain' => array(
+<?php foreach ($paginate_models as $p_model): ?>
+			'<?php echo $p_model['alias']; ?>' => array('fields' => array('<?php echo $p_model['primaryKey']?>', '<?php echo $p_model['displayField']?>')),
+<?php endforeach; ?>
+		)
+	);
+<?php endif; ?>
 <?php if ($singularHumanName == 'User') : ?>
 
 	function <?php echo $admin; ?>login() {
@@ -178,17 +189,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 <?php endif; ?>
 
 	function <?php echo $admin ?>index() {
-<?php if (empty($paginate_models)) : ?>
-		$this->paginate = array('contain' => false);
-<?php else : ?>
-		$this->paginate = array(
-			'contain' => array(
-<?php foreach ($paginate_models as $p_model): ?>
-				'<?php echo $p_model['alias']; ?>' => array('fields' => array('<?php echo $p_model['primaryKey']?>', '<?php echo $p_model['displayField']?>')),
-<?php endforeach; ?>
-			)
-		);
-<?php endif; ?>
+		$this->paginate = $this->Filter->paginate;
 		$<?php echo $pluralName ?> = $this->paginate();
 		$this->set(compact('<?php echo $pluralName ?>'));
 	}
