@@ -21,8 +21,8 @@
  */
 
 App::import('Model', 'Model', false);
-$modelObject =& new Model(array('name' => $name, 'table' => $useTable, 'ds' => 'default'));
-$schema = $modelObject->schema();
+$modelObj =& new Model(array('name' => $name, 'table' => $useTable, 'ds' => 'default'));
+$schema = $modelObj->schema();
 
 echo "<?php\n"; ?>
 class <?php echo $name ?> extends <?php echo $plugin; ?>AppModel {
@@ -57,6 +57,15 @@ if (!$displayField) {
 if ($displayField) : ?>
 	var $displayField = '<?php echo $displayField; ?>';
 <?php endif;
+
+$hasAttachments = false;
+$hasComments = false;
+$hasImages = false;
+
+// We need to guess what type of Relationship this Model may have to any other
+if (in_array("{$name}Attachment", array_keys($associations['hasMany']))) $hasAttachments = true;
+if (in_array("{$name}Comment", array_keys($associations['hasMany']))) $hasComments = true;
+if (in_array("{$name}Image", array_keys($associations['hasMany']))) $hasImages = true;
 
 $behaviors = array();
 $isPublishable = false;
@@ -292,12 +301,13 @@ endif;
 <?php else : ?>
 			'conditions' => array("{$this->alias}.<?php echo (isset($schema['slug'])) ? 'slug' : "{\$this->primaryKey}"; ?>" => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>),
 <?php endif?>
-<?php if (!empty($associations['belongsTo']) || $isTrackable) : ?>
+<?php if (!empty($associations['belongsTo']) || $isTrackable || $hasComments) : ?>
 			'contain' => array(
 <?php foreach ($associations['belongsTo'] as $i => $relation) : ?>
 <?php echo "\t\t\t\t'" . $relation['alias'] ."',\n"; ?>
 <?php endforeach; ?>
 <?php if ($isTrackable) echo "\t\t\t\t'CreatedBy',\n"; ?>
+<?php if ($hasComments) echo "\t\t\t\t'{$name}Comment',\n"; ?>
 			)
 		));
 <?php else: ?>
