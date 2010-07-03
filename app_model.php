@@ -55,10 +55,10 @@ class AppModel extends Model {
 	function find($type, $options = array()) {
 		$method = null;
 		$options = (array) $options;
-		if(is_string($type)) {
+		if (is_string($type)) {
 			$method = sprintf('__find%s', Inflector::camelize($type));
 		}
-		if($method && method_exists($this, $method)) {
+		if ($method && method_exists($this, $method)) {
 			$return = $this->{$method}($options);
 			if ($this->query != null) {
 				unset($this->query['paginate']);
