@@ -39,7 +39,7 @@ if (count($helpers)):
 	endfor;
 	echo ");\n";
 endif;
-
+$components[] = 'Filter.Filter';
 if (count($components)):
 	echo "\tvar \$components = array(";
 	for ($i = 0, $len = count($components); $i < $len; $i++):
