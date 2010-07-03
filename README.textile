@@ -11,3 +11,50 @@ I don't know, as lots of stuff is still broken - like the Js stuff - but you do 
 h2. credits
 
 Too many to list. I'm on a don't ask, don't tell policy.
+
+h2. roadmap
+
+* *Me:* what do you think?
+* *Patrick:* looks good
+* *Patrick:* I'm into it
+* *Me:* it's almost there, gotta get the edit views working (so that one could comment on something if it is meant to be commented on)
+* *Me:* there are other things I want to add too
+* *Me:* and once i get it to a beta, im going to make it a hosted app
+* *Patrick:* where are you going to host it?  going to charge for it?
+* *Patrick:* I thought it was just going to be open soruce
+* *Me:* yeah it will be open source
+* *Me:* but some people wont want to run php on their rails machines ;)
+* *Patrick:* right
+* *Me:* also, i have db naming conventions
+* *Me:* learning those wouldnt be tough but it doesnt need to occur
+* *Me:* my application generator is almost done
+* *Me:* i just released 0.1
+* *Me:* by almost done i mean workable
+* *Me:* 0.2 will enable commenting on records if the database table is setup correctly
+* *Patrick:* sick
+* *Me:* 0.3 will allow adding images and attachments to records
+* *Me:* 0.4 will integrate some minimal Ajax effects
+* *Me:* 0.5 will have an online webapp that produces a zip of exactly what you want to have in your app
+* *Me:* 0.6 will enable application namespacing
+* *Me:* so something like setting the Project model as the namespace means any model with a 'project_id' attribute will require the namespace on certain actions in order to correctly produce data
+* *Me:* 0.7 will enable custom permission setting in-app, as opposed to editing a php file
+* *Me:* 0.8 will be a caching revamp
+* *Patrick:* tons of milestones
+* *Me:* 0.9 will introduce niceties, like allowing users to have notifications set etc. on various records and record types (either a Job System or outright emailing would be allowed), and importing data from various providers into certain models (so like a model named "Image" might import from flickr or photobucket)
+* *Me:* and the 1.0 will be polish
+* *Patrick:* pretty good
+* *Patrick:* yo dawg, can I use the app generator to generate an app generator?
+* *Me:* 1.0 would probably include suggestions for various models or apps
+* *Me:* so app templates (want to rebuild lighthouse? auto-import images from various providers? make an exception handling app like getexceptional?) would be included
+* *Me:* It'll probably take the entire summer
+* *Me:* but I'm getting there and I have various plans for each stage
+* *Me:* gonna start sprint planning sunday and work mon-friday on it
+* *Me:* pretty excited for it
+* *Patrick:* sounds pretty sick
+* *Me:* you rails developers will be so jealous
+* *Patrick:* eh
+* *Me:* haha
+* *Patrick:* I'm not a rails developer
+* *Me:* ru-bee
+* *Me:* ruh-bee
+* *Patrick:* word
