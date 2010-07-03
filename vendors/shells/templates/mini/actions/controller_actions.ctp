@@ -298,28 +298,33 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 	}
 
 	function <?php echo $admin; ?>delete($id = null) {
-		if (!$id) {
+		if (!empty($this->data['<?php echo $currentModelName; ?>']['id'])) {
+			if ($this-><?php echo $currentModelName; ?>->delete($this->data['<?php echo $currentModelName; ?>']['id'])) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Invalid id for <?php echo strtolower($singularHumanName); ?>', true), 'flash/error');
+				$this->Session->setFlash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> deleted', true), 'flash/success');
+				$this->redirect(array('action'=>'index'));
+<?php else: ?>
+				$this->flash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> deleted', true), array('action' => 'index'));
+<?php endif; ?>
+			}
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> was not deleted', true), 'flash/error');
+<?php else: ?>
+			$this->flash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> was not deleted', true), array('action' => 'index'));
+<?php endif; ?>
+			$id = $this->data['<?php echo $currentModelName; ?>']['id'];
+		}
+
+		$<?php echo $singularName ?> = $this-><?php echo $currentModelName; ?>->find('delete', $id);
+		if (!$<?php echo $singularName ?>) {
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('<?php echo strtolower($singularHumanName); ?> unspecified', true), 'flash/error');
 			$this->redirect(array('action'=>'index'));
 <?php else: ?>
-			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+			$this->flash(__('<?php echo strtolower($singularHumanName); ?> unspecified', true), array('action' => 'index'));
 <?php endif; ?>
 		}
-		if ($this-><?php echo $currentModelName; ?>->delete($id)) {
-<?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> deleted', true), 'flash/success');
-			$this->redirect(array('action'=>'index'));
-<?php else: ?>
-			$this->flash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> deleted', true), array('action' => 'index'));
-<?php endif; ?>
-		}
-<?php if ($wannaUseSession): ?>
-		$this->Session->setFlash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> was not deleted', true), 'flash/error');
-<?php else: ?>
-		$this->flash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> was not deleted', true), array('action' => 'index'));
-<?php endif; ?>
-		$this->redirect(array('action' => 'index'));
+		$this->set(compact('<?php echo $singularName ?>'));
 	}
 <?php if ($has_attachments) : ?>
 
