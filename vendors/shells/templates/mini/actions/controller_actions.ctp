@@ -200,10 +200,10 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 
 		if (!$<?php echo $singularName; ?>) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Invalid <?php echo strtolower($singularHumanName) ?>', true), 'flash/error');
+			$this->Session->setFlash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
-			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 		$this->set(compact('<?php echo $singularName ?>'));
@@ -215,14 +215,14 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 			$this-><?php echo $currentModelName; ?>->create();
 			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('callback' => '<?php echo $admin ?>add'))) {
 <?php if ($wannaUseSession): ?>
-				$this->Session->setFlash(__('The <?php echo strtolower($singularHumanName); ?> has been saved', true), 'flash/success');
+				$this->Session->setFlash(__('The <?php echo ucfirst(strtolower($singularHumanName)); ?> has been saved', true), 'flash/success');
 				$this->redirect(array('action' => 'index'));
 <?php else: ?>
 				$this->flash(__('<?php echo ucfirst(strtolower($currentModelName)); ?> saved.', true), array('action' => 'index'));
 <?php endif; ?>
 			} else {
 <?php if ($wannaUseSession): ?>
-				$this->Session->setFlash(__('The <?php echo strtolower($singularHumanName); ?> could not be saved.', true), 'flash/error');
+				$this->Session->setFlash(__('The <?php echo ucfirst(strtolower($singularHumanName)); ?> could not be saved.', true), 'flash/error');
 <?php endif; ?>
 			}
 		}
@@ -248,23 +248,23 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 	function <?php echo $admin; ?>edit($id = null) {
 		if (!$id && empty($this->data)) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), 'flash/error');
+			$this->Session->setFlash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
-			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 		if (!empty($this->data)) {
 			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('callback' => '<?php echo $admin ?>edit'))) {
 <?php if ($wannaUseSession): ?>
-				$this->Session->setFlash(__('The <?php echo strtolower($singularHumanName); ?> has been saved', true), 'flash/success');
+				$this->Session->setFlash(__('The <?php echo ucfirst(strtolower($singularHumanName)); ?> has been saved', true), 'flash/success');
 				$this->redirect(array('action' => 'index'));
 <?php else: ?>
-				$this->flash(__('The <?php echo strtolower($singularHumanName); ?> has been saved.', true), array('action' => 'index'));
+				$this->flash(__('The <?php echo ucfirst(strtolower($singularHumanName)); ?> has been saved.', true), array('action' => 'index'));
 <?php endif; ?>
 			} else {
 <?php if ($wannaUseSession): ?>
-				$this->Session->setFlash(__('The <?php echo strtolower($singularHumanName); ?> could not be saved.', true), 'flash/error');
+				$this->Session->setFlash(__('The <?php echo ucfirst(strtolower($singularHumanName)); ?> could not be saved.', true), 'flash/error');
 <?php endif; ?>
 			}
 		}
@@ -273,10 +273,10 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 		}
 		if (empty($this->data)) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), 'flash/error');
+			$this->Session->setFlash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
-			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 <?php
@@ -318,10 +318,10 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 		$<?php echo $singularName ?> = $this-><?php echo $currentModelName; ?>->find('delete', $id);
 		if (!$<?php echo $singularName ?>) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('<?php echo strtolower($singularHumanName); ?> unspecified', true), 'flash/error');
-			$this->redirect(array('action'=>'index'));
+			$this->Session->setFlash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> unspecified', true), 'flash/error');
+			$this->redirect(array('action' => 'index'));
 <?php else: ?>
-			$this->flash(__('<?php echo strtolower($singularHumanName); ?> unspecified', true), array('action' => 'index'));
+			$this->flash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> unspecified', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 		$this->set(compact('<?php echo $singularName ?>'));
@@ -331,10 +331,10 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 	function add_attachment($id = null) {
 		if (!$id)  {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Invalid id for <?php echo strtolower($singularHumanName); ?>', true), 'flash/error');
+			$this->Session->setFlash(__('Invalid id for <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action'=>'index'));
 <?php else: ?>
-			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 		if (!empty($this->data['<?php echo $singularHumanName . 'Attachment'?>'])) {
@@ -359,10 +359,10 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 	function add_comment($id = null) {
 		if (!$id)  {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Invalid id for <?php echo strtolower($singularHumanName); ?>', true), 'flash/error');
+			$this->Session->setFlash(__('Invalid id for <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action'=>'index'));
 <?php else: ?>
-			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 		if (!empty($this->data['<?php echo $singularHumanName . 'Comment'?>'])) {
@@ -387,10 +387,10 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 	function add_image($id = null) {
 		if (!$id)  {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Invalid id for <?php echo strtolower($singularHumanName); ?>', true), 'flash/error');
+			$this->Session->setFlash(__('Invalid id for <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action'=>'index'));
 <?php else: ?>
-			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 		if (!empty($this->data['<?php echo $singularHumanName . 'Image'?>'])) {
@@ -415,10 +415,10 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 	function movedown($<?php echo $modelObj->primaryKey; ?> = null, $delta = null) {
 		if (!$delta || $delta <= 0) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Please provide the number of positions the <?php echo strtolower($singularHumanName); ?> should be moved up.', true), 'flash/error');
+			$this->Session->setFlash(__('Please provide the number of positions the <?php echo ucfirst(strtolower($singularHumanName)); ?> should be moved up.', true), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
-			$this->flash(__('Please provide the number of positions the <?php echo strtolower($singularHumanName); ?> should be moved up', true), array('action' => 'index'));
+			$this->flash(__('Please provide the number of positions the <?php echo ucfirst(strtolower($singularHumanName)); ?> should be moved up', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 
@@ -426,37 +426,37 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->findBy<?php echo ucfirst($modelObj->primaryKey); ?>($<?php echo $modelObj->primaryKey; ?>);
 		if (!$<?php echo $singularName; ?>) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Invalid <?php echo strtolower($singularHumanName) ?>', true), 'flash/error');
+			$this->Session->setFlash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
-			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 
 		if ($this-><?php echo $currentModelName; ?>->moveDown($<?php echo $modelObj->primaryKey; ?>, abs($delta))) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Moved <?php echo strtolower($singularHumanName) ?> down', true), 'flash/error');
+			$this->Session->setFlash(__('Moved <?php echo ucfirst(strtolower($singularHumanName)); ?> down', true), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
-			$this->flash(__('Moved <?php echo strtolower($singularHumanName); ?> down', true), array('action' => 'index'));
+			$this->flash(__('Moved <?php echo ucfirst(strtolower($singularHumanName)); ?> down', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 
 <?php if ($wannaUseSession): ?>
-		$this->Session->setFlash(__('Unable to move <?php echo strtolower($singularHumanName) ?> down', true), 'flash/error');
+		$this->Session->setFlash(__('Unable to move <?php echo ucfirst(strtolower($singularHumanName)); ?> down', true), 'flash/error');
 		$this->redirect(array('action' => 'index'));
 <?php else: ?>
-		$this->flash(__('Unable to move <?php echo strtolower($singularHumanName); ?> down', true), array('action' => 'index'));
+		$this->flash(__('Unable to move <?php echo ucfirst(strtolower($singularHumanName)); ?> down', true), array('action' => 'index'));
 <?php endif; ?>
 	}
 
 	function moveup($<?php echo $modelObj->primaryKey; ?> = null, $delta = null) {
 		if (!$delta || $delta <= 0) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Please provide the number of positions the <?php echo strtolower($singularHumanName); ?> should be moved up.', true), 'flash/error');
+			$this->Session->setFlash(__('Please provide the number of positions the <?php echo ucfirst(strtolower($singularHumanName)); ?> should be moved up.', true), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
-			$this->flash(__('Please provide the number of positions the <?php echo strtolower($singularHumanName); ?> should be moved up', true), array('action' => 'index'));
+			$this->flash(__('Please provide the number of positions the <?php echo ucfirst(strtolower($singularHumanName)); ?> should be moved up', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 
@@ -464,27 +464,27 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->findBy<?php echo ucfirst($modelObj->primaryKey); ?>($<?php echo $modelObj->primaryKey; ?>);
 		if (!$<?php echo $singularName; ?>) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Invalid <?php echo strtolower($singularHumanName) ?>', true), 'flash/error');
+			$this->Session->setFlash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
-			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 
 		if ($this-><?php echo $currentModelName; ?>->moveUp($<?php echo $modelObj->primaryKey; ?>, abs($delta))) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Moved <?php echo strtolower($singularHumanName) ?> up', true), 'flash/error');
+			$this->Session->setFlash(__('Moved <?php echo ucfirst(strtolower($singularHumanName)); ?> up', true), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
-			$this->flash(__('Moved <?php echo strtolower($singularHumanName); ?> up', true), array('action' => 'index'));
+			$this->flash(__('Moved <?php echo ucfirst(strtolower($singularHumanName)); ?> up', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 
 <?php if ($wannaUseSession): ?>
-		$this->Session->setFlash(__('Unable to move <?php echo strtolower($singularHumanName) ?> up', true), 'flash/error');
+		$this->Session->setFlash(__('Unable to move <?php echo ucfirst(strtolower($singularHumanName)); ?> up', true), 'flash/error');
 		$this->redirect(array('action' => 'index'));
 <?php else: ?>
-		$this->flash(__('Unable to move <?php echo strtolower($singularHumanName); ?> up', true), array('action' => 'index'));
+		$this->flash(__('Unable to move <?php echo ucfirst(strtolower($singularHumanName)); ?> up', true), array('action' => 'index'));
 <?php endif; ?>
 	}
 
@@ -493,26 +493,26 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->findBy<?php echo ucfirst($modelObj->primaryKey); ?>($<?php echo $modelObj->primaryKey; ?>);
 		if (!$<?php echo $singularName; ?>) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Invalid <?php echo strtolower($singularHumanName) ?>', true), 'flash/error');
+			$this->Session->setFlash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
-			$this->flash(__('Invalid <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 
 		if ($this-><?php echo $currentModelName; ?>->removefromtree($<?php echo $modelObj->primaryKey; ?>)) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('Removed <?php echo strtolower($singularHumanName) ?>', true), 'flash/error');
+			$this->Session->setFlash(__('Removed <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action' => 'index'));
 <?php else: ?>
-			$this->flash(__('Removed <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+			$this->flash(__('Removed <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => 'index'));
 <?php endif; ?>
 		}
 <?php if ($wannaUseSession): ?>
-		$this->Session->setFlash(__('Unable to remove <?php echo strtolower($singularHumanName) ?>', true), 'flash/success');
+		$this->Session->setFlash(__('Unable to remove <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/success');
 		$this->redirect(array('action' => 'index'));
 <?php else: ?>
-		$this->flash(__('Unable to remove <?php echo strtolower($singularHumanName); ?>', true), array('action' => 'index'));
+		$this->flash(__('Unable to remove <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => 'index'));
 <?php endif; ?>
 	}
 <?php endif; ?>
