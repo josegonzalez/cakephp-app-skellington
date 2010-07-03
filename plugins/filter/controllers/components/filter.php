@@ -79,7 +79,6 @@ class FilterComponent extends Object {
 		if (in_array($controller->action, $this->settings['actions'])) {
 			$settings['whitelist'] = (empty($settings['whitelist'])) ? array() : (array) $settings['whitelist'];
 			$this->settings = array_merge($this->settings, $settings);
-			$this->paginate = array_merge($this->paginate, $controller->paginate);
 
 			$this->processAction($controller);
 		}
@@ -92,6 +91,11 @@ class FilterComponent extends Object {
 		}
 
 		$this->processFilters($controller);
+		$controller->params['filter'] = array(
+			'default' => $controller->paginate,
+			'filter' => $this->paginate
+		);
+		$this->paginate = array_merge($this->paginate, $controller->paginate);
 
 		foreach ($this->settings['url'] as $key => $value) {
 			$controller->params['named'][$key] = $value;
