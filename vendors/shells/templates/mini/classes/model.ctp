@@ -270,18 +270,56 @@ endif;
 
 	function __findDashboard() {
 		return $this->find('first', array(
-			'conditions' => array(
-				"{$this->alias}.<?php echo $primaryKey; ?>" => Authsome::get('<?php echo $primaryKey; ?>')),
+			'conditions' => array("{$this->alias}.<?php echo $primaryKey; ?>" => Authsome::get('<?php echo $primaryKey; ?>')),
 			'contain' => false
 		));
 	}
+
 <?php endif; ?>
 
-	function __findEdit($id = null) {
-		if (!$id) return false;
+	function __findView($<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?> = null) {
+		if (!$<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>) return false;
 
 		return $this->find('first', array(
-			'conditions' => array("{$this->alias}.<?php echo $primaryKey; ?>" => $id)
+<?php if ($isPublishable != false) : ?>
+			'conditions' => array(
+				"{$this->alias}.<?php echo (isset($schema['slug'])) ? 'slug' : "{\$this->primaryKey}"; ?>" => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>,
+				"{$this->alias}.<?php echo $isPublishable; ?>" => 1),
+<?php elseif ($isDeletable != false) : ?>
+			'conditions' => array(
+				"{$this->alias}.<?php echo (isset($schema['slug'])) ? 'slug' : "{\$this->primaryKey}"; ?>" => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>,
+				"{$this->alias}.deleted" => 0),
+<?php else : ?>
+			'conditions' => array("{$this->alias}.<?php echo (isset($schema['slug'])) ? 'slug' : "{\$this->primaryKey}"; ?>" => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>),
+<?php endif?>
+<?php if (!empty($associations['belongsTo']) || $isTrackable) : ?>
+			'contain' => array(
+<?php foreach ($associations['belongsTo'] as $i => $relation) : ?>
+<?php echo "\t\t\t\t'" . $relation['alias'] ."',\n"; ?>
+<?php endforeach; ?>
+<?php if ($isTrackable) echo "\t\t\t\t'CreatedBy',\n"; ?>
+			)
+		));
+<?php else: ?>
+			'contain' => false
+		));
+<?php endif; ?>
+	}
+
+	function __findEdit($<?php echo $primaryKey; ?> = null) {
+		if (!$<?php echo $primaryKey; ?>) return false;
+
+		return $this->find('first', array(
+			'conditions' => array("{$this->alias}.<?php echo $primaryKey; ?>" => $<?php echo $primaryKey; ?>)
+		));
+	}
+
+	function __findDelete($<?php echo $primaryKey; ?> = null) {
+		if (!$<?php echo $primaryKey; ?>) return false;
+
+		return $this->find('first', array(
+			'conditions' => array("{$this->alias}.<?php echo $primaryKey; ?>" => <?php echo $primaryKey; ?>),
+			'contain' => false
 		));
 	}
 <?php if ($name == 'User') :?>
@@ -322,37 +360,6 @@ endif;
 			)
 		));
 	}
-<?php endif; ?>
-
-	function __findView($<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?> = null) {
-		if (!$<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>) return false;
-
-		return $this->find('first', array(
-<?php if ($isPublishable != false) : ?>
-			'conditions' => array(
-				"{$this->alias}.<?php echo (isset($schema['slug'])) ? 'slug' : "{\$this->primaryKey}"; ?>" => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>,
-				"{$this->alias}.<?php echo $isPublishable; ?>" => 1),
-<?php elseif ($isDeletable != false) : ?>
-			'conditions' => array(
-				"{$this->alias}.<?php echo (isset($schema['slug'])) ? 'slug' : "{\$this->primaryKey}"; ?>" => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>,
-				"{$this->alias}.deleted" => 0),
-<?php else : ?>
-			'conditions' => array("{$this->alias}.<?php echo (isset($schema['slug'])) ? 'slug' : "{\$this->primaryKey}"; ?>" => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>),
-<?php endif?>
-<?php if (!empty($associations['belongsTo']) || $isTrackable) : ?>
-			'contain' => array(
-<?php foreach ($associations['belongsTo'] as $i => $relation) : ?>
-<?php echo "\t\t\t\t'" . $relation['alias'] ."',\n"; ?>
-<?php endforeach; ?>
-<?php if ($isTrackable) echo "\t\t\t\t'CreatedBy',\n"; ?>
-			)
-		));
-<?php else: ?>
-			'contain' => false
-		));
-<?php endif; ?>
-	}
-<?php if ($name == 'User') : ?>
 
 	function authsomeLogin($type, $credentials = array()) {
 		switch ($type) {
