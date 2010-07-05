@@ -54,20 +54,14 @@ foreach ($modelObj->belongsTo as $associationName => $relation) {
 		$paginate_models[] = $paginate_model;
 	}
 }
-$has_attachments = false;
-$has_comments = false;
-$has_images = false;
+$hasAttachments = false;
+$hasComments = false;
+$hasImages = false;
 
 // We need to guess what type of Relationship this Model may have to any other
-if (in_array("{$singularHumanName}Attachment", array_keys($modelObj->hasMany))) {
-	$has_attachments = true;
-}
-if (in_array("{$singularHumanName}Comment", array_keys($modelObj->hasMany))) {
-	$has_comments = true;
-}
-if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
-	$has_images = true;
-}
+if (in_array("{$singularHumanName}Attachment", array_keys($modelObj->hasMany))) $hasAttachments = true;
+if (in_array("{$singularHumanName}Comment", array_keys($modelObj->hasMany))) $hasComments = true;
+if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasImages = true;
 
 ?>
 <?php if (empty($paginate_models)) : ?>
@@ -327,7 +321,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 		}
 		$this->set(compact('<?php echo $singularName ?>'));
 	}
-<?php if ($has_attachments) : ?>
+<?php if ($hasAttachments) : ?>
 
 	function add_attachment($id = null) {
 		if (!$id)  {
@@ -355,7 +349,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 		$this->redirect(array('action' => 'view', $id));
 	}
 <?php endif; ?>
-<?php if ($has_comments) : ?>
+<?php if ($hasComments) : ?>
 
 	function add_comment($id = null) {
 		if (!$id)  {
@@ -383,7 +377,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) {
 		$this->redirect(array('action' => 'view', $id));
 	}
 <?php endif; ?>
-<?php if ($has_images) : ?>
+<?php if ($hasImages) : ?>
 
 	function add_image($id = null) {
 		if (!$id)  {
