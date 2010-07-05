@@ -18,6 +18,7 @@ class CallbackableBehavior extends ModelBehavior {
  **/
 	function setCallbackableData(&$model, $data = null) {
 		$this->__data = $data;
+		return $this->__data;
 	}
 
 /**
