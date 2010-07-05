@@ -353,6 +353,7 @@ class LogableBehavior extends ModelBehavior  {
 	}
 
 	function afterSave(&$Model,$created) {
+		$logData = array();
 		if (!$this->settings[$Model->alias]['enabled']) {
 			return true;
 		}
