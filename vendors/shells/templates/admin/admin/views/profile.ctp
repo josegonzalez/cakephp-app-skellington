@@ -3,17 +3,11 @@ $invalid_fields = array('created', 'created_by', 'created_by_id', 'modified', 'm
 $invalid_behavior_fields = array('lft', 'rght', 'slug');
 $invalid_polymorphic_fields = array('class', 'foreign_id', 'model', 'model_id', 'model_key');
 $original_fields = $fields;
-foreach ($fields as $i => $field) {
-	if (substr($field, -6) == '_count') unset($fields[$i]);
-}
-$fields = array_diff($fields, $invalid_fields);
-$fields = array_diff($fields, $invalid_behavior_fields);
-$fields = array_diff($fields, $invalid_polymorphic_fields);
+foreach ($fields as $i => $field) if (substr($field, -6) == '_count') unset($fields[$i]);
+$fields = array_diff($fields, array_merge($invalid_fields, $invalid_behavior_fields, $invalid_polymorphic_fields));
 
-$form_fields = array();
+$form_fields = $left_fields = $right_fields = array();
 // Shuffle fields around for left and right input
-$left_fields = array();
-$right_fields = array();
 $has_form_field = false;
 foreach ($fields as $field) {
 	if (substr($field, -10) == '_file_name') {
@@ -28,162 +22,139 @@ foreach ($fields as $field) {
 		$right_fields[] = $field;
 	}
 }
-if ($has_form_field) $has_form_field = ", 'type' => 'file'";
-?>
-<h2 class="title"><?php echo "<?php echo sprintf(__('Add %s', true), __('{$pluralHumanName}', true)); ?>"; ?></h2>
-<?php echo "<?php \$this->Html->h2(sprintf(__('Add %s', true), __('{$pluralHumanName}', true))); ?>\n"; ?>
-<div class="inner">
-	<?php echo "<?php echo \$this->Session->flash(); ?>\n"; ?>
-<?php
-echo "\t<?php echo \$this->Form->create('{$modelClass}', array(\n";
-echo "\t\t'class' => 'form', 'inputDefaults' => array('div' => false, 'label' => false){$has_form_field})); ?>\n";
-?>
-<?php
-	if (empty($left_fields) || empty($right_fields)) {
-		echo "\t<?php\n";
-		foreach ($fields as $field) {
-			if (strpos($action, 'add') !== false && $field == $primaryKey) {
-				continue;
-			}
-?>
-	<div class="group">
-
-<?php			if ($field != $primaryKey) {
-				echo "\t\t\techo \$this->Form->label('{$modelClass}.{$field}', '" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', array('class' => 'label'));\n";
-			}
-			if ($field == 'owned_by') {
-				echo "\t\t\t\techo \$this->Form->input('{$modelClass}.{$field}',\n";
-				echo "\t\t\t\t\tfarray('type' => 'select', 'options' => \$owners));\n"; ?>
+if ($has_form_field) $has_form_field = ", 'type' => 'file'"; ?>
+<div class="block" id="block-text">
+	<div class="secondary-navigation">
+		<ul class="wat-cf">
+			<li class="first"><?php echo "<?php echo \$this->Html->link('Index', array('action' => 'index')); ?>"; ?></li>
+			<li class="active"><?php echo "<?php echo \$this->Html->link('Profile', array('action' => 'profile', '#')); ?>"; ?></li>
+		</ul>
 	</div>
-<?php			continue;
-			}
-			if ($field == 'assigned_to') {
-				echo "\t\t\t\techo \$this->Form->input('{$modelClass}.{$field}',\n";
-				echo "\t\t\t\t\tarray('type' => 'select', 'options' => \$assignedTos));\n"; ?>
-	</div>
-<?php			continue;
-			}
-			if ($field == 'password') {
-				echo "\t\t\t<?php echo \$this->Form->input('{$modelClass}.new_{$field}', array('class' => 'text_field', 'type' => 'password')); ?>\n"; ?>
-	</div>
-<?php			continue;
-			}
-			if ($schema[$field]['type'] == 'boolean') {
-				echo "\t\t\t\t<?php echo \$this->Form->input('{$modelClass}.{$field}', array('type' => 'select', 'options' => array('0' => 'No', '1' => 'Yes'))); ?>\n"; ?>
-	</div>
-<?php			continue;
-			}
-
-			if (strstr($field, 'description')) {
-				echo "\t\t\techo \$this->Form->input('{$modelClass}.{$field}', array('type' => 'textarea', 'class' => 'text_area'));\n"; ?>
-	</div>
-<?php			continue;
-			}
-
-			if ($schema[$field]['type'] == 'string') {
-				echo "\t\t\techo \$this->Form->input('{$modelClass}.{$field}', array('class' => 'text_field'));\n"; ?>
-	</div>
-<?php			continue;
-			}
-			echo "\t\t\techo \$this->Form->input('{$modelClass}.{$field}');\n";
-			if ($field != $primaryKey) { ?>
-</div>
-<?php			continue;
-			}
-		}
-		if (!empty($associations['hasAndBelongsToMany'])) {
-			foreach ($associations['hasAndBelongsToMany'] as $assocName => $assocData) {
-				echo "\t\techo \$this->Form->input('{$assocName}');\n";
-			}
-		}
-		echo "\t?>\n";
-	} else {
-	?>
-		<div class="columns wat-cf">
-			<div class="column left">
-<?php
-	foreach ($left_fields as $field) {
-		if (strpos($action, 'add') !== false && $field == $primaryKey) {
-			continue;
-		} ?>
-				<div class="group">
-<?php		echo "\t\t\t\t\t<?php echo \$this->Form->label('{$modelClass}.{$field}', '" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', array('class' => 'label')); ?>\n";
-		if ($field == 'password') {
-			echo "\t\t\t\t\t<?php echo \$this->Form->input('{$modelClass}.new_{$field}',\n";
-			echo "\t\t\t\t\t\tarray('class' => 'text_field', 'type' => 'password')); ?>\n"; ?>
-				</div>
-<?php			continue;
-		}
-
-		if (strstr($field, 'description')) {
-			echo "\t\t\t\t\t<?php echo \$this->Form->input('{$modelClass}.{$field}', array('type' => 'textarea', 'class' => 'text_area')); ?>\n"; ?>
-				</div>
-<?php			continue;
-		}
-
-		if ($schema[$field]['type'] == 'string') {
-			echo "\t\t\t\t\t<?php echo \$this->Form->input('{$modelClass}.{$field}', array('class' => 'text_field')); ?>\n"; ?>
-				</div>
-<?php			continue;
-		}
-		echo "\t\t\t\t\t<?php echo \$this->Form->input('{$modelClass}.{$field}'); ?>\n"; ?>
-				</div>
-<?php } ?>
+	<div class="content">
+		<h2 class="title"><?php echo "<?php echo sprintf(__('Add %s', true), __('{$pluralHumanName}', true)); ?>"; ?></h2>
+		<div class="inner">
+			<?php echo "<?php echo \$this->Session->flash(); ?>\n"; ?>
+			<?php echo "<?php echo \$this->Form->create('{$modelClass}', array(\n"; ?>
+			<?php echo "\t'class' => 'form', 'inputDefaults' => array('div' => false, 'label' => false){$has_form_field})); ?>\n"; ?>
+<?php if (empty($left_fields) || empty($right_fields)) : ?>
+<?php	foreach ($fields as $field) : ?>
+<?php		if (strpos($action, 'add') !== false && $field == $primaryKey) continue;?>
+			<div class="group">
+<?php		if ($field != $primaryKey) : ?>
+				<?php echo "<?php echo \$this->Form->label('{$modelClass}.{$field}', '" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', array('class' => 'label')); ?>\n"; ?>
+<?php		endif; ?>
+<?php		if ($field == 'owned_by') : ?>
+				<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}',\n"; ?>
+				<?php echo "\tarray('type' => 'select', 'options' => \$owners));\n"; ?>
 			</div>
-			<div class="column right">
-<?php
-	foreach ($right_fields as $field) {
-		if (strpos($action, 'add') !== false && $field == $primaryKey) {
-			continue;
-		}
-		if ($field != $primaryKey) { ?>
-				<div class="group">
-<?php				echo "\t\t\t\t\t<?php echo \$this->Form->label('{$modelClass}.{$field}', '" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', array('class' => 'label')); ?>\n";
-		}
-		if (in_array($field, (array) array_keys($form_fields))) {
-			echo "\t\t\t\t <?php echo \$this->Form->input('{$modelClass}.{$form_fields[$field]}', array('type' => 'file')); ?>\n"; ?>
-				</div>
-<?php		continue;
-		}
-		if ($field == 'owned_by') {
-			echo "\t\t\t\t\t<?php echo \$this->Form->input('{$modelClass}.{$field}', array('type' => 'select', 'options' => \$owners)); ?>\n"; ?>
-				</div>
-<?php		continue;
-		}
-		if ($field == 'assigned_to') {
-			echo "\t\t\t\t\t<?php echo \$this->Form->input('{$modelClass}.{$field}', array('type' => 'select', 'options' => \$assignedTos)); ?>\n"; ?>
-				</div>
-<?php		continue;
-		}
-		if ($schema[$field]['type'] == 'boolean') {
-			echo "\t\t\t\t\t<?php echo \$this->Form->input('{$modelClass}.{$field}', array('type' => 'select', 'options' => array('0' => 'No', '1' => 'Yes'))); ?>\n"; ?>
-				</div>
-<?php		continue;
-		}
-		echo "\t\t\t\t\t<?php echo \$this->Form->input('{$modelClass}.{$field}'); ?>\n";
-		if ($field != $primaryKey) { ?>
-				</div>
-<?php	}
-	}
-	if (!empty($associations['hasAndBelongsToMany'])) {
-		foreach ($associations['hasAndBelongsToMany'] as $assocName => $assocData) {
-			echo "\t\t\t\t<?php echo \$this->Form->input('{$assocName}'); ?> \n";
-		}
-	}
-?>
+<?php		elseif ($field == 'assigned_to') : ?>
+				<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
+				<?php echo "\t'type' => 'select', 'options' => \$assignedTos));\n"; ?>
 			</div>
+<?php		elseif ($field == 'password') : ?>
+				<?php echo "<?php echo \$this->Form->input('{$modelClass}.new_{$field}', array(\n"; ?>
+				<?php echo "\t'class' => 'text_field', 'type' => 'password')); ?>\n"; ?>
+			</div>
+<?php		elseif ($schema[$field]['type'] == 'boolean') : ?>
+				<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
+				<?php echo "\t'type' => 'select', 'options' => array('0' => 'No', '1' => 'Yes'))); ?>\n"; ?>
+			</div>
+<?php		elseif (strstr($field, 'description') || strstr($field, 'content')) : ?>
+				<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
+				<?php echo "\t'type' => 'textarea', 'class' => 'text_area')); ?>\n"; ?>
+			</div>
+<?php		elseif ($schema[$field]['type'] == 'string') : ?>
+				<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
+				<?php echo "\t'class' => 'text_field')); ?>\n"; ?>
+			</div>
+<?php			continue; ?>
+<?php		endif; ?>
+				<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}'); ?>\n"; ?>
+<?php		if ($field != $primaryKey) : ?>
+			</div>
+<?php			continue; ?>
+<?php		endif; ?>
+<?php	endforeach; ?>
+<?php	if (!empty($associations['hasAndBelongsToMany'])) : ?>
+<?php		foreach ($associations['hasAndBelongsToMany'] as $assocName => $assocData) : ?>
+				<?php echo "<?php echo \$this->Form->input('{$assocName}'); ?>\n"; ?>
+<?php		endforeach; ?>
+<?php	endif; ?>
+<?php else : ?>
+			<div class="columns wat-cf">
+				<div class="column left">
+<?php	foreach ($left_fields as $field) : ?>
+<?php			if (strpos($action, 'add') !== false && $field == $primaryKey) continue; ?>
+					<div class="group">
+						<?php echo "<?php echo \$this->Form->label('{$modelClass}.{$field}',\n" ?>
+						<?php echo "\t'" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', array('class' => 'label')); ?>\n"; ?>
+<?php				if ($field == 'password') : ?>
+						<?php echo "<?php echo \$this->Form->input('{$modelClass}.new_{$field}', array(\n"; ?>
+						<?php echo "\t'class' => 'text_field', 'type' => 'password')); ?>\n"; ?>
+					</div>
+<?php				elseif (strstr($field, 'description') || strstr($field, 'content')) : ?>
+						<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
+						<?php echo "\t'type' => 'textarea', 'class' => 'text_area')); ?>\n"; ?>
+					</div>
+<?php				elseif ($schema[$field]['type'] == 'string') : ?>
+						<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
+						<?php echo "\t'class' => 'text_field')); ?>\n"; ?>
+					</div>
+<?php				else : ?>
+						<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}'); ?>\n"; ?>
+					</div>
+<?php				endif; ?>
+<?php	endforeach; ?>
+				</div>
+				<div class="column right">
+<?php	foreach ($right_fields as $field) : ?>
+<?php			if (strpos($action, 'add') !== false && $field == $primaryKey) continue; ?>
+<?php				if ($field != $primaryKey) : ?>
+					<div class="group">
+						<?php echo "<?php echo \$this->Form->label('{$modelClass}.{$field}',\n" ?>
+						<?php echo "\t'" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', array('class' => 'label')); ?>\n"; ?>
+<?php				endif; ?>
+<?php			if (in_array($field, (array) array_keys($form_fields))) : ?>
+						<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$form_fields[$field]}', array('type' => 'file')); ?>\n"; ?>
+					</div>
+<?php			elseif ($field == 'owned_by') : ?>
+						<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
+						<?php echo "\t'type' => 'select', 'options' => \$owners)); ?>\n"; ?>
+					</div>
+<?php			elseif ($field == 'assigned_to') : ?>
+						<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
+						<?php echo "\t'type' => 'select', 'options' => \$assignedTos)); ?>\n"; ?>
+					</div>
+<?php			elseif ($schema[$field]['type'] == 'boolean') : ?>
+						<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
+						<?php echo "\t'type' => 'select', 'options' => array('0' => 'No', '1' => 'Yes'))); ?>\n"; ?>
+					</div>
+<?php			else : ?>
+						<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}'); ?>\n"; ?>
+<?php				if ($field != $primaryKey) : ?>
+					</div>
+<?php	 			endif; ?>
+<?php	 		endif; ?>
+<?php	endforeach; ?>
+<?php	if (!empty($associations['hasAndBelongsToMany'])) : ?>
+<?php		foreach ($associations['hasAndBelongsToMany'] as $assocName => $assocData) : ?>
+					<div class="group">
+						<?php echo "<?php echo \$this->Form->input('{$assocName}'); ?> \n"; ?>
+					</div>
+<?php		endforeach; ?>
+<?php	endif; ?>
+				</div>
+			</div>
+<?php endif; ?>
+			<div class="group navform wat-cf">
+				<button class="button" type="submit">
+					<?php echo "<?php echo \$this->Html->image('icons/tick.png', array('alt' => 'Save')); ?> Save\n"; ?>
+				</button>
+				<?php echo "<?php echo \$this->Html->link(\n"; ?>
+				<?php echo "\t\$this->Html->image('icons/cross.png', array('alt' => __('Cancel', true))) .' Cancel',\n"; ?>
+				<?php echo "\tarray('action' => 'index'), array('escape' => false, 'class' => 'button')); ?>\n"; ?>
+			</div>
+		<?php echo "\t<?php echo \$this->Form->end();?>\n"; ?>
 		</div>
-<?php } ?>
-		<div class="group navform wat-cf">
-			<button class="button" type="submit">
-				<?php echo "<?php echo \$this->Html->image('icons/tick.png', array('alt' => 'Save')); ?> Save\n"; ?>
-			</button>
-			<?php echo "<?php echo \$this->Html->link(\$this->Html->image('icons/cross.png', array('alt' => __('Cancel', true))) .' Cancel',\n"; ?>
-			<?php echo "\tarray('action' => 'index'), array('escape' => false, 'class' => 'button')); ?>\n"; ?>
-		</div>
-<?php echo "\t<?php echo \$this->Form->end();?>\n"; ?>
+	</div>
 </div>
-<?php
-echo "\n<?php \$this->Resource->secondary_navigation('Index', array('action' => 'index')); ?>";
-echo "\n<?php \$this->Resource->secondary_navigation('Edit', array('action' => 'edit', \$this->data['{$modelClass}']['{$primaryKey}'] . '#')); ?>";
-?>

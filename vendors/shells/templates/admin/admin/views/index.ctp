@@ -56,7 +56,6 @@
 		'show_time_fields' => 'invalid_time_fields',
 		'show_user_fields' => 'invalid_user_fields',
 		'show_visibility_fields' => 'invalid_visibility_fields',
-
 		'show_fashion_fields' => 'invalid_fashion_fields'
 	);
 
@@ -89,87 +88,91 @@
 		}
 	}
 ?>
-<h2 class="title"><?php echo "<?php echo __('{$pluralHumanName}', true); ?>"; ?></h2>
-<?php echo "<?php \$this->Html->h2(__('{$pluralHumanName}', true)); ?>\n"; ?>
-<div class="inner">
-	<?php echo "<?php echo \$this->Session->flash(); ?>\n"; ?>
-	<table class="table">
-		<tr>
+<div class="block" id="block-text">
+	<div class="secondary-navigation">
+		<ul class="wat-cf">
+			<li class="first active"><?php echo "<?php echo \$this->Html->link('Index', array('action' => 'index', '#')); ?>\n"?></li>
+			<li><?php echo "<?php echo \$this->Html->link('Add', array('action' => 'add')); ?>"?></li>
+		</ul>
+	</div>
+	<div class="content">
+		<h2 class="title"><?php echo "<?php echo __('{$pluralHumanName}', true); ?>"; ?></h2>
+		<?php echo "<?php \$this->Html->h2(__('{$pluralHumanName}', true)); ?>\n"; ?>
+		<div class="inner">
+			<?php echo "<?php echo \$this->Session->flash(); ?>\n"; ?>
+			<table class="table">
+				<tr>
 <?php $first_field = true; ?>
 <?php foreach ($fields as $field):?>
-			<th<?php if ($first_field) {echo ' class="first"';$first_field = false;}?>><?php echo "<?php echo \$this->Paginator->sort('" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', '{$modelClass}.{$field}');?>";?></th>
+					<th<?php if ($first_field) {echo ' class="first"';$first_field = false;}?>><?php echo "<?php echo \$this->Paginator->sort('" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', '{$modelClass}.{$field}');?>";?></th>
 <?php endforeach;?>
-			<?php if ($doActions) : ?><?php echo "<th class=\"actions last\">&nbsp;</th>\n";?><?php endif; ?>
-		</tr>
-<?php
-echo "\t\t<?php \$i = 0; foreach (\${$pluralVar} as \${$singularVar}) : ?>\n";
-echo "\t\t\t<tr<?php echo (\$i++ % 2 == 0) ? ' class=\"altrow odd\"' : 'even';?>>\n";
-	foreach ($fields as $field) {
-		$isKey = false;
-		if (!empty($associations['belongsTo'])) {
-			foreach ($associations['belongsTo'] as $alias => $details) {
-				if ($field === $details['foreignKey']) {
-					$isKey = true;
-					if (is_object($aliased_model = ClassRegistry::init($alias))) {
-						if (in_array('slug', array_keys($aliased_model->schema()))) $details['primaryKey'] = 'slug';
-					}
-					echo "\t\t\t<td>\n\t\t\t\t<?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$details['displayField']}'],\n";
-					echo "\t\t\t\t\tarray('controller' => '{$details['controller']}', 'action' => 'view', \${$singularVar}['{$alias}']['{$details['primaryKey']}'])); ?>\n\t\t\t</td>\n";
-					break;
-				}
-			}
-		}
-		if ($isKey !== true) {
-			if ($field == $displayField) {
-				echo "\t\t\t<td><?php echo \$html->link(\${$singularVar}['{$modelClass}']['{$field}'],\n";
-				if (in_array('slug', $fields)) {
-					echo "\t\t\t\tarray('action' => 'edit', \${$singularVar}['{$modelClass}']['slug'])); ?>&nbsp;</td>\n";
-				} else {
-					echo "\t\t\t\tarray('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>&nbsp;</td>\n";
-				}
-			} else if ($schema[$field]['type'] == 'datetime') {
-				echo "\t\t\t<td><?php echo \$this->Time->niceShort(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
-			} else if ($schema[$field]['type'] == 'date') {
-				echo "\t\t\t<td><?php echo \$this->Time->timeAgoInWords(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
-			} else if ($schema[$field]['type'] == 'time') {
-				echo "\t\t\t<td><?php echo \$this->Time->time(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";
-			} else if (in_array($field, array('created_by', 'modified_by', 'created_by_id', 'modified_by_id'))) {
-				echo "\t\t\t<td><?php echo \$this->Html->link(\${$singularVar}['" . Inflector::classify($field) . "']['username'],\n";
-				echo "\t\t\t\tarray('controller' => 'users', 'action' => 'view', \${$singularVar}['{$modelClass}']['{$field}'],";
-				echo " Inflector::slug(\${$singularVar}['". Inflector::classify($field) . "']['username']))); ?></td>\n";
-			} else {
-				echo "\t\t\t<td><?php echo \${$singularVar}['{$modelClass}']['{$field}']; ?>&nbsp;</td>\n";
-			}
-		}
-	}
-
-	if ($doActions) {
-		echo "\t\t\t<td class=\"actions last\">\n";
-		echo "\t\t\t\t<?php echo \$this->Html->link(__('Show', true),\n";
-		if (in_array('slug', $fields)) {
-			echo "\t\t\t\t\tarray('action' => 'view', \${$singularVar}['{$modelClass}']['slug'])); ?> | \n";
-		} else {
-			echo "\t\t\t\t\tarray('action' => 'view', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?> | \n";
-		}
-		echo "\t\t\t\t<?php echo \$this->Html->link(__('Edit', true),\n";
-		echo "\t\t\t\t\tarray('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?> | \n";
-		echo "\t\t\t\t<?php echo \$this->Html->link(__('Delete', true),\n";
-		echo "\t\t\t\t\tarray('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']),\n";
-		echo "\t\t\t\t\tnull, sprintf(__('Are you sure you want to delete %s?', true), \${$singularVar}['{$modelClass}']['{$displayField}'])); ?>\n";
-		echo "\t\t\t</td>\n";
-	}
-echo "\t\t</tr>\n";
-
-echo "\t<?php endforeach; ?>\n";
-?>
-	</table>
-</div>
-	<div class="actions-bar wat-cf">
-		<div class="pagination">
-			<?php echo "<?php echo \$this->Paginator->prev('« '.__('Previous', true), array('class' => 'next_page'), null, array('class' => 'disabled')); ?>\n";?>
-			<?php echo "<?php echo \$this->Paginator->numbers(array('separator' => false)); ?>\n"?>
-			<?php echo "<?php echo \$this->Paginator->next(__('Next', true).' »', array('rel' => 'next', 'class' => 'next_page'), null, array('class' => 'disabled')); ?>\n";?>
+					<?php if ($doActions) : ?><?php echo "<th class=\"actions last\">&nbsp;</th>\n";?><?php endif; ?>
+				</tr>
+				<?php echo "<?php \$i = 0; foreach (\${$pluralVar} as \${$singularVar}) : ?>\n"; ?>
+				<?php echo "<tr<?php echo (\$i++ % 2 == 0) ? ' class=\"altrow odd\"' : 'even';?>>\n"; ?>
+<?php foreach ($fields as $field) : ?>
+<?php	$isKey = false; ?>
+<?php	if (!empty($associations['belongsTo'])) : ?>
+<?php		foreach ($associations['belongsTo'] as $alias => $details) : ?>
+<?php			if ($field === $details['foreignKey']) : ?>
+<?php				$isKey = true; ?>
+<?php				if (is_object($aliased_model = ClassRegistry::init($alias))) : ?>
+<?php					if (in_array('slug', array_keys($aliased_model->schema()))) $details['primaryKey'] = 'slug'; ?>
+<?php				endif; ?>
+					<?php echo "<td><?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$details['displayField']}'],\n"; ?>
+						<?php echo "\tarray('controller' => '{$details['controller']}', 'action' => 'view', \${$singularVar}['{$alias}']['{$details['primaryKey']}'])); ?></td>\n"; ?>
+<?php				break; ?>
+<?php			endif; ?>
+<?php		endforeach; ?>
+<?php	endif; ?>
+<?php	if ($isKey !== true) : ?>
+<?php		if ($field == $displayField) : ?>
+					<?php echo "<td><?php echo \$html->link(\${$singularVar}['{$modelClass}']['{$field}'], array(\n"; ?>
+<?php			if (in_array('slug', $fields)) : ?>
+					<?php echo "\t'action' => 'edit', \${$singularVar}['{$modelClass}']['slug'])); ?>&nbsp;</td>\n"; ?>
+<?php			else : ?>
+					<?php echo "\t'action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>&nbsp;</td>\n"; ?>
+<?php			endif; ?>
+<?php		elseif ($schema[$field]['type'] == 'datetime') : ?>
+					<?php echo "<td><?php echo \$this->Time->niceShort(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n"; ?>
+<?php		elseif ($schema[$field]['type'] == 'date') : ?>
+					<?php echo "<td><?php echo \$this->Time->timeAgoInWords(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n"; ?>
+<?php		elseif ($schema[$field]['type'] == 'time') : ?>
+					<?php echo "<td><?php echo \$this->Time->time(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n"; ?>
+<?php		elseif (in_array($field, array('created_by', 'modified_by', 'created_by_id', 'modified_by_id'))) : ?>
+					<?php echo "<td><?php echo \$this->Html->link(\${$singularVar}['" . Inflector::classify($field) . "']['username'],\n"; ?>
+					<?php echo "\narray('controller' => 'users', 'action' => 'view', \${$singularVar}['{$modelClass}']['{$field}'],"; ?>
+					<?php echo " Inflector::slug(\${$singularVar}['". Inflector::classify($field) . "']['username']))); ?></td>\n"; ?>
+<?php		else : ?>
+					<?php echo "<td><?php echo \${$singularVar}['{$modelClass}']['{$field}']; ?>&nbsp;</td>\n"; ?>
+<?php		endif; ?>
+<?php	endif; ?>
+<?php endforeach; ?>
+<?php if ($doActions) : ?>
+					<?php echo "<td class=\"actions last\">\n"; ?>
+						<?php echo "<?php echo \$this->Html->link(__('Show', true),\n"; ?>
+<?php	if (in_array('slug', $fields)) : ?>
+						<?php echo "\tarray('action' => 'view', \${$singularVar}['{$modelClass}']['slug'])); ?> | \n"; ?>
+<?php	else : ?>
+						<?php echo "\tarray('action' => 'view', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?> | \n"; ?>
+<?php	endif; ?>
+						<?php echo "<?php echo \$this->Html->link(__('Edit', true),\n"; ?>
+						<?php echo "\tarray('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?> | \n"; ?>
+						<?php echo "<?php echo \$this->Html->link(__('Delete', true),\n"; ?>
+						<?php echo "\tarray('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']),\n"; ?>
+						<?php echo "\tnull, sprintf(__('Are you sure you want to delete %s?', true), \${$singularVar}['{$modelClass}']['{$displayField}'])); ?>\n"; ?>
+					</td>
+<?php endif; ?>
+				</tr>
+			<?php echo "\t<?php endforeach; ?>\n"; ?>
+			</table>
+		</div>
+		<div class="actions-bar wat-cf">
+			<div class="pagination">
+				<?php echo "<?php echo \$this->Paginator->prev('« '.__('Previous', true), array('class' => 'next_page'), null, array('class' => 'disabled')); ?>\n";?>
+				<?php echo "<?php echo \$this->Paginator->numbers(array('separator' => false)); ?>\n"?>
+				<?php echo "<?php echo \$this->Paginator->next(__('Next', true).' »', array('rel' => 'next', 'class' => 'next_page'), null, array('class' => 'disabled')); ?>\n";?>
+			</div>
 		</div>
 	</div>
-<?php echo "<?php \$this->Resource->secondary_navigation('Index', array('action' => 'index')); ?>\n"?>
-<?php echo "<?php \$this->Resource->secondary_navigation('Add', array('action' => 'add')); ?>"?>
+</div>

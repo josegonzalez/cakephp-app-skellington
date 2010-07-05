@@ -1,13 +1,28 @@
-<h2 class="title"><?php echo "<?php echo \${$singularVar}['{$modelClass}']['{$displayField}']; ?>"; ?></h2>
-<?php echo "<?php \$this->Html->h2(\${$singularVar}['{$modelClass}']['{$displayField}']); ?>\n"; ?>
-<?php echo "<?php \$simple_block_meta = ''; ?>\n"; ?>
-<div class="inner">
-	<?php echo "<?php echo \$this->Session->flash(); ?>"; ?>
-	<dl>
+<?php $continueFields = array($primaryKey, $displayField, 'slug', 'deleted', 'password', 'modified_by', 'modified_by_id'); ?>
+<div class="block" id="block-text">
+	<div class="secondary-navigation">
+		<ul class="wat-cf">
+			<li class="first"><?php echo "<?php echo \$this->Html->link('Index', array('action' => 'index')); ?>"; ?></li>
+<?php if (in_array('slug', $fields)) : ?>
+			<li class="active"><?php echo "<?php echo \$this->Html->link('View', array('action' => 'view', \${$singularVar}['{$modelClass}']['slug'] . '#')); ?>"; ?></li>
+<?php else : ?>
+			<li class="active"><?php echo "<?php echo \$this->Html->link('View', array('action' => 'view', \${$singularVar}['{$modelClass}']['{$primaryKey}'] . '#')); ?>"; ?></li>
+<?php endif; ?>
+			<li><?php echo "<?php echo \$this->Html->link('Edit', array('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>"; ?></li>
+			<li><?php echo "<?php echo \$this->Html->link('Add', array('action' => 'add')); ?>"; ?></li>
+			<li><?php echo "<?php echo \$this->Html->link('Delete', array('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']), null, sprintf(__('Are you sure you want to delete %s?', true), \${$singularVar}['{$modelClass}']['{$displayField}'])); ?>"; ?></li>
+		</ul>
+	</div>
+	<div class="content">
+		<h2 class="title"><?php echo "<?php echo \${$singularVar}['{$modelClass}']['{$displayField}']; ?>"; ?></h2>
+		<?php echo "<?php \$this->Html->h2(\${$singularVar}['{$modelClass}']['{$displayField}']); ?>\n"; ?>
+		<div class="inner">
+			<?php echo "<?php echo \$this->Session->flash(); ?>\n"; ?>
+			<dl>
 <?php
 $simple_block_meta = '';
 foreach ($fields as $field) {
-	if (in_array($field, array($primaryKey, $displayField, 'slug', 'deleted', 'password', 'modified_by', 'modified_by_id'))) continue;
+	if (in_array($field, $continueFields)) continue;
 	$isKey = false;
 	if (!empty($associations['belongsTo'])) {
 		foreach ($associations['belongsTo'] as $alias => $details) {
@@ -29,36 +44,97 @@ foreach ($fields as $field) {
 	}
 	if (in_array($field, array('created', 'modified', 'updated'))) {
 		$simple_block_meta .= "<?php \$simple_block_meta .= \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n";
-		$simple_block_meta .= "<?php \$simple_block_meta .= \$this->Resource->definition(\${$singularVar}['{$modelClass}']['{$field}']); ?>\n";
+		$simple_block_meta .= "<?php \$simple_block_meta .= \$this->Resource->definition(\$this->Time->timeAgoInWords(\${$singularVar}['{$modelClass}']['{$field}'])); ?>\n";
 		continue;
 	}
-	echo "\t\t<?php echo \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n";
-	echo "\t\t<?php echo \$this->Resource->definition(\${$singularVar}['{$modelClass}']['{$field}']); ?>\n";
+	if (in_array($schema[$field]['type'], array('date', 'time', 'datetime'))) {
+		$simple_block_meta .= "<?php \$simple_block_meta .= \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n";
+		$simple_block_meta .= "<?php \$simple_block_meta .= \$this->Resource->definition(\$this->Time->niceShort(\${$singularVar}['{$modelClass}']['{$field}'])); ?>\n";
+		continue;
+	}
+	echo "\t\t\t\t<?php echo \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n";
+	echo "\t\t\t\t<?php echo \$this->Resource->definition(\${$singularVar}['{$modelClass}']['{$field}']); ?>\n";
 }
 ?>
-	</dl>
+			</dl>
+		</div>
+	</div>
 </div>
+<?php if (!empty($associations['hasMany']) && in_array("{$singularHumanName}Comment", array_keys($associations['hasMany']))) : ?>
+<div class="block" id="block-text">
+	<div class="content">
+		<h2 class="title"><?php echo "<?php __('$singularHumanName Comments'); ?>" ?></h2>
+		<div class="inner">
+<?php $commentDetails = $associations['hasMany']["{$singularHumanName}Comment"]; ?>
+<?php $otherSingularVar = Inflector::variable("{$singularHumanName}Comment"); ?>
+<?php $commentModel = ClassRegistry::init("{$singularHumanName}Comment"); ?>
+<?php $commentSchema = $commentModel->schema(); ?>
+			<?php echo "<?php foreach (\${$singularVar}['{$singularHumanName}Comment'] as \${$otherSingularVar}): ?>\n" ?>
+				<dl>
+<?php foreach ($commentDetails['fields'] as $field) : ?>
+<?php	if (in_array($field, array_merge($continueFields, array("{$singularVar}_id", 'modified', 'updated')))) continue; ?>
+					<?php echo "<?php echo \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n"; ?>
+<?php	if (in_array($commentSchema[$field]['type'], array('date', 'time', 'datetime'))) : ?>
+					<?php echo "<?php echo \$this->Resource->definition(\$this->Time->timeAgoInWords(\${$otherSingularVar}['{$singularHumanName}Comment']['{$field}'])); ?>\n"; ?>
+<?php	else : ?>
+					<?php echo "<?php echo \$this->Resource->definition(\${$otherSingularVar}['{$singularHumanName}Comment']['{$field}']); ?>\n"; ?>
+<?php	endif; ?>
+<?php endforeach; ?>
+				</dl>
+				<br /><br />
+				<hr />
+			<?php echo "<?php endforeach; ?>\n"?>
+			<?php echo "<?php echo \$this->Form->create('{$singularHumanName}', array(\n"; ?>
+			<?php echo "\t'url' => array('action' => 'add_comment', \${$singularVar}['{$modelClass}']['$primaryKey']),\n"; ?>
+			<?php echo "\t'class' => 'form', 'inputDefaults' => array('div' => false, 'label' => false))); ?>\n"; ?>
+<?php foreach ($commentDetails['fields'] as $field) : ?>
+<?php	if (in_array($field, array_merge($continueFields, array('created', 'modified', 'updated', 'created_by', 'created_by_id')))) continue; ?>
+<?php		if ($field == "{$singularVar}_id"): ?>
+				<?php echo "<?php echo \$this->Form->input('{$singularHumanName}Comment.{$field}', array(\n"; ?>
+				<?php echo "\t'type' => 'hidden', 'value' => \${$singularVar}['{$modelClass}']['$primaryKey'])); ?>\n"; ?>
+<?php			continue; ?>
+<?php		endif; ?>
+				<div class="group">
+					<?php echo "<?php echo \$this->Form->label('{$singularHumanName}Comment.{$field}', '" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', array('class' => 'label')); ?>\n"; ?>
+<?php		if ($field == 'owned_by') : ?>
+					<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}',\n"; ?>
+					<?php echo "\tfarray('type' => 'select', 'options' => \$owners));\n"; ?>
+<?php		elseif ($field == 'assigned_to') : ?>
+					<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
+					<?php echo "\t'type' => 'select', 'options' => \$assignedTos));\n"; ?>
+<?php		elseif ($field == 'password') : ?>
+					<?php echo "<?php echo \$this->Form->input('{$modelClass}.new_{$field}', array(\n"; ?>
+					<?php echo "\t'class' => 'text_field', 'type' => 'password')); ?>\n"; ?>
+<?php		elseif ($commentSchema[$field]['type'] == 'boolean') : ?>
+					<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
+					<?php echo "\t'type' => 'select', 'options' => array('0' => 'No', '1' => 'Yes'))); ?>\n"; ?>
+<?php		elseif (strstr($field, 'description') || strstr($field, 'content')) : ?>
+					<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array('type' => 'textarea', 'class' => 'text_area')); ?>\n"; ?>
+<?php		elseif ($commentSchema[$field]['type'] == 'string') : ?>
+					<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
+					<?php echo "\t'class' => 'text_field')); ?>\n"; ?>
+<?php		else : ?>
+					<?php echo "<?php echo \$this->Form->input('{$singularHumanName}Comment.{$field}'); ?>\n"; ?>
+<?php		endif; ?>
+				</div>
+<?php endforeach; ?>
+				<div class="group navform wat-cf">
+					<button class="button" type="submit">
+						<?php echo "<?php echo \$this->Html->image('icons/tick.png', array('alt' => 'Save')); ?> Save\n"; ?>
+					</button>
+					<?php echo "<?php echo \$this->Html->link(\n"; ?>
+					<?php echo "\t\$this->Html->image('icons/cross.png', array('alt' => __('Cancel', true))) .' Cancel',\n"; ?>
+					<?php echo "\tarray('action' => 'index'), array('escape' => false, 'class' => 'button')); ?>\n"; ?>
+				</div>
+			<?php echo "<?php echo \$this->Form->end(); ?>\n"; ?>
+		</div>
+	</div>
+</div>
+<?php endif; ?>
 <?php
-	echo "<?php \$this->Resource->secondary_navigation('Index', array('action' => 'index')); ?>\n";
-	if (in_array('slug', $fields)) {
-		echo "<?php \$this->Resource->secondary_navigation('View', array('action' => 'view', \${$singularVar}['{$modelClass}']['slug'] . '#')); ?>\n";
-	} else {
-		echo "<?php \$this->Resource->secondary_navigation('View', array('action' => 'view', \${$singularVar}['{$modelClass}']['{$primaryKey}'] . '#')); ?>\n";
-	}
-	echo "<?php \$this->Resource->secondary_navigation('Edit', array('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>\n";
-	echo "<?php \$this->Resource->secondary_navigation('Add', array('action' => 'add')); ?>\n";
-	echo "<?php \$this->Resource->secondary_navigation('Delete', array('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']), null, sprintf(__('Are you sure you want to delete %s?', true), \${$singularVar}['{$modelClass}']['{$displayField}'])); ?>\n";
 	if (!empty($simple_block_meta)) {
-		echo "\n{$simple_block_meta}";
-		echo "<?php echo \$this->Resource->sidebar_simple_block(__('{$singularHumanName} Metadata', true), \"<dl>{\$simple_block_meta}</dl>\"); ?>\n";
-	}
-?>
-<?php
-	if (!empty($associations['hasMany'])) {
-		foreach ($associations['hasMany'] as $alias => $details) {
-			if ($alias == "{$singularHumanName}Comment") {
-
-			}
-		}
+		echo "\n<?php \$simple_block_meta = ''; ?>\n";
+		echo "{$simple_block_meta}";
+		echo "<?php echo \$this->Resource->sidebar_simple_block(__('{$singularHumanName} Metadata', true), \"<dl>{\$simple_block_meta}</dl>\"); ?>";
 	}
 ?>
