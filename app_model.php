@@ -20,7 +20,6 @@ class AppModel extends Model {
 	var $actsAs = array(
 		'Callbackable',
 		'Containable',
-		'Lookupable',
 		'Log.Logable' => array('change' => 'full')
 	);
 
@@ -302,6 +301,31 @@ class AppModel extends Model {
 		} else {
 			return $this->find('all', $findOptions);
 		}
+	}
+
+	function __findLookup($options = array()) {
+		if (!is_array($options)) $options = array('conditions' => array($this->displayField => $options));
+		$options = array_merge(array(
+			'field' => $this->primaryKey,
+			'create' => true,
+			'conditions' => array()
+		), $options);
+
+		if (!empty($options['field'])) {
+			$fieldValue = $this->field($options['field'], $options['condition']);
+		} else {
+			$fieldValue = $this->find('first', $options['conditions']);
+		}
+
+		if ($fieldValue !== false) return $fieldValue;
+		if ($options['create'] === false) return false;
+
+		$this->create($options['conditions']);
+		if (!$this->save()) return false;
+
+		$conditions[$this->primaryKey] = $this->id;
+		if (empty($options['field'])) return $this->read();
+		return $this->field($options['field'], $options['conditions']);
 	}
 
 /**
