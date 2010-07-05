@@ -25,13 +25,6 @@ class ResourceHelper extends Helper {
  */
 	var $sidebar_for_layout = array();
 
-/**
- * Array of Menu items for the secondary navigation
- *
- * @var array
- * @access public
- */
-	var $secondary_navigations = array();
 	var $definition_list = 0;
 	var $definition_list_class = ' class="altrow"';
 
@@ -47,20 +40,6 @@ class ResourceHelper extends Helper {
 			$this->view = ClassRegistry::getObject('view');
 		}
 
-		// Start Secondary Nagivation
-		$secondary_navigation_for_layout = '';
-		foreach ($this->secondary_navigations as $i => $nav) {
-			$class = 'class="';
-			if ($i == 0) $class .= 'first';
-			if (is_array($nav['url']) && isset($nav['url']['action']) && $nav['url']['action'] == $this->params['action']) {
-				$class .= ($class == 'class="') ? 'active' : ' active';
-			}
-			$class .= '"';
-			if ($class == 'class=""') $class = '';
-			$secondary_navigation_for_layout .= "<li {$class}>" .
-				$this->Html->link($nav['title'], $nav['url'], $nav['options'], $nav['confirmMessage']) . '</li>';
-		}
-		$this->view->set(compact('secondary_navigation_for_layout'));
 		$this->view->set('sidebar_for_layout', $this->sidebar_for_layout);
 	}
 
@@ -144,21 +123,6 @@ class ResourceHelper extends Helper {
 		$this->sidebar_for_layout['simple'][] = array(
 			'title' => $title,
 			'content' => $content
-		);
-	}
-
-/**
- * undocumented function
- *
- * @return void
- * @author Jose Diaz-Gonzalez
- **/
-	function secondary_navigation($title = null, $url = array(), $options = array(), $confirmMessage = null) {
-		$this->secondary_navigations[] = array(
-			'title' => $title,
-			'url' => $url,
-			'options' => $options,
-			'confirmMessage' => $confirmMessage
 		);
 	}
 
