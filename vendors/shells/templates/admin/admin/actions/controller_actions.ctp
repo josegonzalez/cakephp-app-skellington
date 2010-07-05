@@ -50,6 +50,7 @@ foreach ($modelObj->belongsTo as $associationName => $relation) {
 		if ($related_model->hasField('slug')) {
 			$paginate_model['primaryKey'] = 'slug';
 		}
+		if (in_array($paginate_model['alias'], array('CreatedBy', 'ModifiedBy'))) continue;
 		$paginate_models[] = $paginate_model;
 	}
 }
