@@ -333,7 +333,7 @@ if (!empty($validate)) {
 			'conditions' => array('<?php echo "{$name}Comment"; ?>.<?php echo Inflector::underscore($name)?>_id' => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>),
 			'contain' => array('CreatedBy')
 		));
-		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Comment"; ?>'] = (!empty($<?php echo lcfirst(Inflector::camelize($name)); ?>Comments['<?php echo "{$name}Comment"; ?>'])) ? $<?php echo lcfirst(Inflector::camelize($name)); ?>Comments['<?php echo "{$name}Comment"; ?>'] : array();
+		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Comment"; ?>'] = (!empty($<?php echo lcfirst(Inflector::camelize($name)); ?>Comments[0])) ? $<?php echo lcfirst(Inflector::camelize($name)); ?>Comments : array();
 		return $<?php echo lcfirst(Inflector::camelize($name)); ?>;
 <?php endif; ?>
 	}
