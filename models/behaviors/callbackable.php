@@ -53,7 +53,7 @@ class CallbackableBehavior extends ModelBehavior {
  */
 	function beforeValidate(&$model) {
 		$method = null;
-		if (($callback = $this->getCallbackableData('callback', 'string')) != false) {
+		if (($callback = $this->getCallbackableData($model, 'callback', 'string')) != false) {
 			$method = sprintf('__beforeValidate%s', Inflector::camelize($callback));
 		}
 
@@ -73,7 +73,7 @@ class CallbackableBehavior extends ModelBehavior {
  */
 	function afterSave(&$model, $created) {
 		$method = null;
-		if (($callback = $this->getCallbackableData('callback', 'string')) != false) {
+		if (($callback = $this->getCallbackableData($model, 'callback', 'string')) != false) {
 			$method = sprintf('__afterSave%s', Inflector::camelize($callback));
 		}
 
@@ -93,7 +93,7 @@ class CallbackableBehavior extends ModelBehavior {
  */
 	function beforeDelete(&$model, $cascade = true) {
 		$method = null;
-		if (($callback = $this->getCallbackableData('callback', 'string')) != false) {
+		if (($callback = $this->getCallbackableData($model, 'callback', 'string')) != false) {
 			$method = sprintf('__beforeDelete%s', Inflector::camelize($callback));
 		}
 
@@ -111,7 +111,7 @@ class CallbackableBehavior extends ModelBehavior {
  */
 	function afterDelete(&$model) {
 		$method = null;
-		if (($callback = $this->getCallbackableData('callback', 'string')) != false) {
+		if (($callback = $this->getCallbackableData($model, 'callback', 'string')) != false) {
 			$method = sprintf('__afterDelete%s', Inflector::camelize($callback));
 		}
 
@@ -129,7 +129,7 @@ class CallbackableBehavior extends ModelBehavior {
  */
 	function onError(&$model, $error) {
 		$method = null;
-		if (($callback = $this->getCallbackableData('callback', 'string')) != false) {
+		if (($callback = $this->getCallbackableData($model,'callback', 'string')) != false) {
 			$method = sprintf('__onError%s', Inflector::camelize($callback));
 		}
 
