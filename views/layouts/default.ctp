@@ -36,16 +36,7 @@
 		</div>
 		<div id="wrapper" class="wat-cf">
 			<div id="main" <?php if (empty($sidebar_for_layout)) echo 'class="wide"';?>>
-				<div class="block" id="block-text">
-					<div class="secondary-navigation">
-						<ul class="wat-cf">
-							<?php echo $secondary_navigation_for_layout; ?>
-						</ul>
-					</div>
-					<div class="content">
-						<?php echo $content_for_layout; ?>
-					</div>
-				</div>
+				<?php echo $content_for_layout; ?>
 
 				<div id="footer">
 					<div class="block">
