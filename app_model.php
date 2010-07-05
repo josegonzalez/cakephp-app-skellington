@@ -155,25 +155,6 @@ class AppModel extends Model {
 		return parent::save($this->data, $options);
 	}
 
-/**
- * Unsets contain key for faster pagination counts
- *
- * @param array $conditions
- * @param integer $recursive
- * @param array $extra
- * @return integer
- * @access public
- * @author Jose Diaz-Gonzalez
- */
-	function paginateCount($conditions = null, $recursive = 0, $extra = array()) {
-		$extra = (array) $extra;
-		$conditions = compact('conditions');
-		if ($recursive != $this->recursive) {
-			$conditions['recursive'] = $recursive;
-		}
-		$extra['contain'] = false;
-		return $this->find('count', array_merge($conditions, $extra));
-	}
 
 /**
  * Convenience method to update one record without invoking any callbacks
