@@ -52,11 +52,7 @@ class AppModel extends Model {
  * @link http://github.com/mcurry/find
  */
 	function find($type, $options = array()) {
-		$method = null;
-		$options = (array) $options;
-		if (is_string($type)) {
-			$method = sprintf('__find%s', Inflector::camelize($type));
-		}
+		$method = (is_string($type)) ? sprintf('__find%s', Inflector::camelize($type)) : null;
 		if ($method && method_exists($this, $method)) {
 			$return = $this->{$method}($options);
 			if ($this->query != null) {
@@ -66,6 +62,12 @@ class AppModel extends Model {
 				return $query;
 			}
 			return $return;
+		}
+		if (!empty($options['blacklist'])) {
+			$options['blacklist'] = (array) $options['blacklist'];
+			$options['fields'] = (isset($options['fields'])) ? $options['fields'] : array_keys($this->schema());
+			$options['fields'] = array_diff($options['fields'], $options['blacklist']);
+			unset($options['blacklist']);
 		}
 		if (!empty($options['cache'])) {
 			if (!class_exists('MiCache')) App::import('Vendor', 'mi_cache');
@@ -95,6 +97,12 @@ class AppModel extends Model {
  */
 	function beforeFind($query = array()) {
 		$query = (array) $query;
+		if (!empty($query['blacklist'])) {
+			$query['blacklist'] = (array) $query['blacklist'];
+			$query['fields'] = (isset($query['fields'])) ? $query['fields'] : array_keys($this->schema());
+			$query['fields'] = array_diff($query['fields'], $query['blacklist']);
+			unset($query['blacklist']);
+		}
 		if (!empty($query['paginate'])) {
 			$keys = array('fields', 'order', 'limit', 'page');
 			foreach ($keys as $key) {
