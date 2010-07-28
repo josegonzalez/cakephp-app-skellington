@@ -32,7 +32,17 @@ if ($has_form_field) $has_form_field = ", 'type' => 'file'"; ?>
 			<li><?php echo "<?php echo \$this->Html->link('View', array('action' => 'view', \$this->data['{$modelClass}']['{$the_key}'])); ?>"; ?></li>
 			<li class="active"><?php echo "<?php echo \$this->Html->link('Edit', array('action' => 'edit', \$this->data['{$modelClass}']['{$primaryKey}'] . '#')); ?>"; ?></li>
 			<li><?php echo "<?php echo \$this->Html->link('Add', array('action' => 'add')); ?>"; ?></li>
-			<li><?php echo "<?php echo \$this->Html->link('Delete', array('action' => 'delete', \$this->data['{$modelClass}']['{$primaryKey}']), null, sprintf(__('Are you sure you want to delete %s?', true), \$this->data['{$modelClass}']['{$displayField}'])); ?>"; ?></li>
+			<li>
+				<?php echo "<?php echo \$this->Html->link(__('Delete', true),\n"; ?>
+				<?php echo "\tarray('action' => 'delete', \$this->data['{$modelClass}']['{$primaryKey}']),\n"; ?>
+				<?php echo "\tarray('class' => 'delete-link', 'title' => \$this->data['{$modelClass}']['{$displayField}'], 'rel' => \"DeleteForm{$modelClass}{\$this->data['{$modelClass}']['{$primaryKey}']}\")); ?>\n"; ?>
+				<?php echo "<?php echo \$this->Form->create('{$modelClass}', array(\n"; ?>
+					<?php echo "'id' => \"DeleteForm{$modelClass}{\$this->data['{$modelClass}']['{$primaryKey}']}\",\n"; ?>
+					<?php echo "'action' => 'delete')); ?>\n"; ?>
+					<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$primaryKey}', array(\n"; ?>
+						<?php echo "'type' => 'hidden', 'value' => \$this->data['{$modelClass}']['{$primaryKey}'])); ?>\n"?>
+				<?php echo "<?php echo \$this->Form->end(); ?>\n"; ?>
+			</li>
 <?php else : ?>
 			<li class="active"><?php echo"<?php echo \$this->Html->link('Add', array('action' => 'add', '#')); ?>"; ?></li>
 <?php endif;?>
@@ -166,3 +176,18 @@ if ($has_form_field) $has_form_field = ", 'type' => 'file'"; ?>
 		</div>
 	</div>
 </div>
+<?php echo "<?php echo \$this->Html->scriptBlock(\"
+(function($){
+    $.fn.deleteForm = function() {
+        return this.each(function(){
+            \\\$this = $(this);
+            \\\$this.click(function(){
+                var answer = confirm('Are you sure you want to delete \\\"' + \\\$this.attr('title') + '\\\"?');
+                if (answer) \$('#' + \\\$this.attr('rel')).submit();
+                return false;
+            });
+        });
+    };
+}(jQuery));
+
+$('.delete-link').deleteForm();\"); ?>"?>

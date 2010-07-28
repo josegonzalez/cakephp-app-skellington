@@ -160,7 +160,13 @@
 						<?php echo "\tarray('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?> | \n"; ?>
 						<?php echo "<?php echo \$this->Html->link(__('Delete', true),\n"; ?>
 						<?php echo "\tarray('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']),\n"; ?>
-						<?php echo "\tnull, sprintf(__('Are you sure you want to delete %s?', true), \${$singularVar}['{$modelClass}']['{$displayField}'])); ?>\n"; ?>
+						<?php echo "\tarray('class' => 'delete-link', 'title' => \${$singularVar}['{$modelClass}']['{$displayField}'], 'rel' => \"DeleteForm{$modelClass}{\${$singularVar}['{$modelClass}']['{$primaryKey}']}\")); ?>\n"; ?>
+						<?php echo "<?php echo \$this->Form->create('{$modelClass}', array(\n"; ?>
+							<?php echo "'id' => \"DeleteForm{$modelClass}{\${$singularVar}['{$modelClass}']['{$primaryKey}']}\",\n"; ?>
+							<?php echo "'url' => array('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']))); ?>\n"; ?>
+							<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$primaryKey}', array(\n"; ?>
+								<?php echo "'type' => 'hidden', 'value' => \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>\n"?>
+						<?php echo "<?php echo \$this->Form->end(); ?>\n"; ?>
 					</td>
 <?php endif; ?>
 				</tr>
@@ -176,3 +182,18 @@
 		</div>
 	</div>
 </div>
+<?php echo "<?php echo \$this->Html->scriptBlock(\"
+(function($){
+    $.fn.deleteForm = function() {
+        return this.each(function(){
+            \\\$this = $(this);
+            \\\$this.click(function(){
+                var answer = confirm('Are you sure you want to delete \\\"' + \\\$this.attr('title') + '\\\"?');
+                if (answer) \$('#' + \\\$this.attr('rel')).submit();
+                return false;
+            });
+        });
+    };
+}(jQuery));
+
+$('.delete-link').deleteForm();\"); ?>"?>

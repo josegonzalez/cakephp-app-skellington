@@ -10,7 +10,17 @@
 <?php endif; ?>
 			<li><?php echo "<?php echo \$this->Html->link('Edit', array('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>"; ?></li>
 			<li><?php echo "<?php echo \$this->Html->link('Add', array('action' => 'add')); ?>"; ?></li>
-			<li><?php echo "<?php echo \$this->Html->link('Delete', array('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']), null, sprintf(__('Are you sure you want to delete %s?', true), \${$singularVar}['{$modelClass}']['{$displayField}'])); ?>"; ?></li>
+			<li>
+				<?php echo "<?php echo \$this->Html->link(__('Delete', true),\n"; ?>
+				<?php echo "\tarray('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']),\n"; ?>
+				<?php echo "\tarray('class' => 'delete-link', 'title' => \${$singularVar}['{$modelClass}']['{$displayField}'], 'rel' => \"DeleteForm{$modelClass}{\${$singularVar}['{$modelClass}']['{$primaryKey}']}\")); ?>\n"; ?>
+				<?php echo "<?php echo \$this->Form->create('{$modelClass}', array(\n"; ?>
+					<?php echo "'id' => \"DeleteForm{$modelClass}{\${$singularVar}['{$modelClass}']['{$primaryKey}']}\",\n"; ?>
+					<?php echo "'url' => array('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']))); ?>\n"; ?>
+					<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$primaryKey}', array(\n"; ?>
+						<?php echo "'type' => 'hidden', 'value' => \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>\n"?>
+				<?php echo "<?php echo \$this->Form->end(); ?>\n"; ?>
+			</li>
 		</ul>
 	</div>
 	<div class="content">
@@ -138,3 +148,18 @@ foreach ($fields as $field) {
 		echo "<?php echo \$this->Resource->sidebar_simple_block(__('{$singularHumanName} Metadata', true), \"<dl>{\$simple_block_meta}</dl>\"); ?>";
 	}
 ?>
+<?php echo "<?php echo \$this->Html->scriptBlock(\"
+(function($){
+    $.fn.deleteForm = function() {
+        return this.each(function(){
+            \\\$this = $(this);
+            \\\$this.click(function(){
+                var answer = confirm('Are you sure you want to delete \\\"' + \\\$this.attr('title') + '\\\"?');
+                if (answer) \$('#' + \\\$this.attr('rel')).submit();
+                return false;
+            });
+        });
+    };
+}(jQuery));
+
+$('.delete-link').deleteForm();\"); ?>"?>
