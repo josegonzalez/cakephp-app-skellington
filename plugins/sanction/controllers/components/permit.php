@@ -7,7 +7,7 @@ class PermitComponent extends Object {
 
 	var $settings = array(
 		'path' => 'Auth.User',
-		'check' => 'group'
+		'check' => 'group_id'
 	);
 
 /**
@@ -62,9 +62,7 @@ class PermitComponent extends Object {
 		if (empty($route['rules'])) return;
 
 		if (isset($route['rules']['deny'])) {
-			if ($route['rules']['deny'] == true) {
-				$self->redirect($route);
-			}
+			if ($route['rules']['deny'] == true) $self->redirect($route);
 			return;
 		}
 
@@ -90,14 +88,13 @@ class PermitComponent extends Object {
 		}
 
 		foreach ($route['rules']['auth'] as $field => $value) {
-			if ($user[$field] == $value) {
-				$count--;
+			if (!is_array($value)) $value = (array) $value;
+			foreach ($value as $condition){
+				if ($user[$field] == $condition) $count--;
 			}
 		}
 
-		if ($count != 0) {
-			$self->redirect($route);
-		}
+		if ($count != 0) $self->redirect($route);
 	}
 
 	function redirect($route) {
@@ -124,7 +121,7 @@ class PermitComponent extends Object {
 		}
 
 		if (method_exists($self->session, 'startup')) {
-            $self->session->startup($self->controller);
+			$self->session->startup($self->controller);
 		}
 
 		return $self;
@@ -193,9 +190,7 @@ class Permit extends Object{
 	function &getInstance() {
 		static $instance = array();
 
-		if (!$instance) {
-			$instance[0] =& new Permit();
-		}
+		if (!$instance) $instance[0] =& new Permit();
 		return $instance[0];
 	}
 }

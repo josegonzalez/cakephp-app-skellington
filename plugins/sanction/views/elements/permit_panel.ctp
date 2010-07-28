@@ -5,5 +5,4 @@ echo $toolbar->makeNeatArray(array('rule' => $content['executed']));
 
 echo '<h4>' . __d('sanction', 'Access Rules', true) . '</h4>';
 echo $toolbar->makeNeatArray($content['clearances']);
-
 ?>

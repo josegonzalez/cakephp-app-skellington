@@ -22,7 +22,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-	Router::parseExtensions('json', 'xml');
+	Router::parseExtensions('json', 'rss', 'xml');
 
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',
