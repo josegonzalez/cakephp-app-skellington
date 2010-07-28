@@ -320,6 +320,26 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 <?php endif; ?>
 		}
 	}
+
+	function <?php echo $admin ?>changelog($<?php echo $slugField; ?> = null) {
+		$<?php echo $slugField; ?> = (!$<?php echo $slugField; ?> && !empty($this->params['named']['<?php echo $modelObj->primaryKey; ?>'])) ? $this->params['named']['<?php echo $modelObj->primaryKey; ?>'] : $<?php echo $slugField; ?>;
+		$<?php echo $singularName; ?>Changelog = $this-><?php echo $currentModelName; ?>->findLog(array('model_id' => $<?php echo $slugField; ?>));
+
+		if (!$<?php echo $singularName; ?>Changelog) {
+<?php if ($wannaUseSession): ?>
+			$this->Session->setFlash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
+			$this->redirect(array('action' => 'index'));
+<?php else: ?>
+			$this->flash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), array('action' => 'index'));
+<?php endif; ?>
+		}
+		$this->set(compact('<?php echo $singularName ?>Changelog'));
+	}
+
+	function <?php echo $admin?>history() {
+		$<?php echo $singularName; ?>History = $this-><?php echo $currentModelName; ?>->findLog();
+		$this->set(compact('<?php echo $singularName ?>History'));
+	}
 <?php if ($hasAttachments) : ?>
 
 	function <?php echo $admin ?>add_attachment($<?php echo $modelObj->primaryKey; ?> = null) {
