@@ -12,6 +12,7 @@
 		});
 		// ]]>
 	</script>
+	<?php echo $scripts_for_layout; ?>
 </head>
 <body>
 	<div id="container">
