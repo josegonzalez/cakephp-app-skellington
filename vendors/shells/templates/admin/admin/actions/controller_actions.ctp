@@ -121,7 +121,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 				$this->redirect(array('action' => 'forgot_password'));
 			}
 
-			$activationKey = $this-><?php echo $currentModelName; ?>->changeActivationKey($<?php echo $singularName; ?>['<?php echo $currentModelName; ?>']['id']);
+			$activationKey = $this-><?php echo $currentModelName; ?>->changeActivationKey($<?php echo $singularName; ?>['<?php echo $currentModelName; ?>']['<?php echo $modelObj->primaryKey; ?>']);
 
 			try {
 				if ($this->Mail->send(array(
@@ -156,7 +156,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 		}
 
 		if (!empty($this->data) && isset($this->data['<?php echo $currentModelName; ?>']['password'])) {
-			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('fields' => array('id', 'password', 'activation_key'), 'callback' => 'reset_password', 'user_id' => $<?php echo $singularName; ?>['<?php echo $currentModelName; ?>']['id']))) {
+			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('fields' => array('<?php echo $modelObj->primaryKey; ?>', 'password', 'activation_key'), 'callback' => 'reset_password', 'user_id' => $<?php echo $singularName; ?>['<?php echo $currentModelName; ?>']['<?php echo $modelObj->primaryKey; ?>']))) {
 				$this->Session->setFlash(__('Your password has been reset successfully', true), 'flash/success');
 				$this->redirect(array('action' => 'login'));
 			} else {
@@ -169,7 +169,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 
 	function <?php echo $admin; ?>change_password() {
 		if (!empty($this->data)) {
-			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('fieldList' => array('id', 'password'), 'callback' => 'change_password'))) {
+			if ($this-><?php echo $currentModelName; ?>->save($this->data, array('fieldList' => array('<?php echo $modelObj->primaryKey; ?>', 'password'), 'callback' => 'change_password'))) {
 				$this->Session->setFlash(__('Your password has been successfully changed', true), 'flash/success');
 				$this->redirect(array('action' => 'dashboard'));
 			} else {
@@ -190,7 +190,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 	}
 
 	function <?php echo $admin ?>view($<?php echo $slugField; ?> = null) {
-		$<?php echo $slugField; ?> = (!$<?php echo $slugField; ?> && !empty($this->params['named']['id'])) ? $this->params['named']['id'] : $<?php echo $slugField; ?>;
+		$<?php echo $slugField; ?> = (!$<?php echo $slugField; ?> && !empty($this->params['named']['<?php echo $modelObj->primaryKey; ?>'])) ? $this->params['named']['<?php echo $modelObj->primaryKey; ?>'] : $<?php echo $slugField; ?>;
 		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->find('view', $<?php echo $slugField; ?>);
 
 		if (!$<?php echo $singularName; ?>) {
@@ -240,8 +240,8 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 	}
 
 <?php $compact = array(); ?>
-	function <?php echo $admin; ?>edit($id = null) {
-		if (!$id && empty($this->data)) {
+	function <?php echo $admin; ?>edit($<?php echo $modelObj->primaryKey; ?> = null) {
+		if (!$<?php echo $modelObj->primaryKey; ?> && empty($this->data)) {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(__('Invalid <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action' => 'index'));
@@ -264,7 +264,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 			}
 		}
 		if (empty($this->data)) {
-			$this->data = $this-><?php echo $currentModelName; ?>->find('edit', $id);
+			$this->data = $this-><?php echo $currentModelName; ?>->find('edit', $<?php echo $modelObj->primaryKey; ?>);
 		}
 		if (empty($this->data)) {
 <?php if ($wannaUseSession): ?>
@@ -292,9 +292,9 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 	?>
 	}
 
-	function <?php echo $admin; ?>delete($id = null) {
-		if (!empty($this->data['<?php echo $currentModelName; ?>']['id'])) {
-			if ($this-><?php echo $currentModelName; ?>->delete($this->data['<?php echo $currentModelName; ?>']['id'])) {
+	function <?php echo $admin; ?>delete($<?php echo $modelObj->primaryKey; ?> = null) {
+		if (!empty($this->data['<?php echo $currentModelName; ?>']['<?php echo $modelObj->primaryKey; ?>'])) {
+			if ($this-><?php echo $currentModelName; ?>->delete($this->data['<?php echo $currentModelName; ?>']['<?php echo $modelObj->primaryKey; ?>'])) {
 <?php if ($wannaUseSession): ?>
 				$this->Session->setFlash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> deleted', true), 'flash/success');
 				$this->redirect(array('action'=>'index'));
@@ -307,11 +307,11 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 <?php else: ?>
 			$this->flash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> was not deleted', true), array('action' => 'index'));
 <?php endif; ?>
-			$id = $this->data['<?php echo $currentModelName; ?>']['id'];
+			$<?php echo $modelObj->primaryKey; ?> = $this->data['<?php echo $currentModelName; ?>']['<?php echo $modelObj->primaryKey; ?>'];
 		}
 
-		$<?php echo $singularName ?> = $this-><?php echo $currentModelName; ?>->find('delete', $id);
-		if (!$<?php echo $singularName ?>) {
+		$this->data = $this-><?php echo $currentModelName; ?>->find('delete', $<?php echo $modelObj->primaryKey; ?>);
+		if (!$this->data) {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> unspecified', true), 'flash/error');
 			$this->redirect(array('action' => 'index'));
@@ -319,12 +319,11 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 			$this->flash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> unspecified', true), array('action' => 'index'));
 <?php endif; ?>
 		}
-		$this->set(compact('<?php echo $singularName ?>'));
 	}
 <?php if ($hasAttachments) : ?>
 
-	function add_attachment($id = null) {
-		if (!$id)  {
+	function <?php echo $admin ?>add_attachment($<?php echo $modelObj->primaryKey; ?> = null) {
+		if (!$<?php echo $modelObj->primaryKey; ?>)  {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(__('Invalid id for <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action'=>'index'));
@@ -346,13 +345,13 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 <?php endif; ?>
 			}
 		}
-		$this->redirect(array('action' => 'view', $id));
+		$this->redirect(array('action' => 'view', $<?php echo $modelObj->primaryKey; ?>));
 	}
 <?php endif; ?>
 <?php if ($hasComments) : ?>
 
-	function add_comment($id = null) {
-		if (!$id)  {
+	function <?php echo $admin ?>add_comment($<?php echo $modelObj->primaryKey; ?> = null) {
+		if (!$<?php echo $modelObj->primaryKey; ?>)  {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(__('Invalid id for <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action'=>'index'));
@@ -374,13 +373,13 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 <?php endif; ?>
 			}
 		}
-		$this->redirect(array('action' => 'view', $id));
+		$this->redirect(array('action' => 'view', $<?php echo $modelObj->primaryKey; ?>));
 	}
 <?php endif; ?>
 <?php if ($hasImages) : ?>
 
-	function add_image($id = null) {
-		if (!$id)  {
+	function <?php echo $admin ?>add_image($<?php echo $modelObj->primaryKey; ?> = null) {
+		if (!$<?php echo $modelObj->primaryKey; ?>)  {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(__('Invalid id for <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action'=>'index'));
@@ -402,12 +401,12 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 <?php endif; ?>
 			}
 		}
-		$this->redirect(array('action' => 'view', $id));
+		$this->redirect(array('action' => 'view', $<?php echo $modelObj->primaryKey; ?>));
 	}
 <?php endif; ?>
 <?php if ($modelObj->Behaviors->enabled('Tree')) : ?>
 
-	function movedown($<?php echo $modelObj->primaryKey; ?> = null, $delta = null) {
+	function <?php echo $admin ?>movedown($<?php echo $modelObj->primaryKey; ?> = null, $delta = null) {
 		if (!$delta || $delta <= 0) {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(__('Please provide the number of positions the <?php echo ucfirst(strtolower($singularHumanName)); ?> should be moved up.', true), 'flash/error');
@@ -445,7 +444,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 <?php endif; ?>
 	}
 
-	function moveup($<?php echo $modelObj->primaryKey; ?> = null, $delta = null) {
+	function <?php echo $admin ?>moveup($<?php echo $modelObj->primaryKey; ?> = null, $delta = null) {
 		if (!$delta || $delta <= 0) {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(__('Please provide the number of positions the <?php echo ucfirst(strtolower($singularHumanName)); ?> should be moved up.', true), 'flash/error');
@@ -483,7 +482,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 <?php endif; ?>
 	}
 
-	function removefromtree($<?php echo $modelObj->primaryKey; ?> = null) {
+	function <?php echo $admin ?>removefromtree($<?php echo $modelObj->primaryKey; ?> = null) {
 		$this-><?php echo $currentModelName; ?>-><?php echo $modelObj->primaryKey; ?> = $<?php echo $modelObj->primaryKey; ?>;
 		$<?php echo $singularName; ?> = $this-><?php echo $currentModelName; ?>->findBy<?php echo ucfirst($modelObj->primaryKey); ?>($<?php echo $modelObj->primaryKey; ?>);
 		if (!$<?php echo $singularName; ?>) {
