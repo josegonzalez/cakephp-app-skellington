@@ -77,7 +77,7 @@ foreach ($schema as $fieldName => $fieldConfig) {
 	if (substr($fieldName, -10) == '_file_name' && $fieldConfig['type'] == 'string') {
 		$uploadField = substr($fieldName, 0, -10);
 		if (strlen($uploadField) == 0) continue;
-		$behaviors[] = "'UploadPack.Upload' => array('{$uploadField}'=> array('styles' => array('thumb' => '80x80')))";
+		$behaviors[] = "'UploadPack.Upload' => array('{$uploadField}' => array('styles' => array('thumb' => '80x80')))";
 		continue;
 	}
 	if ($fieldName == 'slug') {
