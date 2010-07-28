@@ -52,7 +52,9 @@ class AppModel extends Model {
  * @link http://github.com/mcurry/find
  */
 	function find($type, $options = array()) {
-		$method = (is_string($type)) ? sprintf('__find%s', Inflector::camelize($type)) : null;
+		$method = null;
+		if (is_string($type)) $method = sprintf('__find%s', Inflector::camelize($type));
+
 		if ($method && method_exists($this, $method)) {
 			$return = $this->{$method}($options);
 			if ($this->query != null) {
