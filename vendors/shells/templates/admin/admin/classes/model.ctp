@@ -347,6 +347,16 @@ if (!empty($validate)) {
 		));
 	}
 
+	function __findExists($<?php echo $primaryKey; ?> = null) {
+		if (!$<?php echo $primaryKey; ?>) return false;
+
+		return $this->find('first', array(
+			'fields' => array("{$this->primaryKey}"),
+			'conditions' => array("{$this->alias}.{$this->primaryKey}" => $<?php echo $primaryKey; ?>),
+			'contain' => false
+		));
+	}
+
 	function __findDelete($<?php echo $primaryKey; ?> = null) {
 		if (!$<?php echo $primaryKey; ?>) return false;
 
