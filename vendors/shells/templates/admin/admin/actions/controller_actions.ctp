@@ -355,7 +355,6 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 			if ($this-><?php echo $currentModelName; ?>-><?php echo $singularHumanName . 'Attachment'?>->save($this->data, array('callback' => '<?php echo $admin ?>edit'))) {
 <?php if ($wannaUseSession): ?>
 				$this->Session->setFlash(__('The Attachment has been saved', true), 'flash/success');
-				$this->redirect(array('action' => 'index'));
 <?php else: ?>
 				$this->flash(__('The Attachment has been saved.', true), array('action' => 'index'));
 <?php endif; ?>
@@ -383,7 +382,6 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 			if ($this-><?php echo $currentModelName; ?>-><?php echo $singularHumanName . 'Comment'?>->save($this->data, array('callback' => '<?php echo $admin ?>edit'))) {
 <?php if ($wannaUseSession): ?>
 				$this->Session->setFlash(__('The Comment has been saved', true), 'flash/success');
-				$this->redirect(array('action' => 'index'));
 <?php else: ?>
 				$this->flash(__('The Comment has been saved.', true), array('action' => 'index'));
 <?php endif; ?>
@@ -411,7 +409,6 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 			if ($this-><?php echo $currentModelName; ?>-><?php echo $singularHumanName . 'Image'?>->save($this->data, array('callback' => '<?php echo $admin ?>edit'))) {
 <?php if ($wannaUseSession): ?>
 				$this->Session->setFlash(__('The Image has been saved', true), 'flash/success');
-				$this->redirect(array('action' => 'index'));
 <?php else: ?>
 				$this->flash(__('The Image has been saved.', true), array('action' => 'index'));
 <?php endif; ?>
