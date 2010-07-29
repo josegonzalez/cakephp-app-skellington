@@ -343,7 +343,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 <?php if ($hasAttachments) : ?>
 
 	function <?php echo $admin ?>add_attachment($<?php echo $modelObj->primaryKey; ?> = null) {
-		if (!$<?php echo $modelObj->primaryKey; ?>)  {
+		if (!$this-><?php echo $currentModelName; ?>->find('exists', $<?php echo $modelObj->primaryKey; ?>)) {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(__('Invalid id for <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action'=>'index'));
@@ -371,7 +371,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 <?php if ($hasComments) : ?>
 
 	function <?php echo $admin ?>add_comment($<?php echo $modelObj->primaryKey; ?> = null) {
-		if (!$<?php echo $modelObj->primaryKey; ?>)  {
+		if (!$this-><?php echo $currentModelName; ?>->find('exists', $<?php echo $modelObj->primaryKey; ?>)) {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(__('Invalid id for <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action'=>'index'));
@@ -399,7 +399,7 @@ if (in_array("{$singularHumanName}Image", array_keys($modelObj->hasMany))) $hasI
 <?php if ($hasImages) : ?>
 
 	function <?php echo $admin ?>add_image($<?php echo $modelObj->primaryKey; ?> = null) {
-		if (!$<?php echo $modelObj->primaryKey; ?>)  {
+		if (!$this-><?php echo $currentModelName; ?>->find('exists', $<?php echo $modelObj->primaryKey; ?>)) {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(__('Invalid id for <?php echo ucfirst(strtolower($singularHumanName)); ?>', true), 'flash/error');
 			$this->redirect(array('action'=>'index'));
