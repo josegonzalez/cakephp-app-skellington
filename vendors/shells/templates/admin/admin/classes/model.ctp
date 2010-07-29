@@ -60,12 +60,22 @@ if ($displayField) : ?>
 $hasAttachments = false;
 $hasComments = false;
 $hasImages = false;
+$hasTotal = 0;
 
 // We need to guess what type of Relationship this Model may have to any other
 foreach ($associations['hasMany'] as $i => $details) {
-	if ($details['alias'] == "{$name}Attachment") $hasAttachments = true;
-	if ($details['alias'] == "{$name}Comment") $hasComments = true;
-	if ($details['alias'] == "{$name}Image") $hasImages = true;
+	if ($details['alias'] == "{$name}Attachment") {
+		$hasAttachments = true;
+		$hasTotal++;
+	}
+	if ($details['alias'] == "{$name}Comment") {
+		$hasComments = true;
+		$hasTotal++;
+	}
+	if ($details['alias'] == "{$name}Image") {
+		$hasImages = true;
+		$hasTotal++;
+	}
 }
 
 $behaviors = array();
@@ -300,7 +310,7 @@ if (!empty($validate)) {
 	function __findView($<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?> = null) {
 		if (!$<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>) return false;
 
-<?php if ($hasComments) : ?>
+<?php if ($hasComments || $hasAttachments || $hasImages) : ?>
 		$<?php echo lcfirst(Inflector::camelize($name)); ?> = $this->find('first', array(
 <?php else :?>
 		return $this->find('first', array(
@@ -328,12 +338,55 @@ if (!empty($validate)) {
 			'contain' => false
 		));
 <?php endif; ?>
-<?php if ($hasComments) : ?>
-		$<?php echo lcfirst(Inflector::camelize($name)); ?>Comments = $this-><?php echo "{$name}Comment"; ?>->find('all', array(
-			'conditions' => array('<?php echo "{$name}Comment"; ?>.<?php echo Inflector::underscore($name)?>_id' => $<?php echo (isset($schema['slug'])) ? 'slug' : $primaryKey; ?>),
+<?php if ($hasAttachments) : ?>
+		$<?php echo lcfirst(Inflector::camelize($name)); ?>Attachments = $this-><?php echo "{$name}Attachment"; ?>->find('all', array(
+			'conditions' => array('<?php echo "{$name}Attachment"; ?>.<?php echo Inflector::underscore($name); ?>_id' => $<?php echo $primaryKey; ?>),
 			'contain' => array('CreatedBy')
 		));
-		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Comment"; ?>'] = (!empty($<?php echo lcfirst(Inflector::camelize($name)); ?>Comments[0])) ? $<?php echo lcfirst(Inflector::camelize($name)); ?>Comments : array();
+<?php endif; ?>
+<?php if ($hasComments) : ?>
+		$<?php echo lcfirst(Inflector::camelize($name)); ?>Comments = $this-><?php echo "{$name}Comment"; ?>->find('all', array(
+			'conditions' => array('<?php echo "{$name}Comment"; ?>.<?php echo Inflector::underscore($name); ?>_id' => $<?php echo $primaryKey; ?>),
+			'contain' => array('CreatedBy')
+		));
+<?php endif; ?>
+<?php if ($hasImages) : ?>
+		$<?php echo lcfirst(Inflector::camelize($name)); ?>Images = $this-><?php echo "{$name}Image"; ?>->find('all', array(
+			'conditions' => array('<?php echo "{$name}Image"; ?>.<?php echo Inflector::underscore($name); ?>_id' => $<?php echo $primaryKey; ?>),
+			'contain' => array('CreatedBy')
+		));
+<?php endif; ?>
+<?php if ($hasTotal > 1) : ?>
+		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Meta"; ?>'] = Set::sort(array_merge(<?php
+$setTotal = $hasTotal;
+$hasName = lcfirst(Inflector::camelize($name));
+	if ($hasAttachments) {
+		$setTotal--;
+		echo "\${$hasName}Attachments";
+		if ($setTotal != 0) echo ', ';
+	}
+	if ($hasComments) {
+		$setTotal--;
+		echo "\${$hasName}Comments";
+		if ($setTotal != 0) echo ', ';
+	}
+	if ($hasImages) {
+		$setTotal--;
+		echo "\${$hasName}Images";
+	}
+?>), '{n}.{s}.created', 'asc');
+<?php else : ?>
+<?php	if ($hasAttachments) : ?>
+		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Attachment"; ?>'] = $<?php echo lcfirst(Inflector::camelize($name)); ?>Attachments;
+<?php	endif; ?>
+<?php	if ($hasComments) : ?>
+		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Comment"; ?>'] = $<?php echo lcfirst(Inflector::camelize($name)); ?>Comments;
+<?php	endif; ?>
+<?php	if ($hasImages) : ?>
+		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Image"; ?>'] = $<?php echo lcfirst(Inflector::camelize($name)); ?>Images;
+<?php	endif; ?>
+<?php endif; ?>
+<?php if ($hasComments || $hasAttachments || $hasImages) : ?>
 		return $<?php echo lcfirst(Inflector::camelize($name)); ?>;
 <?php endif; ?>
 	}
