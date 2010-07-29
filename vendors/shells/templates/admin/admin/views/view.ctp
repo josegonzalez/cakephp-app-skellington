@@ -148,7 +148,23 @@ foreach ($fields as $field) {
 		echo "<?php echo \$this->Resource->sidebar_simple_block(__('{$singularHumanName} Metadata', true), \"<dl>{\$simple_block_meta}</dl>\"); ?>";
 	}
 ?>
-<?php echo "<?php echo \$this->Html->scriptBlock(\"
+<?php if (!empty($associations['hasMany']) && in_array("{$singularHumanName}Attachment", array_keys($associations['hasMany']))) : ?>
+<?php echo "\n<?php echo \$this->Resource->sidebar_simple_block(__('Attachments', true),\n"; ?>
+	<?php echo " \$this->Form->create('{$singularHumanName}', array('url' => array('action' => 'add_attachment', \${$singularVar}['{$modelClass}']['$primaryKey']),\n"; ?>
+			<?php echo "'class' => 'form', 'inputDefaults' => array('div' => false, 'label' => false), 'type' => 'file'))\n"; ?>
+		<?php echo ". \$this->Form->input('{$singularHumanName}Attachment.{$singularVar}_id', array('type' => 'hidden', 'value' => \${$singularVar}['{$modelClass}']['$primaryKey']))\n"; ?>
+		<?php echo ". '<div class=\"columns wat-cf\">'\n"; ?>
+			<?php echo ". '<div class=\"group\">'\n"; ?>
+				<?php echo ". \$this->Form->label('{$singularHumanName}Attachment.description', 'Description', array('class' => 'label'))\n"; ?>
+				<?php echo ". \$this->Form->input('{$singularHumanName}Attachment.description', array('class' => 'text_field'))\n"; ?>
+			<?php echo ". '</div>'\n"; ?>
+			<?php echo ". '<div class=\"group\">'\n"; ?>
+				<?php echo ". \$this->Form->input('{$singularHumanName}Attachment.attachment', array('type' => 'file'))\n"; ?>
+			<?php echo ". '</div>'\n"; ?>
+		<?php echo ". '</div>'\n"; ?>
+	<?php echo ". \$this->Form->end('Submit')); ?>"; ?>
+<?php endif; ?>
+<?php echo "\n<?php echo \$this->Html->scriptBlock(\"
 (function($){
     $.fn.deleteForm = function() {
         return this.each(function(){
