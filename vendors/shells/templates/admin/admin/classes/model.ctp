@@ -338,6 +338,7 @@ if (!empty($validate)) {
 			'contain' => false
 		));
 <?php endif; ?>
+<?php if ($hasTotal > 1) : ?>
 <?php if ($hasAttachments) : ?>
 		$<?php echo lcfirst(Inflector::camelize($name)); ?>Attachments = $this-><?php echo "{$name}Attachment"; ?>->find('all', array(
 			'conditions' => array('<?php echo "{$name}Attachment"; ?>.<?php echo Inflector::underscore($name); ?>_id' => $<?php echo $primaryKey; ?>),
@@ -356,7 +357,6 @@ if (!empty($validate)) {
 			'contain' => array('CreatedBy')
 		));
 <?php endif; ?>
-<?php if ($hasTotal > 1) : ?>
 		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Meta"; ?>'] = Set::sort(array_merge(<?php
 $setTotal = $hasTotal;
 $hasName = lcfirst(Inflector::camelize($name));
@@ -377,13 +377,22 @@ $hasName = lcfirst(Inflector::camelize($name));
 ?>), '{n}.{s}.created', 'asc');
 <?php else : ?>
 <?php	if ($hasAttachments) : ?>
-		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Attachment"; ?>'] = $<?php echo lcfirst(Inflector::camelize($name)); ?>Attachments;
+		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Meta"; ?>'] = $this-><?php echo "{$name}Attachment"; ?>->find('all', array(
+			'conditions' => array('<?php echo "{$name}Attachment"; ?>.<?php echo Inflector::underscore($name); ?>_id' => $<?php echo $primaryKey; ?>),
+			'contain' => array('CreatedBy')
+		));
 <?php	endif; ?>
 <?php	if ($hasComments) : ?>
-		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Comment"; ?>'] = $<?php echo lcfirst(Inflector::camelize($name)); ?>Comments;
+		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Meta"; ?>'] = $this-><?php echo "{$name}Comment"; ?>->find('all', array(
+			'conditions' => array('<?php echo "{$name}Comment"; ?>.<?php echo Inflector::underscore($name); ?>_id' => $<?php echo $primaryKey; ?>),
+			'contain' => array('CreatedBy')
+		));
 <?php	endif; ?>
 <?php	if ($hasImages) : ?>
-		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Image"; ?>'] = $<?php echo lcfirst(Inflector::camelize($name)); ?>Images;
+		$<?php echo lcfirst(Inflector::camelize($name)); ?>['<?php echo "{$name}Meta"; ?>'] = $this-><?php echo "{$name}Image"; ?>->find('all', array(
+			'conditions' => array('<?php echo "{$name}Image"; ?>.<?php echo Inflector::underscore($name); ?>_id' => $<?php echo $primaryKey; ?>),
+			'contain' => array('CreatedBy')
+		));
 <?php	endif; ?>
 <?php endif; ?>
 <?php if ($hasComments || $hasAttachments || $hasImages) : ?>
