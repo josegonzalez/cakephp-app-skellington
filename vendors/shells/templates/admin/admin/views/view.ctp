@@ -70,64 +70,125 @@ foreach ($fields as $field) {
 		</div>
 	</div>
 </div>
-<?php if (!empty($associations['hasMany']) && in_array("{$singularHumanName}Comment", array_keys($associations['hasMany']))) : ?>
+<?php
+$hasMany = array();
+if (!empty($associations['hasMany'])) :
+	if (in_array("{$singularHumanName}Attachment", array_keys($associations['hasMany'])))  {
+		$hasMany['Attachment'] = array(
+			'details' => $associations['hasMany']["{$singularHumanName}Attachment"],
+			'singularVar' => Inflector::variable("{$singularHumanName}Meta"),
+			'model' => ClassRegistry::init("{$singularHumanName}Attachment"),
+			'schema' => ClassRegistry::init("{$singularHumanName}Attachment")->schema(),
+		);
+	}
+	if (in_array("{$singularHumanName}Comment", array_keys($associations['hasMany'])))  {
+		$hasMany['Comment'] = array(
+			'details' => $associations['hasMany']["{$singularHumanName}Comment"],
+			'singularVar' => Inflector::variable("{$singularHumanName}Meta"),
+			'model' => ClassRegistry::init("{$singularHumanName}Comment"),
+			'schema' => ClassRegistry::init("{$singularHumanName}Comment")->schema(),
+		);
+	}
+	if (in_array("{$singularHumanName}Image", array_keys($associations['hasMany'])))  {
+		$hasMany['Image'] = array(
+			'details' => $associations['hasMany']["{$singularHumanName}Image"],
+			'singularVar' => Inflector::variable("{$singularHumanName}Meta"),
+			'model' => ClassRegistry::init("{$singularHumanName}Image"),
+			'schema' => ClassRegistry::init("{$singularHumanName}Image")->schema(),
+		);
+	}
+	foreach ($hasMany as $modelName => $hasManyRelationship) {
+		$validFields = array();
+		foreach ($hasManyRelationship['details']['fields'] as $field) {
+			if (in_array($field,  array_merge($continueFields, array("{$singularVar}_id", 'modified', 'updated')))) {
+				continue;
+			}
+			$validFields[] = $field;
+		}
+		$hasMany[$modelName]['details']['fields'] = $validFields;
+	}
+?>
 <div class="block" id="block-text">
 	<div class="content">
-		<h2 class="title"><?php echo "<?php __('$singularHumanName Comments'); ?>" ?></h2>
+		<h2 class="title"><?php echo "<?php __('$singularHumanName Meta'); ?>" ?></h2>
 		<div class="inner">
-<?php $commentDetails = $associations['hasMany']["{$singularHumanName}Comment"]; ?>
-<?php $otherSingularVar = Inflector::variable("{$singularHumanName}Comment"); ?>
-<?php $commentModel = ClassRegistry::init("{$singularHumanName}Comment"); ?>
-<?php $commentSchema = $commentModel->schema(); ?>
-			<?php echo "<?php foreach (\${$singularVar}['{$singularHumanName}Comment'] as \${$otherSingularVar}): ?>\n" ?>
+			<?php echo "<?php foreach (\${$singularVar}['{$singularHumanName}Meta'] as \${$singularVar}Meta): ?>\n" ?>
 				<dl>
-<?php foreach ($commentDetails['fields'] as $field) : ?>
-<?php	if (in_array($field, array_merge($continueFields, array("{$singularVar}_id", 'modified', 'updated')))) continue; ?>
-					<?php echo "<?php echo \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n"; ?>
-<?php	if (in_array($commentSchema[$field]['type'], array('date', 'time', 'datetime'))) : ?>
-					<?php echo "<?php echo \$this->Resource->definition(\$this->Time->timeAgoInWords(\${$otherSingularVar}['{$singularHumanName}Comment']['{$field}'])); ?>\n"; ?>
-<?php	else : ?>
-					<?php echo "<?php echo \$this->Resource->definition(\${$otherSingularVar}['{$singularHumanName}Comment']['{$field}']); ?>\n"; ?>
+<?php	if (isset($hasMany['Attachment'])) : ?>
+					<?php echo "<?php if (isset(\${$singularVar}Meta['{$singularHumanName}Attachment'])) : ?>\n"; ?>
+<?php		foreach ($hasMany['Attachment']['details']['fields'] as $field) : ?>
+						<?php echo "<?php echo \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n"; ?>
+<?php			if (in_array($hasMany['Attachment']['schema'][$field]['type'], array('date', 'time', 'datetime'))) : ?>
+						<?php echo "<?php echo \$this->Resource->definition(\$this->Time->timeAgoInWords(\${$hasMany['Attachment']['singularVar']}['{$singularHumanName}Attachment']['{$field}'])); ?>\n"; ?>
+<?php			else : ?>
+						<?php echo "<?php echo \$this->Resource->definition(\${$hasMany['Attachment']['singularVar']}['{$singularHumanName}Attachment']['{$field}']); ?>\n"; ?>
+<?php			endif; ?>
+<?php		endforeach; ?>
+					<?php echo "<?php endif; ?>\n"; ?>
 <?php	endif; ?>
-<?php endforeach; ?>
+<?php	if (isset($hasMany['Comment'])) : ?>
+					<?php echo "<?php if (isset(\${$singularVar}Meta['{$singularHumanName}Comment'])) : ?>\n"; ?>
+<?php		foreach ($hasMany['Comment']['details']['fields'] as $field) : ?>
+						<?php echo "<?php echo \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n"; ?>
+<?php			if (in_array($hasMany['Comment']['schema'][$field]['type'], array('date', 'time', 'datetime'))) : ?>
+						<?php echo "<?php echo \$this->Resource->definition(\$this->Time->timeAgoInWords(\${$hasMany['Comment']['singularVar']}['{$singularHumanName}Comment']['{$field}'])); ?>\n"; ?>
+<?php			else : ?>
+						<?php echo "<?php echo \$this->Resource->definition(\${$hasMany['Comment']['singularVar']}['{$singularHumanName}Comment']['{$field}']); ?>\n"; ?>
+<?php			endif; ?>
+<?php		endforeach; ?>
+					<?php echo "<?php endif; ?>\n"; ?>
+<?php	endif; ?>
+<?php	if (isset($hasMany['Image'])) : ?>
+					<?php echo "<?php if (isset(\${$singularVar}Meta['{$singularHumanName}Image'])) : ?>\n"; ?>
+<?php		foreach ($hasMany['Image']['details']['fields'] as $field) : ?>
+						<?php echo "<?php echo \$this->Resource->term(__('" . Inflector::humanize($field) . "', true)); ?>\n"; ?>
+<?php			if (in_array($hasMany['Image']['schema'][$field]['type'], array('date', 'time', 'datetime'))) : ?>
+						<?php echo "<?php echo \$this->Resource->definition(\$this->Time->timeAgoInWords(\${$hasMany['Image']['singularVar']}['{$singularHumanName}Image']['{$field}'])); ?>\n"; ?>
+<?php			else : ?>
+						<?php echo "<?php echo \$this->Resource->definition(\${$hasMany['Image']['singularVar']}['{$singularHumanName}Image']['{$field}']); ?>\n"; ?>
+<?php			endif; ?>
+<?php		endforeach; ?>
+					<?php echo "<?php endif; ?>\n"; ?>
+<?php	endif; ?>
 				</dl>
 				<br /><br />
 				<hr />
 			<?php echo "<?php endforeach; ?>\n"?>
+<?php	if (isset($hasMany['Comment'])) : ?>
 			<?php echo "<?php echo \$this->Form->create('{$singularHumanName}', array(\n"; ?>
 			<?php echo "\t'url' => array('action' => 'add_comment', \${$singularVar}['{$modelClass}']['$primaryKey']),\n"; ?>
 			<?php echo "\t'class' => 'form', 'inputDefaults' => array('div' => false, 'label' => false))); ?>\n"; ?>
-<?php foreach ($commentDetails['fields'] as $field) : ?>
-<?php	if (in_array($field, array_merge($continueFields, array('created', 'modified', 'updated', 'created_by', 'created_by_id')))) continue; ?>
-<?php		if ($field == "{$singularVar}_id"): ?>
+<?php		foreach ($hasMany['Comment']['details']['fields'] as $field) : ?>
+<?php			if (in_array($field, array_merge($continueFields, array('created', 'modified', 'updated', 'created_by', 'created_by_id')))) continue; ?>
+<?php			if ($field == "{$singularVar}_id"): ?>
 				<?php echo "<?php echo \$this->Form->input('{$singularHumanName}Comment.{$field}', array(\n"; ?>
 				<?php echo "\t'type' => 'hidden', 'value' => \${$singularVar}['{$modelClass}']['$primaryKey'])); ?>\n"; ?>
-<?php			continue; ?>
-<?php		endif; ?>
+<?php				continue; ?>
+<?php			endif; ?>
 				<div class="group">
 					<?php echo "<?php echo \$this->Form->label('{$singularHumanName}Comment.{$field}', '" . Inflector::humanize(preg_replace('/_id$/', '', $field)) . "', array('class' => 'label')); ?>\n"; ?>
-<?php		if ($field == 'owned_by') : ?>
+<?php			if ($field == 'owned_by') : ?>
 					<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}',\n"; ?>
 					<?php echo "\tfarray('type' => 'select', 'options' => \$owners));\n"; ?>
-<?php		elseif ($field == 'assigned_to') : ?>
+<?php			elseif ($field == 'assigned_to') : ?>
 					<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
 					<?php echo "\t'type' => 'select', 'options' => \$assignedTos));\n"; ?>
-<?php		elseif ($field == 'password') : ?>
+<?php			elseif ($field == 'password') : ?>
 					<?php echo "<?php echo \$this->Form->input('{$modelClass}.new_{$field}', array(\n"; ?>
 					<?php echo "\t'class' => 'text_field', 'type' => 'password')); ?>\n"; ?>
-<?php		elseif ($commentSchema[$field]['type'] == 'boolean') : ?>
+<?php			elseif ($hasMany['Comment']['schema'][$field]['type'] == 'boolean') : ?>
 					<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
 					<?php echo "\t'type' => 'select', 'options' => array('0' => 'No', '1' => 'Yes'))); ?>\n"; ?>
-<?php		elseif (strstr($field, 'description') || strstr($field, 'content')) : ?>
+<?php			elseif (strstr($field, 'description') || strstr($field, 'content')) : ?>
 					<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array('type' => 'textarea', 'class' => 'text_area')); ?>\n"; ?>
-<?php		elseif ($commentSchema[$field]['type'] == 'string') : ?>
+<?php			elseif ($hasMany['Comment']['schema'][$field]['type'] == 'string') : ?>
 					<?php echo "<?php echo \$this->Form->input('{$modelClass}.{$field}', array(\n"; ?>
 					<?php echo "\t'class' => 'text_field')); ?>\n"; ?>
-<?php		else : ?>
+<?php			else : ?>
 					<?php echo "<?php echo \$this->Form->input('{$singularHumanName}Comment.{$field}'); ?>\n"; ?>
-<?php		endif; ?>
+<?php			endif; ?>
 				</div>
-<?php endforeach; ?>
+<?php		endforeach; ?>
 				<div class="group navform wat-cf">
 					<button class="button" type="submit">
 						<?php echo "<?php echo \$this->Html->image('icons/tick.png', array('alt' => 'Save')); ?> Save\n"; ?>
@@ -140,6 +201,7 @@ foreach ($fields as $field) {
 		</div>
 	</div>
 </div>
+<?php	endif; ?>
 <?php endif; ?>
 <?php
 	if (!empty($simple_block_meta)) {
@@ -150,7 +212,7 @@ foreach ($fields as $field) {
 ?>
 <?php if (!empty($associations['hasMany']) && in_array("{$singularHumanName}Attachment", array_keys($associations['hasMany']))) : ?>
 <?php echo "\n<?php echo \$this->Resource->sidebar_simple_block(__('Attachments', true),\n"; ?>
-	<?php echo " \$this->Form->create('{$singularHumanName}', array('url' => array('action' => 'add_attachment', \${$singularVar}['{$modelClass}']['$primaryKey']),\n"; ?>
+	<?php echo "\$this->Form->create('{$singularHumanName}', array('url' => array('action' => 'add_attachment', \${$singularVar}['{$modelClass}']['$primaryKey']),\n"; ?>
 			<?php echo "'class' => 'form', 'inputDefaults' => array('div' => false, 'label' => false), 'type' => 'file'))\n"; ?>
 		<?php echo ". \$this->Form->input('{$singularHumanName}Attachment.{$singularVar}_id', array('type' => 'hidden', 'value' => \${$singularVar}['{$modelClass}']['$primaryKey']))\n"; ?>
 		<?php echo ". '<div class=\"columns wat-cf\">'\n"; ?>
