@@ -40,3 +40,6 @@
 [submodule "plugins/djjob/vendors"]
 	path = plugins/djjob/vendors
 	url = git://github.com/seatgeek/djjob.git
+[submodule "plugins/settings"]
+	path = plugins/settings
+	url = git://github.com/josegonzalez/settings.git
