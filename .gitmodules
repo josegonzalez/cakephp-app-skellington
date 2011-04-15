@@ -52,3 +52,6 @@
 [submodule "plugins/filter"]
 	path = plugins/filter
 	url = git://github.com/josegonzalez/cakephp-filter-plugin.git
+[submodule "plugins/contact"]
+	path = plugins/contact
+	url = git://github.com/msadouni/cakephp-contact-plugin.git
