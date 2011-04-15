@@ -7,15 +7,25 @@
  *
  * @package       app
  */
-class AppHelper extends Helper {
-	var $view = null;
 
-	function h2($contents, $alternate = null) {
+App::import('Vendor', 'UrlCache.url_cache_app_helper');
+class AppHelper extends UrlCacheAppHelper {
+	public $view = null;
+
+	public function h2($contents, $alternate = null) {
 		if ((empty($contents) || $contents == '' || $contents == ' ') && isset($alternate)) $contents = $alternate;
-		if (!$this->view) $this->view = ClassRegistry::getObject('view');
 
-		$this->view->set('title_for_layout', "{$contents} |");
-		$this->view->set("h2_for_layout", $contents);
+        $this->for_layout($contents . ' |', 'title');
+        $this->for_layout($contents, 'h2');
 	}
+
+    public function for_layout($content, $name) {
+        ob_start();
+        if (!$this->view) {
+            $this->view = ClassRegistry::getObject('view');
+        }
+        echo $content;
+        $this->view->set($name . '_for_layout', ob_get_clean());
+    }
+
 }
-?>

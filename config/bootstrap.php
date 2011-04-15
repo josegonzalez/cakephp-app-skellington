@@ -50,25 +50,49 @@
  */
 if (!defined('STDIN') && !class_exists('Assert')) App::import('Vendor', 'assert');
 
-function diebug($variable = false, $showHtml = true, $showFrom = true, $die = true) {
-	if (Configure::read() > 0) {
-		if (is_array($showHtml)) {
-			$showHtml = array_merge(array('showHtml' => true, 'showFrom' => true, 'die' => true), $showHtml);
-			extract($showHtml);
-		}
-		if ($showFrom) {
-			$calledFrom = debug_backtrace();
-			echo '<strong>' . substr(str_replace(ROOT, '', $calledFrom[0]['file']), 1) . '</strong>';
-			echo ' (line <strong>' . $calledFrom[0]['line'] . '</strong>)<br /><br />';
-		}
-		if ($showHtml) {
-			if (!class_exists('dBug')) App::import('Vendor', 'dBug', array('file' => 'dBug.php'));
-			new dBug($variable);
-			echo '<br />';
-		} else {
-			debug($variable, $showHtml, $showFrom);
-		}
-		if ($die) die;
-	}
+
+function diebug($var = false, $showHtml = true, $showFrom = true, $die = true) {
+    if (Configure::read() > 0) {
+        $file = '';
+        $line = '';
+        if ($showFrom) {
+            $calledFrom = debug_backtrace();
+            $file = substr(str_replace(ROOT, '', $calledFrom[0]['file']), 1);
+            $line = $calledFrom[0]['line'];
+        }
+        $html = <<<HTML
+<strong>%s</strong> (line <strong>%s</strong>)
+<pre class="cake-debug">
+%s
+</pre>
+HTML;
+        $text = <<<TEXT
+
+%s (line %s)
+########## DEBUG ##########
+%s
+###########################
+
+TEXT;
+        $template = $html;
+        if (php_sapi_name() == 'cli') {
+            $template = $text;
+        }
+        if ($showHtml === null && $template !== $text) {
+            $showHtml = true;
+        }
+        $var = print_r($var, true);
+        if ($showHtml && php_sapi_name() != 'cli') {
+            $var = str_replace(array('<', '>'), array('&lt;', '&gt;'), $var);
+        }
+        printf($template, $file, $line, $var);
+        if ($die) die;
+    }
 }
-?>
+
+Configure::write('UrlCache.pageFiles', true);
+Configure::write('Settings.SiteTitle', 'CakePHP Website');
+Configure::write('Settings.SmtpUsername', 'username');
+Configure::write('Settings.SmtpPassword', 'password');
+Configure::write('Settings.ServerEmail', 'mail@example.com');
+Configure::write('Settings.FULL_BASE_URL', 'mail@example.com');

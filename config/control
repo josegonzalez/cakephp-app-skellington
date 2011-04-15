@@ -1,0 +1,10 @@
+Package: app_skellington
+Source: git://github.com/josegonzalez/app_skellington.git
+Type: skeleton
+Section: skeleton
+Description: builds a barebones cakephp app skeleton based on the db config
+Pre-depends: CakePHP==1.3
+Recommends:
+Suggests:
+Bugs: http://github.com/josegonzalez/cakepackages/issues
+Callbacks: git-submodules
