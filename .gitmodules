@@ -43,3 +43,12 @@
 [submodule "plugins/settings"]
 	path = plugins/settings
 	url = git://github.com/josegonzalez/settings.git
+[submodule "plugins/upload_pack"]
+	path = plugins/upload_pack
+	url = git://github.com/szajbus/uploadpack.git
+[submodule "plugins/log"]
+	path = plugins/log
+	url = git://github.com/josegonzalez/log.git
+[submodule "plugins/filter"]
+	path = plugins/filter
+	url = git://github.com/josegonzalez/cakephp-filter-plugin.git
