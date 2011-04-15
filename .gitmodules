@@ -1,0 +1,42 @@
+[submodule "plugins/authsome"]
+	path = plugins/authsome
+	url = git://github.com/felixge/cakephp-authsome.git
+[submodule "plugins/webservice"]
+	path = plugins/webservice
+	url = git://github.com/josegonzalez/webservice_plugin.git
+[submodule "plugins/wysiwyg"]
+	path = plugins/wysiwyg
+	url = git://github.com/josegonzalez/cakephp-wysiwyg-helper.git
+[submodule "plugins/searchable"]
+	path = plugins/searchable
+	url = git://github.com/josegonzalez/searchable.git
+[submodule "plugins/sanction"]
+	path = plugins/sanction
+	url = git://github.com/josegonzalez/sanction.git
+[submodule "plugins/debug_kit"]
+	path = plugins/debug_kit
+	url = git://github.com/cakephp/debug_kit.git
+[submodule "plugins/interactive"]
+	path = plugins/interactive
+	url = git://github.com/mcurry/interactive.git
+[submodule "plugins/asset_compress"]
+	path = plugins/asset_compress
+	url = git://github.com/josegonzalez/asset_compress.git
+[submodule "plugins/cake_djjob"]
+	path = plugins/cake_djjob
+	url = git://github.com/josegonzalez/cake_djjob.git
+[submodule "plugins/lazy_model"]
+	path = plugins/lazy_model
+	url = git://github.com/Phally/lazy_model.git
+[submodule "plugins/linkable"]
+	path = plugins/linkable
+	url = git://github.com/Terr/linkable.git
+[submodule "plugins/migrations"]
+	path = plugins/migrations
+	url = git://github.com/CakeDC/migrations.git
+[submodule "plugins/url_cache"]
+	path = plugins/url_cache
+	url = git://github.com/mcurry/url_cache.git
+[submodule "plugins/djjob/vendors"]
+	path = plugins/djjob/vendors
+	url = git://github.com/seatgeek/djjob.git
