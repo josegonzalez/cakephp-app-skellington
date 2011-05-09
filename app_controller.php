@@ -71,6 +71,18 @@ class AppController extends Controller {
  */
     public $view = 'AutoHelper';
 
+
+/**
+ * The name of the layout file to render the view inside of. The name specified
+ * is the filename of the layout in /app/views/layouts without the .ctp
+ * extension.
+ *
+ * @var string
+ * @access public
+ * @link http://book.cakephp.org/view/962/Page-related-Attributes-layout-and-pageTitle
+ */
+    public $layout = 'admin';
+
 /**
  * Object constructor - Adds the Debugkit panel if in development mode
  *
