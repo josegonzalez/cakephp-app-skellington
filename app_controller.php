@@ -81,7 +81,7 @@ class AppController extends Controller {
  * @access public
  * @link http://book.cakephp.org/view/962/Page-related-Attributes-layout-and-pageTitle
  */
-    public $layout = 'admin';
+    public $layout = 'default';
 
 /**
  * Object constructor - Adds the Debugkit panel if in development mode
