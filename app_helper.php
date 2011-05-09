@@ -10,14 +10,14 @@
 
 App::import('Vendor', 'UrlCache.url_cache_app_helper');
 class AppHelper extends UrlCacheAppHelper {
-	public $view = null;
+    public $view = null;
 
-	public function h2($contents, $alternate = null) {
-		if ((empty($contents) || $contents == '' || $contents == ' ') && isset($alternate)) $contents = $alternate;
+    public function h2($contents, $alternate = null) {
+        if ((empty($contents) || $contents == '' || $contents == ' ') && isset($alternate)) $contents = $alternate;
 
         $this->for_layout($contents . ' |', 'title');
         $this->for_layout($contents, 'h2');
-	}
+    }
 
     public function for_layout($content, $name) {
         ob_start();

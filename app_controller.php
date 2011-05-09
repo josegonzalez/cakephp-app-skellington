@@ -19,25 +19,25 @@ class AppController extends Controller {
  * @access public
  * @link http://book.cakephp.org/view/961/components-helpers-and-uses
  */
-	public $components = array(
-	    'Authsome.Authsome' => array(
+    public $components = array(
+        'Authsome.Authsome' => array(
             'configureKey' => 'Auth',
             'sessionKey' => 'Auth',
             'cookieKey' => 'Auth',
             'model' => 'User'
         ),
         'CakeDjjob.CakeDjjob',
-		'Log.Logging',
-		'Mail',
-		'RequestHandler',
-		'Sanction.Permit' => array(
-			'path' => 'Auth.User',
-			'check' => 'role'
-		),
-		'Session',
-		'Settings.Settings',
-		'Webservice.Webservice'
-	);
+        'Log.Logging',
+        'Mail',
+        'RequestHandler',
+        'Sanction.Permit' => array(
+            'path' => 'Auth.User',
+            'check' => 'role'
+        ),
+        'Session',
+        'Settings.Settings',
+        'Webservice.Webservice'
+    );
 
 /**
  * An array containing the names of helpers this controller uses. The array elements should
