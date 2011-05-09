@@ -1,5 +1,5 @@
 <h2>Register</h2>
-<?php echo $this->Form->create('User'); ?>
+<?php echo $this->Form->create('User', array('class' => 'form')); ?>
 <?php echo $this->Form->input('User.first_name',
         array('placeholder' => __('your first name', true),
             'type' => 'text')); ?>

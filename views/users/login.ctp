@@ -1,5 +1,5 @@
 <h2>Login</h2>
-<?php echo $this->Form->create('User'); ?>
+<?php echo $this->Form->create('User', array('class' => 'form')); ?>
     <?php echo $this->Form->input('User.login',
             array('label' => __('Username', true),
                 'placeholder' => __('your email address', true),
