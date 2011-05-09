@@ -4,9 +4,10 @@
 	if (($output = Cache::read('main_navigation' . md5($this->params['controller']))) === false) {
 		if (($controllers = Cache::read('main_navigation')) === false) {
 			$controllers = array_diff(App::objects('controller'),
-				array('App', 'LoginTokens', 'Lost', 'Pages', 'Statuses'));
+				array('App', 'Account', 'LoginTokens', 'Pages', 'Statuses'));
 			foreach ($controllers as $key => $controller_name) {
 				$model = ClassRegistry::init(Inflector::singularize($controller_name));
+				if (!$model) continue;
 				$schema = $model->schema();
 				$controllers[$key] = array(
 				    'title' => $controller_name,
@@ -14,6 +15,8 @@
 				);
 				if (count($schema) == 2 && (isset($schema['id']) && isset($schema['name']))) unset($controllers[$key]);
 			}
+
+			restore_error_handler();
 			Cache::write('main_navigation', $controllers);
 		}
 		$i = 0;
@@ -24,5 +27,5 @@
 		}
 		Cache::write('main_navigation' . md5($this->params['controller']), $output);
 	}
-	echo $output;
+	// echo $output;
 ?>
