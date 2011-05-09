@@ -21,7 +21,7 @@ class AppModel extends LazyModel {
     var $actsAs = array(
         'CakeDjjob.CakeDjjob',
         'Containable',
-        'Linkable.Linkable'
+        'Linkable.Linkable',
         'Log.Logable' => array('change' => 'full')
     );
 
