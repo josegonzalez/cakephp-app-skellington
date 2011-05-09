@@ -27,5 +27,5 @@
 		}
 		Cache::write('main_navigation' . md5($this->params['controller']), $output);
 	}
-	// echo $output;
+	echo $output;
 ?>
