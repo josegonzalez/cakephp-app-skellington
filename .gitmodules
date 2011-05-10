@@ -58,3 +58,6 @@
 [submodule "plugins/cake_admin"]
 	path = plugins/cake_admin
 	url = git://github.com/josegonzalez/cake_admin.git
+[submodule "plugins/upload"]
+	path = plugins/upload
+	url = git://github.com/josegonzalez/upload.git
