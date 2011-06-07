@@ -53,7 +53,6 @@ class AppController extends Controller {
         'AssetCompress.AssetCompress',
         'Sanction.Clearance',
         'Wysiwyg.Tinymce',
-        'UploadPack.Upload',
     );
 
 /**
