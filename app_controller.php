@@ -26,9 +26,7 @@ class AppController extends Controller {
             'cookieKey' => 'Auth',
             'model' => 'User'
         ),
-        'CakeDjjob.CakeDjjob',
         'Log.Logging',
-        'Mail',
         'RequestHandler',
         'Sanction.Permit' => array(
             'path' => 'Auth.User',
@@ -89,7 +87,7 @@ class AppController extends Controller {
  */
     public function __construct() {
         if (Configure::read('debug')) {
-            $this->components[] = 'DebugKit.Toolbar';
+            $this->components['DebugKit.Toolbar'] = array('panels' => array('Sanction.permit'));
         }
         parent::__construct();
     }
