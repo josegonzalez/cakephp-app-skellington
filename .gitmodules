@@ -58,3 +58,6 @@
 [submodule "plugins/upload"]
 	path = plugins/upload
 	url = git://github.com/josegonzalez/upload.git
+[submodule "plugins/dummy"]
+	path = plugins/dummy
+	url = git@github.com:dkullmann/dummy.git
