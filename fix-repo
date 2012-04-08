@@ -1,0 +1,35 @@
+#!/bin/bash
+function COMMAND { echo -e "\n[CMD] $1" && eval $1; }
+
+echo "This script is destructive, and you"
+echo "should ensure you have committed all"
+echo -e "work before continuing.\n"
+
+echo -e "Are you sure you want to continue? [y/n]"
+
+read -p "" -n 1
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+	echo -e "\n... Exiting ..."
+	exit 1
+fi
+
+COMMAND "git pull origin master"
+
+COMMAND "git submodule init && git submodule update"
+
+for fn in data debug_kit models persistent views
+do
+	COMMAND "rm -rf tmp/cache/$fn && mkdir -p tmp/cache/$fn && chmod 777 tmp/cache/$fn && touch tmp/cache/empty"
+done
+
+for fn in logs sessions tests
+do
+	COMMAND "rm -rf tmp/$fn && mkdir -p tmp/$fn && chmod 777 tmp/$fn && touch tmp/$fn/empty"
+done
+
+COMMAND "chmod -R 777 tmp"
+
+COMMAND "(cd .git && rm -rf hooks && ln -s ../Config/git_hooks hooks)"
+
+COMMAND "git reset --hard"
